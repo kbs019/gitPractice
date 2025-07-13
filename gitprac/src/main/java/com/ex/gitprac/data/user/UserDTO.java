@@ -12,5 +12,5 @@ public class UserDTO {
     private LocalDateTime reg;      // 가입날짜
     private LocalDateTime birth;    // 생년월일
     private int status;             // 상태
-    private String Email;           // 이메일
+    private String email;           // 이메일
 }
