@@ -4,8 +4,19 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ex.repository.QnaBoardMapper">	
 
+  <!-- 전체 글 갯수 -->
+  <select id="boardCount" resultType="int">
+    select count(*) from qna_board
+  </select>
+  <!-- 글 목록 -->
+  <select id="boardList" resultType="com.ex.gitprac.data.QnaBoardDTO">
+    <@[CDATA[
+    select * from ( select b.*, rownum r from ( select * from qna_board order by postNo desc ) b ) where r >= #{start} and r <= #{end}
+    ]]>
+  </select>
+
   <!-- 글 작성 -->
   <insert id="postInsert" resultType="int" parameterType="com.ex.gitprac.data.QnaBoardDTO">
-    insert into qna_board values( qna_board_seq.nextval, #{writer}, #{title}, #{content}, #{imgName}, #{imgPath}, 0, sysdate, 0, 0, 0 )
+    insert into qna_board values( qna_board_seq.nextval, #{writer}, #{title}, #{content}, #{imgName}, #{imgPath}, #{showRecord}, sysdate, 0, 0, 0 )
   </insert>
 </mapper>

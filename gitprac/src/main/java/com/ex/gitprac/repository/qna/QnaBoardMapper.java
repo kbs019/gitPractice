@@ -1,11 +1,20 @@
 package com.ex.gitprac.repository.qna;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.ex.gitprac.data.qna.QnaBoardDTO;
 
 @Mapper
 public interface QnaBoardMapper {
+
+    // 글갯수
+    public int boardCount();
+    // 글목록
+    public List<QnaBoardDTO> boardList(@Param("start") int start, @Param("end") int end);
+
     // 글 작성
     public int postInsert(QnaBoardDTO qto);
 }

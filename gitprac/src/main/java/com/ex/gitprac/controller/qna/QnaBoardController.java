@@ -1,5 +1,7 @@
 package com.ex.gitprac.controller.qna;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.io.File;
 
@@ -25,6 +27,40 @@ import lombok.RequiredArgsConstructor;
 public class QnaBoardController {
 
     private final QnaBoardService qnaBoardService;
+
+    @GetMapping("list")
+    public String list( Model model, @RequestParam(name="pageNum", defaultValue="1") int pageNum ){
+        int pageSize = 10;
+        int currentPage = pageNum;
+        int start = (currentPage - 1) * pageSize + 1;
+        int end = currentPage * pageSize;
+        int count = qnaBoardService.boardCount();
+
+        List<QnaBoardDTO> list = null;
+        if( count > 0 ){
+            list = qnaBoardService.boardList(start, end);
+        }else{
+            list = new ArrayList<QnaBoardDTO>();
+        }
+
+        int pageCount = (count/pageSize) + (count%pageSize == 0 ? 0 : 1);
+        int pageBlock = 10;
+        int startPage = (int) ((currentPage - 1) / pageBlock) * pageBlock + 1;
+        int endPage = startPage + pageBlock - 1;
+        if( endPage > pageCount ){
+            endPage = pageCount;
+        }
+
+        model.addAttribute("pageCount", pageCount);
+        model.addAttribute("pageBlock", pageBlock);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("count", count);
+        model.addAttribute("list", list);
+        model.addAttribute("pageNum", pageNum);
+
+        return "/qna/list";
+    }
 
     @GetMapping("write")
     public String write(){
