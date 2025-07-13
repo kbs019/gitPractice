@@ -2,7 +2,7 @@ package com.ex.gitprac.service.qna;
 
 import org.springframework.stereotype.Service;
 
-import com.ex.gitprac.repository.qna.QnaBoardMapper;
+//import com.ex.gitprac.repository.qna.QnaBoardMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -10,5 +10,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class QnaBoardService {
 
-    private final QnaBoardMapper qnaBoardMapper;
+    //private final QnaBoardMapper qnaBoardMapper;
 }
