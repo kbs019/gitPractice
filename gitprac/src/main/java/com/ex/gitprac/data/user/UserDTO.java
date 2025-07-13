@@ -13,4 +13,8 @@ public class UserDTO {
     private LocalDateTime birth;    // 생년월일
     private int status;             // 상태
     private String email;           // 이메일
+    private String name;
+    private int role;
+    private String carrier;
+    private int phone;
 }
