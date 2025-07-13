@@ -6,6 +6,17 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>확인</h1>
+    <span th:if="${result == 1}">
+        <script>
+            alert("업로드가 완료되었습니다.");
+            window.location="@{/qna/list}";
+        </script>
+    </span>
+    <span th:unless="${result == 1}">
+        <script>
+            alert("다시 작성해주세요.");
+            history.go(-1);
+        </script>
+    </span>
 </body>
 </html>
