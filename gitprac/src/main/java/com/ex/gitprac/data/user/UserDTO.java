@@ -10,4 +10,6 @@ public class UserDTO {
     private String pw;
     private String nick;
     private LocalDateTime reg;
+    private LocalDateTime birth;
+    private int status;
 }
