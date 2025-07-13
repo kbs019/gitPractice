@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-GitpracApplication<gitprac>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.ex.gitprac.GitpracApplication",
+            "projectName": "gitprac",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
