@@ -16,8 +16,7 @@ public class QnaBoardService {
     public int postInsert( QnaBoardDTO qto ){
         int result = 0;
 
-        int res = qnaBoardMapper.postInsert(qto);
-        if(res == 1){
+        if( qnaBoardMapper.postInsert(qto) == 1 ){
             result = 1;
         }
         

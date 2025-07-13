@@ -5,7 +5,7 @@
 <mapper namespace="com.ex.repository.QnaBoardMapper">	
 
   <!-- 글 작성 -->
-  <insert id="postInsert" resultType="int">
-    insert into qna_board values( qna_board_seq.nextval, #{writer}, #{title}, #{content}, #{imgName}, #{imgPath}, sysdate, 0, 0, 0 )
+  <insert id="postInsert" resultType="int" parameterType="com.ex.gitprac.data.QnaBoardDTO">
+    insert into qna_board values( qna_board_seq.nextval, #{writer}, #{title}, #{content}, #{imgName}, #{imgPath}, 0, sysdate, 0, 0, 0 )
   </insert>
 </mapper>

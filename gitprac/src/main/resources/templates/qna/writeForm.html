@@ -16,32 +16,31 @@
             <form th:action="@{/qna/write}" method="post" enctype="multipart/form-data">
                 <div class="writeForm-wrapper" align="center">
                     <div class="title-wrapper">
-                        <label for="title">글 제목</label>
+                        <label for="title">글 제목</label> : 
                         <input type="text" id="title" name="title" required>
                     </div>
                     <div class="writer-wrapper">
-                        <!--<label for="writer">작성자</label>--> <!--  -->
-                        <!--<span th:text="${session.user.nick}"></span>-->
+                        <!--<span>작성자 : <span th:text="${session.user.nick}"></span></span>-->
                     </div>
                     <div class="image-wrapper">
-                        <label for="image">첨부파일</label>
+                        <label for="image">첨부파일</label> &nbsp;
                         <input type="file" id="image" name="image">
                     </div>
                     <div class="record-wrapper">
-                        <label for="">일지 공유 여부 확인</label>
+                        <label for="isChecked">일지 공유 여부 확인</label>  &nbsp;
                         <input type="checkbox" id="isChecked" name="isChecked">
                     </div>
                     <div class="content-wrapper">
-                        <label for="content">글 내용</label>
+                        <label for="content">글 내용</label>    <br>
                         <textarea id="content" name="content" required></textarea>
                     </div>
                     <div class="reset-or-submit-wrapper">
-                        <div class="reset-button">
+                        <span class="reset-button">
                             <button type="reset">다시 작성</button>
-                        </div>
-                        <div class="submit-button">
+                        </span> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="submit-button">
                             <button type="submit">업로드</button>
-                        </div>
+                        </span>
                     </div>
                 </div>
             </form>
