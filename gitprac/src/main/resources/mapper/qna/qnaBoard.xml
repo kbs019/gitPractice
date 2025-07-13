@@ -4,4 +4,12 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ex.repository.QnaBoardMapper">	
 
+  <!-- postNo 의 최댓값 조회 -->
+  <select id="maxNum" resultType="int">
+    select NVL(max(postNo), 1) from qna_board
+  </select>
+  <!-- 글 작성 -->
+  <insert id="postInsert" resultType="int" parameterType="com.ex.gitparc.data.QnaBoardDTO">
+    insert into qna_board values( qna_board_seq.nextval, #{writer}, #{title}, #{content}, #{imgName}, #{imgPath}, sysdate, 0, 0, 0 )
+  </insert>
 </mapper>
