@@ -6,11 +6,11 @@ import lombok.Data;
 
 @Data
 public class UserDTO {
-    private String id;
-    private String pw;
-    private String nick;
-    private LocalDateTime reg;
-    private LocalDateTime birth;
-    private int status;
-    private String Email;
+    private String id;              // 아이디
+    private String pw;              // 패스워드
+    private String nick;            // 닉네임
+    private LocalDateTime reg;      // 가입날짜
+    private LocalDateTime birth;    // 생년월일
+    private int status;             // 상태
+    private String email;           // 이메일
 }
