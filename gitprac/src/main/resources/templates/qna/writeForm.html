@@ -7,6 +7,45 @@
 </head>
 <body>
     <div th:replace="~{fragments/headers.html :: headersFragment}"></div>
-    <div>본문</div>
+    <div class="body">
+        <div class="body-top" align="center">
+            <h2>글 작성</h2>
+            <hr width="400" align="center">
+        </div>
+        <div class="body-content">
+            <form th:action="@{/qna/write}" method="post" enctype="multipart/form-data">
+                <div class="writeForm-wrapper" align="center">
+                    <div class="title-wrapper">
+                        <label for="title">글 제목</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+                    <div class="writer-wrapper">
+                        <!--<label for="writer">작성자</label>-->
+                        <!--<span th:text="${session.user.nick}"></span>-->
+                    </div>
+                    <div class="image-wrapper">
+                        <label for="image">첨부파일</label>
+                        <input type="file" id="image" name="image">
+                    </div>
+                    <div class="record-wrapper">
+                        <label for="">일지 공유 여부 확인</label>
+                        <input type="checkbox" id="isChecked" name="isChecked">
+                    </div>
+                    <div class="content-wrapper">
+                        <label for="content">글 내용</label>
+                        <textarea id="content" name="content" required></textarea>
+                    </div>
+                    <div class="reset-or-submit-wrapper">
+                        <div class="reset-button">
+                            <button type="reset">다시 작성</button>
+                        </div>
+                        <div class="submit-button">
+                            <button type="submit">업로드</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
