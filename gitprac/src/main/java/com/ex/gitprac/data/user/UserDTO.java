@@ -12,4 +12,5 @@ public class UserDTO {
     private LocalDateTime reg;
     private LocalDateTime birth;
     private int status;
+    private String Email;
 }
