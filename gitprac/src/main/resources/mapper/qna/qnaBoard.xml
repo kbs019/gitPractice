@@ -17,6 +17,6 @@
 
   <!-- 글 작성 -->
   <insert id="postInsert" resultType="int" parameterType="com.ex.gitprac.data.QnaBoardDTO">
-    insert into qna_board values( qna_board_seq.nextval, #{writer}, #{title}, #{content}, #{imgName}, #{imgPath}, #{showRecord}, sysdate, 0, 0, 0 )
+    insert into qna_board values( qna_board_seq.nextval, #{writer}, #{title}, #{content}, #{imgName}, #{imgPath}, #{originalName}, #{showRecord}, sysdate, 0, 0, 0 )
   </insert>
 </mapper>

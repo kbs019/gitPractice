@@ -12,6 +12,7 @@ public class QnaBoardDTO {
     private String content;
     private String imgName;
     private String imgPath;
+    private String originalName;
     private int showRecord;
     private LocalDateTime reg;
     private int views;

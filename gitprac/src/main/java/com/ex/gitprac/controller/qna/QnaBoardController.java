@@ -76,12 +76,15 @@ public class QnaBoardController {
         // writer 를 qto 객체에 저장
         qto.setWriter(writer);
 
+        // 원본 파일명을 출력
+        String originalName = mf.getOriginalFilename();
         // 이미지 파일의 중복을 피하기 위해 새로운 이미지 파일의 이름 생성
-        String newName = UUID.randomUUID().toString().replace("-", "")+mf.getOriginalFilename();
+        String newName = UUID.randomUUID().toString().replace("-", "")+originalName;
         // 현재 프로젝트 내의 이미지 파일을 저장할 폴더의 경로를 지정
         String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\qnaUpload\\";
         
         // 새로 생성된 이름과 경로를 qto 객체에 대입
+        qto.setOriginalName(originalName);
         qto.setImgName(newName);
         qto.setImgPath(uploadPath);
 
