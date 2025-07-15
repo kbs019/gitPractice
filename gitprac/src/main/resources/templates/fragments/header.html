@@ -33,14 +33,14 @@
             </div>
 
             <div id="header_bottom">
-                <span th:if="${user.role == 0}">
-                    <ul>
+                <ul>
+                    <span th:if="${user.role == 0}">
                         <li><a th:href="@{/diary/main}">다이어리</a></li>
                         <li><a th:href="@{/rec/main}">일지</a></li>
+                    </span>
                         <li><a th:href="@{/qna/main}">상담 게시판</a></li>
                         <li><a th:href="@{/comu/main}">자유 게시판</a></li>
-                    </ul>
-                </span>
+                </ul>
             </div>
         </div>
     </header>
