@@ -7,6 +7,51 @@
 </head>
 <body>
     <div th:replace="~{frgments/headers.html :: headersFragment}"></div>
-    <h1>확인</h1>
+    <div class="content-top">
+        <div class="content-top-title">
+            <center>글 내용</center>
+            <hr width="600" align="center" color="orange">
+        </div>
+        <div class="content-top-btns">
+            <div width="600" align="right">
+                <span th:if="${ (session.user.nick).equals(qto.writer) }">
+                    <input type="button" value="수정" th:onclick="|window.location='@{/qna/update(postNo=${qto.postNo}, pageNum=${pageNum})}'|">  &nbsp;&nbsp;
+                    <input type="button" value="삭제" th:onclick="|window.location='@{/qna/delete(postNo=${qto.postNo}, pageNum=${pageNum})}'|">
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="content-body">
+        <div class="content-title-wrapper">
+            <h3><span th:text="${qto.title}"></span></h3>
+        </div>
+        <div class="content-info-wrapper">
+            <div class="content-writer-wrapper">
+                작성자 | <span th:text="${qto.writer}"></span>
+            </div>
+            <div class="content-views-wrapper">
+                조회수 | <span th:text="${qto.views}"></span>
+            </div>
+            <div class="content-reg-wrapper">
+                작성일자 | <span th:text="${#temporals.format(qto.reg, 'yy-MM-dd HH:mm')}"></span>
+            </div>
+        </div>    
+        <div class="content-image-wrapper" th:if="${qto.originalName != null}">
+            <img th:src="${qto.imgPath}+'/'+${qto.imgName}">    <!-- <img th:src="${qto.imgPath+'/'+qto.imgName}"> -->
+        </div>
+        <div class="content-content-wrapper">
+            <div th:text="${qto.content}"></div>
+        </div>
+        <div class="content-btn-wrapper" th:if="${qto.showRecord == 1}">    <!-- 이 부분 이렇게 한번에 진행이 될까? -->
+            <button onclick="showRecord()">일지 보기</button>
+        </div>
+    </div>
+<script>
+    function showRecord(){
+        window.open(
+            '/qna/showRecord', 'popupRecord', 'width=600, height=400, left=100, top=100'
+        );
+    }
+</script>
 </body>
 </html>

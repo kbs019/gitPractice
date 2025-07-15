@@ -33,7 +33,7 @@
             </tr>
             <tr height="30" th:each="dto : ${list}">
                 <td align="center">
-                    <a th:href="@{|/qna/content?num=${dto.num}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
+                    <a th:href="@{|/qna/content?postNo=${dto.postNo}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
                 </td>
                 <td th:text="${dto.wrtier}" align="center"></td>
                 <td align="center">

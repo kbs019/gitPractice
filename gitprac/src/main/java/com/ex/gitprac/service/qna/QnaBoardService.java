@@ -34,4 +34,16 @@ public class QnaBoardService {
         
         return result;
     }
+
+    // 조회수 증가 & 글 내용 조회
+    public QnaBoardDTO postContent( int postNo ){
+        qnaBoardMapper.viewsUp(postNo);
+
+        return qnaBoardMapper.postContent(postNo);
+    }
+
+    // 글내용 조회 (updateForm() 에서 사용)
+    public QnaBoardDTO showContent( int postNo ){
+        return qnaBoardMapper.postContent(postNo);
+    }
 }

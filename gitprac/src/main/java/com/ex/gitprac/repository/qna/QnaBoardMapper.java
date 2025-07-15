@@ -17,4 +17,9 @@ public interface QnaBoardMapper {
 
     // 글 작성
     public int postInsert(QnaBoardDTO qto);
+
+    // 조회수 증가
+    public void viewsUp(int postNo);
+    // 글 내용
+    public QnaBoardDTO postContent(int postNo);
 }

@@ -29,6 +29,7 @@ public class QnaBoardController {
 
     private final QnaBoardService qnaBoardService;
 
+    // 상담 게시판의 메인 페이지인 list
     @GetMapping("list")
     public String list( Model model, @RequestParam(name="pageNum", defaultValue="1") int pageNum ){
         int pageSize = 10;
@@ -63,11 +64,13 @@ public class QnaBoardController {
         return "/qna/list";
     }
 
+    // 글작성 버튼을 눌렀을 때, 작동
     @GetMapping("write")
     public String write(){
         return "/qna/writeForm";
     }
 
+    // 글작성 form 에서 업로드 버튼을 눌렀을 때, 작동
     @PostMapping("write")
     public String write( @RequestParam("image") MultipartFile mf, QnaBoardDTO qto, Model model, HttpSession session ){
         // 세션에 저장된 user 객체 꺼내기
@@ -107,9 +110,23 @@ public class QnaBoardController {
         return "/qna/writePro";
     }
 
+    // list 에서 글제목을 클릭했을때, 작동
     @GetMapping("content")
-    public String content( @RequestParam("num") int num, @ModelAttribute("pageNum") int pageNum, Model model ){
+    public String content( @RequestParam("postNo") int postNo, @ModelAttribute("pageNum") int pageNum, Model model ){
         
+        QnaBoardDTO qto = qnaBoardService.postContent(postNo);
+        model.addAttribute("qto", qto);
+
         return "/qna/content";
+    }
+
+    // content 에서 수정버튼을 클릭했을때, 작동
+    @GetMapping("update")
+    public String updateForm( @RequestParam("postNo") int postNo, @ModelAttribute("pageNum") int pageNum, Model model ){
+
+        QnaBoardDTO qto = qnaBoardService.showContent(postNo);
+        model.addAttribute("qto", qto);
+        
+        return "/qna/updateForm";
     }
 }

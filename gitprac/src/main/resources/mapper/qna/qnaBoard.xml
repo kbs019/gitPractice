@@ -19,4 +19,13 @@
   <insert id="postInsert" resultType="int" parameterType="com.ex.gitprac.data.QnaBoardDTO">
     insert into qna_board values( qna_board_seq.nextval, #{writer}, #{title}, #{content}, #{imgName}, #{imgPath}, #{originalName}, #{showRecord}, sysdate, 0, 0, 0 )
   </insert>
+
+  <!-- 조회수 + 1 -->
+  <update id="viewsUp" parameterType="int">
+    update qna_board set views = views + 1 where postNo = #{postNo}
+  </update>
+  <!-- 글 내용 -->
+  <select id="postContent" resultType="com.ex.gitprac.data.QnaBoardDTO" parameterType="int">
+    select * from qna_board where postNo = #{postNo}
+  </select>
 </mapper>
