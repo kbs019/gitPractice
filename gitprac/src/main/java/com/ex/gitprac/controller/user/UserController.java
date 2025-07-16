@@ -26,10 +26,12 @@ public class UserController {
         return "user/loginForm";
     }
     @PostMapping("login")
-    public String loginForm( @RequestParam("role") int role, HttpSession session, Model model) {
+    public String loginForm( @RequestParam("id") String id, @RequestParam("pw") String pw, HttpSession session ) {
 
-        model.addAttribute("role", role);
-
+        int result = userService.loginCheck(id, pw);
+        if( result == 1 ) {
+            session.setAttribute("sid", id);
+        }
         return "user/loginPro";
     } 
       

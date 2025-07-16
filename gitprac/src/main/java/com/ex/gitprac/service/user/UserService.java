@@ -13,7 +13,12 @@ public class UserService {
     private final UserMapper userMapper;
 
     // 회원가입
-    public int userInsert(UserDTO userDTO) {
+    public int userInsert( UserDTO userDTO)  {
         return userMapper.userInsert(userDTO);
+    }
+    // 로그인 체크
+    public int loginCheck( String id, String pw) {
+        int result = userMapper.loginCheck(id, pw);
+        return result;
     }
 }
