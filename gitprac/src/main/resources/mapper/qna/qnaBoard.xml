@@ -28,4 +28,9 @@
   <select id="postContent" resultType="com.ex.gitprac.data.QnaBoardDTO" parameterType="int">
     select * from qna_board where postNo = #{postNo}
   </select>
+
+  <!-- 글 수정 -->
+  <update id="postUpdate" returnType="int" parameterType="com.ex.gitprac.data.QnaBoardDTO">
+    update qna_board set title=#{title}, writer=#{writer}, content=#{content}, imgName=#{imgName}, imgPath=#{imgPath}, originalName=#{originalName}, showRecord=#{showRecord} where postNo=#{postNo}
+  </update>
 </mapper>

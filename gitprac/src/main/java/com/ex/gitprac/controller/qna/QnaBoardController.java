@@ -129,4 +129,13 @@ public class QnaBoardController {
         
         return "/qna/updateForm";
     }
+
+    // updateForm 에서 수정 버튼을 클릭했을때, 작동
+    @PostMapping("update")
+    public String updatePro( @RequestParam("image") MultipartFile mf, @ModelAttribute("pageNum") int pageNum, QnaBoardDTO qto, Model model ){
+
+        
+
+        return "qna/updatePro";
+    }
 }
