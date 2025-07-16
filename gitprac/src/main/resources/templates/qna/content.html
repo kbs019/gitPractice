@@ -52,13 +52,14 @@
     <div class="reply-block">
         <div class="reply-insert-form">
             <form id="replyInsertForm">
-                <input type="hidden" id="postNo" th:value="${dto.postNo}">
+                <input type="hidden" id="postNo" th:value="${qto.postNo}">
                 <input type="hidden" id="writer" th:value="${session.users.nick}">
                 <textarea id="replyContent" required></textarea>
                 <button type="button" id="replyInsertBtn">답변 작성</button>
             </form>
         </div>
     </div>
+    <div id="replyList"></div>  <!-- 여기에 리스트 출력시킬 예정 -->
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- 일지 보기 버튼 클릭 시, 팝업창 open -->
@@ -85,12 +86,27 @@
                         content : $('#replyContent').val()
                     },
                     success : function( result ){
-                        alert('답변이 작성되었습니다.');
-                        content : $('#replyContent').val('');
+                        alert(result);
+                        $('#replyContent').val('');
                     },
                     error : function( xhr, status, error ){
                         console.log(error + '  발생');
                         alert('오류 발생');
+                    }
+                });
+
+                $.ajax({
+                    url : '/qna/replyList',
+                    type : 'post',
+                    data : {
+                        postNo : $('#postNo').val()
+                    },
+                    success : function( replyTable ){
+                        $('#replyList').html(replyTable);
+                    },
+                    error : function( xhr, status, error ){
+                        console.log(error + "-- 발생");
+                        alert("오류 발생");
                     }
                 });
             });

@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ex.gitprac.data.qna.QnaBoardDTO;
+import com.ex.gitprac.data.qna.QnaReplyDTO;
 import com.ex.gitprac.data.user.UserDTO;
 
 import com.ex.gitprac.service.qna.QnaBoardService;
@@ -185,8 +187,26 @@ public class QnaBoardController {
 
     // ajax 로 넘어온 댓글 작성
     @PostMapping("replyInsert")
-    //@ResponseBody
-    public String replyInsert(){
-        return "";
+    @ResponseBody
+    public String replyInsert( @RequestParam("postNo") int postNo, @RequestParam("writer") String writer, @RequestParam("content") String content ){
+
+        String message = "댓글 작성에 실패하였습니다.";
+
+        if( qnaBoardService.replyInsert(postNo, writer, content) == 1 ){
+            message = "댓글 작성에 성공했습니다.";
+        }
+
+        return message;
+    }
+
+    // 댓글 리스트 출력
+    @PostMapping("replyList")
+    public String replyList( @RequestParam("postNo") int postNo, Model model ){
+
+        QnaReplyDTO rto = qnaBoardService.replyList(postNo);
+
+        model.addAttribute("rto", rto);
+
+        return "/qna/replyList";
     }
 }

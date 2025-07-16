@@ -12,3 +12,10 @@ public class QnaReplyDTO {
     private String content;
     private LocalDateTime reg;
 }
+/*
+create table qna_reply(
+    postNo      number,
+    replyNo     number,
+    writer
+);
+*/

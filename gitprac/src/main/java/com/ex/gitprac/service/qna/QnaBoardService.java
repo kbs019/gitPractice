@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.ex.gitprac.data.qna.QnaBoardDTO;
+import com.ex.gitprac.data.qna.QnaReplyDTO;
 import com.ex.gitprac.repository.qna.QnaBoardMapper;
+import com.ex.gitprac.repository.qna.QnaReplyMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class QnaBoardService {
 
     private final QnaBoardMapper qnaBoardMapper;
+    private final QnaReplyMapper qnaReplyMapper;
     // 글 갯수
     public int boardCount(){
         return qnaBoardMapper.boardCount();
@@ -59,4 +62,23 @@ public class QnaBoardService {
 
     // 일지 조회 (showRecord 팝업창에서 사용)
     // public RecBoardDTO showRecord( String writer ){ RecBoardDTO rto = qnaBoardMapper.showRecord(writer); return rto; }
+
+    // 답변 작성 + isAnswered 컬럼의 값 변경
+    public int replyInsert( int postNo, String writer, String content ){
+        int result = 0;
+
+        if( qnaReplyMapper.replyInsert(postNo, writer, content) == 1 ){
+            qnaBoardMapper.isAnsweredChange(postNo);
+            result = 1;
+        }
+
+        return result;
+    }
+
+    // 답변 리스트 조회
+    public QnaReplyDTO replyList( int postNo ){
+        QnaReplyDTO rto = qnaReplyMapper.replySelect(postNo);
+
+        return rto;
+    }
 }

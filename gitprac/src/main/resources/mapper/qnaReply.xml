@@ -3,5 +3,12 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ex.gitprac.repository.qna.QnaReplyMapper">	
-
+  <!-- 답변 작성 -->
+  <insert id="replyInsert">
+    insert into qna_reply values(#{postNo}, qna_reply_seq.nextval, #{writer}, #{content}, sysdate)
+  </insert>
+  <!-- 답변 조회 -->
+  <select id="replySelect" resultType="com.ex.gitprac.data.qna.QnaReplyDTO">
+    select * from qna_reply where postNo=#{postNo}
+  </select>
 </mapper>

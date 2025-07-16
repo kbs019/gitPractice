@@ -31,4 +31,7 @@ public interface QnaBoardMapper {
 
     // 일지 조회
     // public RecBoardDTO recordSelect(String writer);
+
+    // 답변 작성에 의해 isAnswered 컬럼의 값 변경
+    public void isAnsweredChange(int postNo);
 }

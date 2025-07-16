@@ -43,4 +43,9 @@
   <!-- <select id="recordSelect" resultType="com.ex.gitprac.data.rec.RecBoardDTO">
     select * from rec_board where writer=#{writer}
   </select> -->
+
+  <!-- 답변 작성 시, isAnswered 컬럼값 변경 -->
+  <update id="isAnsweredChange">
+    update qna_board set isAnswered=1 where postNo=#{postNo}
+  </update>
 </mapper>
