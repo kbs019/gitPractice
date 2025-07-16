@@ -17,8 +17,8 @@ public class UserService {
         return userMapper.userInsert(userDTO);
     }
     // 로그인 체크
-    public int loginCheck( String id, String pw) {
-        int result = userMapper.loginCheck(id, pw);
-        return result;
+    public UserDTO loginCheck( String id, String pw) {
+
+        return userMapper.loginCheck(id, pw);
     }
 }

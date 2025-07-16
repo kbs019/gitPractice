@@ -1,5 +1,6 @@
 package com.ex.gitprac.data.user;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.Data;
@@ -10,7 +11,7 @@ public class UserDTO {
     private String pw;              // 패스워드
     private String nick;            // 닉네임
     private String name;            // 이름
-    private LocalDateTime birth;    // 생년월일
+    private LocalDate birth;    // 생년월일
     private LocalDateTime reg;      // 가입날짜
     private String email;           // 이메일
     private String phone;           // 휴대폰

@@ -28,9 +28,9 @@ public class UserController {
     @PostMapping("login")
     public String loginForm( @RequestParam("id") String id, @RequestParam("pw") String pw, HttpSession session ) {
 
-        int result = userService.loginCheck(id, pw);
-        if( result == 1 ) {
-            session.setAttribute("sid", id);
+        UserDTO udto = userService.loginCheck(id, pw);
+        if( udto != null ) {
+            session.setAttribute("users", udto);
         }
         return "user/loginPro";
     } 

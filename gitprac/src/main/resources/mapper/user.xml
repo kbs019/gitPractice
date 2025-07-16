@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ex.gitprac.repository.user.UserMapper">	
+
+    <insert id="userinsert">
+        insert into users values(#{id}, #{pw}, #{nick}, #{username}, #{birth}, #{email}, #{phone}, #{carrier}, sysdate)
+    </insert>
+    <select id="loginCheck" resultType="com.ex.gitprac.data.user.UserDTO">
+        select * from users where id=#{id} and pw=#{pw}
+    </select>
+</mapper>
