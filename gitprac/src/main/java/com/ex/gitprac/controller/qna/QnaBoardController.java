@@ -86,11 +86,13 @@ public class QnaBoardController {
         String newName = UUID.randomUUID().toString().replace("-", "")+originalName;
         // 현재 프로젝트 내의 이미지 파일을 저장할 폴더의 경로를 지정
         String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\qnaUpload\\";
+        // 브라우저가 접근할 수 있는 URL 경로
+        String imgWebPath = "/qnaUpload/";
         
         // 새로 생성된 이름과 경로를 qto 객체에 대입
         qto.setOriginalName(originalName);
         qto.setImgName(newName);
-        qto.setImgPath(uploadPath);
+        qto.setImgPath(imgWebPath);
 
         // 경로와 파일명을 사용하여 File 객체 생성
         File f = new File(uploadPath + newName);
@@ -161,6 +163,14 @@ public class QnaBoardController {
     // delete
     @GetMapping("delete")
     public String delete( @ModelAttribute("pageNum") int pageNum, @RequestParam("postNo") int postNo, Model model ){
+        QnaBoardDTO qto = qnaBoardService.showContent(postNo);
+
+        String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\qnaUpload\\";
+        String uploadName = qto.getImgName();
+
+        File f = new File(uploadPath + uploadName);
+        f.delete();
+
         qnaBoardService.postDelete(postNo);
         return "redirect:/qna/list";
     }
@@ -171,5 +181,12 @@ public class QnaBoardController {
         // RecBoardDTO rto = qnaBoardService.recordSelect(nick);
         // model.addAttribute("rto", rto);
         return "/qna/record";
+    }
+
+    // ajax 로 넘어온 댓글 작성
+    @PostMapping("replyInsert")
+    //@ResponseBody
+    public String replyInsert(){
+        return "";
     }
 }

@@ -33,28 +33,35 @@
                 조회수 | <span th:text="${qto.views}"></span>
             </div>
             <div class="content-reg-wrapper">
-                작성일자 | <span th:text="${#temporals.format(qto.reg, 'yy-MM-dd HH:mm')}"></span>
+                작성일자 | <span th:text="${#temporals.format(qto.reg, 'yy/MM/dd HH:mm')}"></span>
             </div>
         </div>    
         <div class="content-image-wrapper" th:if="${qto.originalName != null}">
-            <img th:src="${qto.imgPath}+${qto.imgName}">    <!-- <img th:src="${qto.imgPath+'/'+qto.imgName}"> -->
+            <img th:src="@{${qto.imgPath}+${qto.imgName}}">    
         </div>
         <div class="content-content-wrapper">
             <div th:text="${qto.content}"></div>
         </div>
         <div class="content-btn-wrapper" th:if="${qto.showRecord == 1}">    <!-- 이 부분 이렇게 한번에 진행이 될까? -->
-            <button onclick="showRecord()">일지 보기</button>
+            <span th:if="${session.users.role == 1}">
+                <button onclick="showRecord()">일지 보기</button>
+            </span>
         </div>
     </div>
 
-    <!-- <div class="reply-block">
+    <div class="reply-block">
         <div class="reply-insert-form">
-            <form th:action>
-
+            <form id="replyInsertForm">
+                <input type="hidden" id="postNo" th:value="${dto.postNo}">
+                <input type="hidden" id="writer" th:value="${session.users.nick}">
+                <textarea id="replyContent" required></textarea>
+                <button type="button" id="replyInsertBtn">답변 작성</button>
             </form>
         </div>
-    </div> -->
-
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- 일지 보기 버튼 클릭 시, 팝업창 open -->
     <script th:inline="javascript">
         function showRecord(){
             let writer = /*[['${qto.writer}']]*/ 'anonymous';
@@ -64,6 +71,30 @@
                 'width=600, height=400, left=100, top=100'
             );
         }
+    </script>
+    <!-- 답변 작성 클릭 시, ajax 실행 -->
+    <script>
+        $(document).ready(function(){
+            $('#replyInsertBtn').click(function(){
+                $.ajax({
+                    url : '/qna/replyInsert',
+                    type : 'post',
+                    data : {
+                        postNo : $('#postNo').val(),
+                        writer : $('#writer').val(),
+                        content : $('#replyContent').val()
+                    },
+                    success : function( result ){
+                        alert('답변이 작성되었습니다.');
+                        content : $('#replyContent').val('');
+                    },
+                    error : function( xhr, status, error ){
+                        console.log(error + '  발생');
+                        alert('오류 발생');
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
