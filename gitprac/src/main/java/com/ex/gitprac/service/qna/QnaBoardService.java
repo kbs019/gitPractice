@@ -46,4 +46,9 @@ public class QnaBoardService {
     public QnaBoardDTO showContent( int postNo ){
         return qnaBoardMapper.postContent(postNo);
     }
+
+    // 글 수정 (updatePro() 에서 사용)
+    public int postUpdate( QnaBoardDTO qto ){
+        return qnaBoardMapper.postUpdate(qto);
+    }
 }
