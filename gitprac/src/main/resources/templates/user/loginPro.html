@@ -2,7 +2,7 @@
     <span th:if="${session.users.role} == 0">
         <script>
             alert('메인1로 이동');
-            window.location='@{/qna/list}';
+            window.location='/qna/list';
         </script>
     </span>
     <span th:if="${session.users.role} == 1">

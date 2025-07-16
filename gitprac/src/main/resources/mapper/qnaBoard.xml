@@ -10,13 +10,13 @@
   </select>
   <!-- 글 목록 -->
   <select id="boardList" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
-    <@[CDATA[
+    <![CDATA[
     select * from ( select b.*, rownum r from ( select * from qna_board order by postNo desc ) b ) where r >= #{start} and r <= #{end}
     ]]>
   </select>
 
   <!-- 글 작성 -->
-  <insert id="postInsert" resultType="int" parameterType="com.ex.gitprac.data.qna.QnaBoardDTO">
+  <insert id="postInsert" parameterType="com.ex.gitprac.data.qna.QnaBoardDTO">
     insert into qna_board values( qna_board_seq.nextval, #{writer}, #{title}, #{content}, #{imgName}, #{imgPath}, #{originalName}, #{showRecord}, sysdate, 0, 0, 0 )
   </insert>
 
@@ -30,7 +30,7 @@
   </select>
 
   <!-- 글 수정 -->
-  <update id="postUpdate" returnType="int" parameterType="com.ex.gitprac.data.qna.QnaBoardDTO">
+  <update id="postUpdate" parameterType="com.ex.gitprac.data.qna.QnaBoardDTO">
     update qna_board set title=#{title}, writer=#{writer}, content=#{content}, imgName=#{imgName}, imgPath=#{imgPath}, originalName=#{originalName}, showRecord=#{showRecord} where postNo=#{postNo}
   </update>
 
