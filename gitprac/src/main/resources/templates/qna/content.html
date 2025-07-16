@@ -46,12 +46,24 @@
             <button onclick="showRecord()">일지 보기</button>
         </div>
     </div>
-<script>
-    function showRecord(){
-        window.open(
-            '/qna/showRecord', 'popupRecord', 'width=600, height=400, left=100, top=100'
-        );
-    }
-</script>
+
+    <div class="reply-block">
+        <div class="reply-insert-form">
+            <form th:action>
+
+            </form>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        function showRecord(){
+            let writer = /*[['${qto.writer}']]*/ 'anonymous';
+            window.open(
+                '/qna/showRecord?nick=' + writer,
+                'popupRecord',
+                'width=600, height=400, left=100, top=100'
+            );
+        }
+    </script>
 </body>
 </html>

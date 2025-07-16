@@ -6,6 +6,17 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <span th:if="${result == 1}">
+        <script>
+            alert("수정이 완료되었습니다.");
+            window.location="/qna/content?postNo=[[${qto.postNo}]]&pageNum=[[${pageNum}]]";
+        </script>
+    </span>
+    <span th:unless="${result == 1}">
+        <script>
+            alert("수정에 실패하였습니다.");
+            history.go(-1);
+        </script>
+    </span>
 </body>
 </html>

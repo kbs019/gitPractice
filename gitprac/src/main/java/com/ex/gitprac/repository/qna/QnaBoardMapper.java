@@ -25,4 +25,10 @@ public interface QnaBoardMapper {
 
     // 글 수정
     public int postUpdate(QnaBoardDTO qto);
+
+    // 글 삭제
+    public void postDelete(int postNo);
+
+    // 일지 조회
+    // public RecBoardDTO recordSelect(String writer);
 }

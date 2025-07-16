@@ -134,10 +134,42 @@ public class QnaBoardController {
     @PostMapping("update")
     public String updatePro( @RequestParam("image") MultipartFile mf, @ModelAttribute("pageNum") int pageNum, QnaBoardDTO qto, Model model ){
 
-        if(mf.getOriginalFilename() == null){
-            
+        String newName = UUID.randomUUID().toString().replace("-", "") + mf.getOriginalFilename();
+        String filePath = new File("").getAbsolutePath() + "\\src\\main\\resources\\static\\qnaUpload\\";
+        String originalFileName = mf.getOriginalFilename();
+        String orgName = qto.getOriginalName();
+
+        if(originalFileName != null){
+            File f = new File(qto.getImgPath()+"/"+qto.getImgName());
+            f.delete();
+
+            qto.setImgName(newName);
+            qto.setImgPath(filePath);
+            qto.setOriginalName(originalFileName);
+        } else {    // 입력받은 새로운 파일이 없다면,
+            qto.setImgName(qto.getImgName());
+            qto.setImgPath(qto.getImgPath());
+            qto.setOriginalName(orgName);
         }
 
+        int result = qnaBoardService.postUpdate(qto);
+        model.addAttribute("result", result);
+
         return "qna/updatePro";
+    }
+
+    // delete
+    @GetMapping("delete")
+    public String delete( @ModelAttribute("pageNum") int pageNum, @RequestParam("postNo") int postNo, Model model ){
+        qnaBoardService.postDelete(postNo);
+        return "redirect:/qna/list";
+    }
+
+    // showRecord 팝업창 화면 구성
+    @GetMapping("showRecord")
+    public String showRecord( @RequestParam("nick") String nick, Model model ){
+        // RecBoardDTO rto = qnaBoardService.recordSelect(nick);
+        // model.addAttribute("rto", rto);
+        return "/qna/record";
     }
 }

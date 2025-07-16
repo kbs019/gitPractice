@@ -51,4 +51,12 @@ public class QnaBoardService {
     public int postUpdate( QnaBoardDTO qto ){
         return qnaBoardMapper.postUpdate(qto);
     }
+
+    // 글 삭제 (delete() 에서 사용)
+    public void postDelete( int postNo ){
+        qnaBoardMapper.postDelete(postNo);
+    }
+
+    // 일지 조회 (showRecord 팝업창에서 사용)
+    // public RecBoardDTO showRecord( String writer ){ RecBoardDTO rto = qnaBoardMapper.showRecord(writer); return rto; }
 }
