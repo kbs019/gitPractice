@@ -134,7 +134,9 @@ public class QnaBoardController {
     @PostMapping("update")
     public String updatePro( @RequestParam("image") MultipartFile mf, @ModelAttribute("pageNum") int pageNum, QnaBoardDTO qto, Model model ){
 
-        
+        if(mf.getOriginalFilename() == null){
+            
+        }
 
         return "qna/updatePro";
     }

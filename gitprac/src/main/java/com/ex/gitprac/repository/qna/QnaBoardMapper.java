@@ -22,4 +22,7 @@ public interface QnaBoardMapper {
     public void viewsUp(int postNo);
     // 글 내용
     public QnaBoardDTO postContent(int postNo);
+
+    // 글 수정
+    public int postUpdate(QnaBoardDTO qto);
 }
