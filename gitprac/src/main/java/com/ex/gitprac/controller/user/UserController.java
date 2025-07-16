@@ -41,11 +41,11 @@ public class UserController {
     }
 
     @PostMapping("insert")
-    public String userInsert(UserDTO dto, Model model) {
+    public String userInsert(UserDTO udto, Model model) {
 
-        int result = userService.userInsert(dto);
+        int result = userService.userInsert(udto);
         model.addAttribute("result", result);
-        return "/user/isertPro";
+        return "user/insertPro";
     }
     
 }
