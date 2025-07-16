@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <div th:replace="~{fragments/headers.html :: headersFragment}"></div>
+    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
     <div align="center">
         <table width="800">
             <tr>
@@ -35,7 +35,7 @@
                 <td align="center">
                     <a th:href="@{|/qna/content?postNo=${dto.postNo}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
                 </td>
-                <td th:text="${dto.wrtier}" align="center"></td>
+                <td th:text="${dto.writer}" align="center"></td>
                 <td align="center">
                     <span th:if="${dto.isAnswered == 0}">
                         <span>답변 대기중</span>

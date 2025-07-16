@@ -1,31 +1,32 @@
 <div th:fragment="headerFragment">
+    <span th:if="${session.users != null}">
     <header>
         <div id="header">
             <div id="header_top">
                 <a th:href="@{/mem/logout}">로그아웃</a>
-                <span th:if="${seesion.user.role == 0}">
+                <span th:if="${session.users.role} == 0">
                     <a th:href="@{/mem/myPage}">마이페이지</a>
                 </span>
-                <span th:if="${session.user.role == 1}">
+                <span th:if="${session.users.role} == 1">
                     <A th:href="@{/mem/vetPage}">수의사 페이지</A>
                 </span>
-                <span th:if="${session.user.role == 2}">
+                <span th:if="${session.users.role} == 2">
                     <a th:href="@{/admin/adminPage}">관리자 페이지</a>
                 </span>
             </div>
 
             <div id="header_middle">
-                <span th:if="${session.user.role == 0}">
+                <span th:if="${session.users.role} == 0">
                     <a th:href="@{/diary/main}">
                         <h1>하루犬과</h1>
                     </a>
                 </span>
-                <span th:if="${session.user.role == 1}">
+                <span th:if="${session.users.role} == 1">
                     <a th:href="@{/mem/vetPage}">
                         <h1>하루犬과</h1>
                     </a>
                 </span>
-                <span th:if="${session.user.role == 2}">
+                <span th:if="${session.users.role} == 2">
                     <a th:href="@{/admin/adminPage}">
                         <h1>하루犬과</h1>
                     </a>
@@ -36,10 +37,17 @@
                 <ul>
                     <li><a th:href="@{/diary/main}">다이어리</a></li>
                     <li><a th:href="@{/rec/main}">일지</a></li>
-                    <li><a th:href="@{/qna/main}">상담 게시판</a></li>
+                    <li><a th:href="@{/qna/list}">상담 게시판</a></li>
                     <li><a th:href="@{/comu/main}">자유 게시판</a></li>
                 </ul>
             </div>
         </div>
     </header>
+    </span>
+    <span th:if="${session.users == null}">
+        <script>
+            alert("로그인이 해제되었습니다.");
+            window.location="/user/login";
+        </script>>
+    </span>
 </div>
