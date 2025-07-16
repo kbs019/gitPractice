@@ -74,7 +74,7 @@ public class QnaBoardController {
     @PostMapping("write")
     public String write( @RequestParam("image") MultipartFile mf, QnaBoardDTO qto, Model model, HttpSession session ){
         // 세션에 저장된 user 객체 꺼내기
-        UserDTO user = (UserDTO) session.getAttribute("user");
+        UserDTO user = (UserDTO) session.getAttribute("users");
         // user 객체의 nick 컬럼의 값을 꺼내어 writer 에 대입
         String writer = user.getNick();
         // writer 를 qto 객체에 저장

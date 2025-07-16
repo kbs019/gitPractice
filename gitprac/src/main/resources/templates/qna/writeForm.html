@@ -6,7 +6,14 @@
     <title>Document</title>
 </head>
 <body>
-    <div th:replace="~{fragments/headers.html :: headersFragment}"></div>
+    <span th:if="${session.users == null}">
+        <script>
+            alert("로그인이 필요합니다.");
+            window.location="/user/login";
+        </script>
+    </span>
+    <span th:if="${session.users != null}">
+    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
     <div class="body">
         <div class="body-top" align="center">
             <h2>글 작성</h2>
@@ -20,7 +27,7 @@
                         <input type="text" id="title" name="title" required>
                     </div>
                     <div class="writer-wrapper">
-                        <!--<input type="hidden" name="writer" th:value="${session.users.nick}">-->
+                        <input type="hidden" name="writer" th:value="${session.users.nick}">
                         <span>작성자 : <span th:text="${session.users.nick}"></span></span>
                     </div>
                     <div class="image-wrapper">
@@ -44,12 +51,13 @@
                             <button type="submit">업로드</button>
                         </span>
                         <span class="cancel-button">
-                            <button onclick="window.location='history.go(-1);'">취소</button>
+                            <button onclick="history.go(-1);">취소</button>
                         </span>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+    </span>
 </body>
 </html>
