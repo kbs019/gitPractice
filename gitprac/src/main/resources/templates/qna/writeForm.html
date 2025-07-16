@@ -6,13 +6,13 @@
     <title>Document</title>
 </head>
 <body>
-    <span th:if="${session.users == null}">
+    <!-- <span th:if="${session.users == null}">
         <script>
             alert("로그인이 필요합니다.");
             window.location="/user/login";
         </script>
-    </span>
-    <span th:if="${session.users != null}">
+    </span> -->
+    <!-- <span th:if="${session.users != null}"> -->
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
     <div class="body">
         <div class="body-top" align="center">
@@ -58,6 +58,6 @@
             </form>
         </div>
     </div>
-    </span>
+    <!-- </span> -->
 </body>
 </html>

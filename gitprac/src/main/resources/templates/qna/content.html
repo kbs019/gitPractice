@@ -37,7 +37,7 @@
             </div>
         </div>    
         <div class="content-image-wrapper" th:if="${qto.originalName != null}">
-            <img th:src="${qto.imgPath}.replace('\', '/')+${qto.imgName}">    <!-- <img th:src="${qto.imgPath+'/'+qto.imgName}"> -->
+            <img th:src="${qto.imgPath}+${qto.imgName}">    <!-- <img th:src="${qto.imgPath+'/'+qto.imgName}"> -->
         </div>
         <div class="content-content-wrapper">
             <div th:text="${qto.content}"></div>
