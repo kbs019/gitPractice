@@ -222,7 +222,4 @@ public class QnaBoardController {
 
         return result;
     }
-
-    // 01012345678
-    // 123456789ㄴㅇㅀ;ㅣㅏㅓ
 }

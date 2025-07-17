@@ -10,12 +10,12 @@
 <select id="countDiary" resultType="int">
 SELECT * FROM DIARY WHERE WRITER = #{writer}
 </select>
-<select id="listDiary" resultType="com.ex.data.diary.DiaryDTO">
+<select id="listDiary" resultType="com.ex.gitprac.data.diary.DiaryDTO">
 <![CDATA[
   SELECT * FROM (SELECT B.*, ROWNUM R FROM (SELECT * FROM DIARY WHERE WRITER = #{writer} ORDER BY DIARY_NO DESC) B) WHERE R >= #{start} AND R <= #{end}
 ]]>
 </select>
-<select id="contentDiary" resultType="com.ex.data.diary.DiaryDTO">
+<select id="contentDiary" resultType="com.ex.gitprac.data.diary.DiaryDTO">
 SELECT * FROM DIARY WHERE DIARY_NO = #{diaryNo}
 </select>
 </mapper>
