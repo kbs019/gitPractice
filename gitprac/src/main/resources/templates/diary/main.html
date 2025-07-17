@@ -1,9 +1,19 @@
 <!-- 여기에는 헤더 인클루드 -->
 
-<div id="formArea"></div>
 <!-- <div>여기는 달력</div> --> 
+<button id="calendarBtn">달력 펼치기</button>
+<div id="calendar"></div>
+
+
+<div id="formArea"></div>
 <button id="insert">글 쓰기</button>
 <!-- <div>여기는 글 목록 출력</div> -->
+<div th:if="${ddto == null}">
+    등록된 게시글이 없습니다.<br>
+    게시글을 작성해주세요~
+</div>
+<div th:if=""></div>
+
 <div>
     <table>
         <tr>
@@ -15,12 +25,25 @@
     </table>
 </div>
 <script>
+    document.getElementById("calendarBtn").onclick = () =>{
+        // 버튼 추가
+        const addCalendar = document.createElement("form");
+        addCalendar.setAttribute("action", "/diary/insert");
+        addCalendar.setAttribute("method", "post");
+        addCalendar.innerHTML = 
+        `
+        <input type="date" name="startDate"/>
+        <input type="date" name="endDate"/>
+        `;
+        document.getElementById("calendar").appendChild(addCalendar);
+    };
+
     document.getElementById("insert").onclick = () => {
         // 버튼 숨기기
         document.getElementById("insert").style.display = "none";
 
         const insertForm = document.createElement("form");
-        insertForm.setAttribute("action", "/board/insert");
+        insertForm.setAttribute("action", "/diary/insert");
         insertForm.setAttribute("method", "multi-part/form");
         insertForm.setAttribute("enctype", "multipart/form-data");
 
