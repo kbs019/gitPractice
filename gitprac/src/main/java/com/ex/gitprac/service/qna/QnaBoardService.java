@@ -1,5 +1,6 @@
 package com.ex.gitprac.service.qna;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -57,6 +58,7 @@ public class QnaBoardService {
 
     // 글 삭제 (delete() 에서 사용)
     public void postDelete( int postNo ){
+        qnaReplyMapper.allReplyDelete(postNo);          // 여기 게시글 삭제할 때, 모든 답변 삭제 기능 추가
         qnaBoardMapper.postDelete(postNo);
     }
 
@@ -76,9 +78,13 @@ public class QnaBoardService {
     }
 
     // 답변 리스트 조회
-    public QnaReplyDTO replyList( int postNo ){
-        QnaReplyDTO rto = qnaReplyMapper.replySelect(postNo);
+    public List<QnaReplyDTO> replySelect( int postNo ){
+        
+        return qnaReplyMapper.replySelect(postNo);
+    }
 
-        return rto;
+    // 답변 삭제
+    public int replyDelete( int replyNo ){
+        return qnaReplyMapper.replyDelete(replyNo);
     }
 }

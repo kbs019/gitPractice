@@ -203,10 +203,26 @@ public class QnaBoardController {
     @PostMapping("replyList")
     public String replyList( @RequestParam("postNo") int postNo, Model model ){
 
-        QnaReplyDTO rto = qnaBoardService.replyList(postNo);
+        List<QnaReplyDTO> list = qnaBoardService.replySelect(postNo);
 
-        model.addAttribute("rto", rto);
+        model.addAttribute("list", list);
 
         return "/qna/replyList";
     }
+
+    // 답변 삭제
+    @PostMapping("replyDelete")
+    @ResponseBody
+    public String replyDelete( @RequestParam("replyNo") int replyNo ){
+        String result = "삭제를 실패하였습니다.";
+
+        if( qnaBoardService.replyDelete(replyNo) == 1 ){
+            result = "삭제를 완료하였습니다.";
+        }
+
+        return result;
+    }
+
+    // 01012345678
+    // 123456789ㄴㅇㅀ;ㅣㅏㅓ
 }

@@ -4,4 +4,23 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ex.gitprac.repository.diary.DiaryMapper">
 
+<insert id="insertDiary"> 
+  INSERT INTO DIARY VALUES(DIARY_SEQ_NEXTVAL, #{writer}, #{content}, SYSDATE, #{imgName}, #{imgPath}, #{originalName}, 0);
+</insert>
+<select id="countDiary" resultType="int">
+SELECT * FROM DIARY WHERE WRITER = #{writer}
+</select>
+<select id="listDiary" resultType="com.ex.data.diary.DiaryDTO">
+<![CDATA[
+  SELECT * FROM (SELECT B.*, ROWNUM R FROM (SELECT * FROM DIARY WHERE WRITER = #{writer} ORDER BY DIARY_NO DESC) B) WHERE R >= #{start} AND R <= #{end}
+]]>
+</select>
+<select id="contentDiary" resultType="com.ex.data.diary.DiaryDTO">
+SELECT * FROM DIARY WHERE DIARY_NO = #{diaryNo}
+</select>
 </mapper>
+<!-- 
+select * from (select b.*, rownum r from 
+(select * from diary order by ) b) 
+where r >= #{start} and r <= #{end}
+ -->
