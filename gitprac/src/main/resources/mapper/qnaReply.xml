@@ -9,6 +9,14 @@
   </insert>
   <!-- 답변 조회 -->
   <select id="replySelect" resultType="com.ex.gitprac.data.qna.QnaReplyDTO">
-    select * from qna_reply where postNo=#{postNo}
+    select * from qna_reply where postNo=#{postNo} order by reg desc
   </select>
+  <!-- 답변 삭제 -->
+  <delete id="replyDelete">
+    delete from qna_reply where replyNo=#{replyNo}
+  </delete>
+  <!-- 게시글 삭제 시, 해당 게시글의 모든 답변 삭제 -->
+  <delete id="allReplyDelete">
+    delete from qna_reply where postNo=#{postNo}
+  </delete>
 </mapper>
