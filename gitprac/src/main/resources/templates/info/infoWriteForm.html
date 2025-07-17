@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+    <div class="">
+        <div class="" align="center">
+            <h2>글작성</h2>
+            <hr width="400" align="center"> 
+        </div>
+        <div class="">
+            <form th:action="@{/info/write}" method="post" enctype="multipart/form-data">
+                <div class="writeForm-wrapper" align="center">
+                    <div class="">
+                        <label for="title">글 제목</label>
+                        <input type="text" id="title" name="title" required />
+                    </div>
+                    <div class="">
+                        <input type="hidden" name="writer" th:value="${session.users.nick}"/>
+                        <span>작성자 <span th:text="${session.users.nick}"></span></span>
+                    </div>
+                    <div class="">
+                        <label for="content">글 내용</label>
+                        <textarea id="content" name="content" required></textarea>
+                    </div>
+                    <div class="writePage-button">
+                        <span class="submit-button">
+                            <button type="submit">업로드</button>
+                        </span>
+                        <span class="cancel-button">
+                            <button onclick="history.go(-1)">취소</button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

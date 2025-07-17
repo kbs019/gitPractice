@@ -2,6 +2,28 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ex.gitprac.repository.info.InfoBoardDTO">
+<mapper namespace="com.ex.gitprac.repository.info.InfoBoardMapper">
+  <sql id="whereNum">
+    where num = #{num}
+  </sql>
 
+  <!-- 게시글 리스트 -->
+  <select id="infoBoardList" resultType="com.ex.gitprac.data.info.InfoBoardDTO">
+    <![CDATA[
+      select * from (select b.*, rownum r from(select * from info_board order by post_no desc) b) where r >= #{start} and r <= ${end} 
+    ]]>
+  </select>
+  <!-- 게시글 카운트 -->
+  <select id="infoBoardCount" resultType="int">
+    select count(*) from info_board
+  </select>
+  <!-- 글쓰기 -->
+  <insert id="infoBoardInsert">
+    insert into info_board value(seq_info_board.nextval, #{writer}, #{title}, #{content}, sysdate, #{category})
+  </insert>
+  <!-- 게시글 조회 -->
+  <select id="infoBoardContent" resultType="com.ex.gitprac.data.info.InfoBoardDTO">
+    select * from info_board
+    <include refid="whereNum"></include>
+  </select>
 </mapper>
