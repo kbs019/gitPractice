@@ -3,6 +3,7 @@ package com.ex.gitprac.controller.diary;
 import java.io.File;
 import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -36,7 +37,41 @@ public class DiaryController {
     private final DiaryService diaryService;
 
     @GetMapping("main")
-    public String main(){
+    public String main(HttpSession session, Model model, @RequestParam(name="pageNum", defaultValue="1" )int pageNum) {
+        
+        UserDTO udto = (UserDTO)session.getAttribute("users");
+        String writer = udto.getNick();
+        int pageSize = 6;
+		int currentPage = pageNum;
+		int start = (currentPage - 1)*pageSize + 1;
+		int end = currentPage * pageSize;
+		int count = diaryService.countDiary(writer);
+		
+		List<DiaryDTO> list = null;
+		if( count > 0) {
+			list = diaryService.listDiary(start, end, writer);
+		}else {
+			list = Collections.EMPTY_LIST;
+		}
+		int pageCount = count/pageSize + (count%pageSize == 0 ? 0 : 1);
+		int startPage = (int)((currentPage - 1)/10)*10 + 1;
+		int pageBlock = 10;
+		int endPage = startPage+pageBlock - 1 ;
+		if(endPage > pageCount) {
+			endPage = pageCount;
+		}
+		
+		model.addAttribute("pageCount", pageCount);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("pageBlock", pageBlock);
+		model.addAttribute("endPage", endPage);
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("pageNum", pageNum);
+		model.addAttribute("start", start);
+		model.addAttribute("end", end);
+		model.addAttribute("count", count);
+		model.addAttribute("list", list);
+        
         return "diary/main";
     }
 
@@ -73,7 +108,7 @@ public class DiaryController {
     }
 
     @GetMapping("list")
-    public List<Map<String, Object>> list(HttpSession session,  Model model) {
+    public List list(Model model, @RequestParam(name="pageNum", defaultValue="1" )int pageNum) {
         
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         
