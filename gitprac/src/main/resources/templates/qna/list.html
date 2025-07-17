@@ -31,20 +31,20 @@
                 <th width="150">답변 여부</th>
                 <th width="200">작성일</th>
             </tr>
-            <tr height="30" th:each="dto : ${list}">
+            <tr height="30" th:each="qto : ${list}">
                 <td align="center">
-                    <a th:href="@{|/qna/content?postNo=${dto.postNo}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
+                    <a th:href="@{|/qna/content?postNo=${qto.postNo}&pageNum=${pageNum}|}" th:text="${qto.title}"></a>
                 </td>
-                <td th:text="${dto.writer}" align="center"></td>
+                <td th:text="${qto.writer}" align="center"></td>
                 <td align="center">
-                    <span th:if="${dto.isAnswered == 0}">
+                    <span th:if="${qto.isAnswered == 0}">
                         <span>답변 대기중</span>
                     </span>
-                    <span th:if="${dto.isAnswered == 1}">
+                    <span th:if="${qto.isAnswered == 1}">
                         <span>답변 완료</span>
                     </span>
                 </td>
-                <td th:text="${#temporals.format(dto.reg, 'yy/MM/dd HH:mm')}" align="center"></td>
+                <td th:text="${#temporals.format(qto.reg, 'yy/MM/dd HH:mm')}" align="center"></td>
             </tr>
         </table>
     </div>
