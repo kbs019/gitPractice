@@ -1,7 +1,13 @@
-<!-- <table>
-    <tr>
-        <td>
-
-        </td>
-    </tr>
-</table> -->
+<div class="reply-list">
+    <span th:each="rto : ${list}" class="reply-item">
+        <div class="reply-content">
+            <div th:text="${rto.content}"></div>
+            <span th:text="${rto.writer}"></span>
+            <span th:text="${#temporals.format(rto.reg, 'yy/MM/dd HH:mm')}"></span>
+        </div>
+        <input type="hidden" class="replyNo" th:value="${rto.replyNo}">
+        <span th:if="${session.users.nick == rto.writer or session.users.role == 2}">
+            <button class="replyDelete">삭제</button>
+        </span>
+    </span>
+</div>

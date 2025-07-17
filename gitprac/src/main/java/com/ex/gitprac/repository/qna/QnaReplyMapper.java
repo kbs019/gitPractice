@@ -1,5 +1,7 @@
 package com.ex.gitprac.repository.qna;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -12,5 +14,9 @@ public interface QnaReplyMapper {
     // 답변 작성
     public int replyInsert( @Param("postNo") int postNo, @Param("writer") String writer, @Param("content") String content );
     // 답변 리스트 조회
-    public QnaReplyDTO replySelect( int postNo );
+    public List<QnaReplyDTO> replySelect( int postNo );
+    // 답변 삭제
+    public int replyDelete( int replyNo );
+    // 게시글 삭제로 인한 해당 게시글의 모든 답변 삭제
+    public void allReplyDelete(int postNo);
 }
