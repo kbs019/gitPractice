@@ -9,8 +9,8 @@
     SELECT rec_seq.NEXTVAL FROM dual
   </selectKey>
   INSERT INTO rec (
-    rec_no, writer, pet_no, category, title, content, reg,
-    org_img_name, img_name, img_path
+    recNo, writer, petNo, category, title, content, reg,
+    orgImgName, imgName, imgPath
   ) VALUES (
     #{recNo}, #{writer}, #{petNo}, #{category}, #{title}, #{content}, SYSDATE,
     #{orgImgName, jdbcType=VARCHAR},
@@ -23,9 +23,9 @@
   <!-- ✅ 여기 줄바꿈 문제 수정함 -->
   <select id="findAll" resultType="com.ex.gitprac.data.rec.RecDTO">
     SELECT
-      rec_no AS recNo,
+      recNo,
       writer,
-      pet_no AS petNo,
+      petNo,
       category,
       title,
       content,
@@ -36,9 +36,9 @@
 
   <select id="findFiltered" resultType="com.ex.gitprac.data.rec.RecDTO">
     SELECT
-      rec_no AS recNo,
+      recNo,
       writer,
-      pet_no AS petNo,
+      petNo,
       category,
       title,
       content,
@@ -46,7 +46,7 @@
     FROM rec
     <where>
       <if test="petNo != null">
-        pet_no = #{petNo}
+        petNo = #{petNo}
       </if>
       <if test="startDate != null and endDate != null">
   <![CDATA[
@@ -77,15 +77,16 @@
 
   <select id="findByNo" resultType="com.ex.gitprac.data.rec.RecDTO">
   SELECT
-    rec_no AS recNo,
+    recNo,
     writer,
-    pet_no AS petNo,
+    petNo,
     category,
     title,
     content,
-    reg
+    reg,
+    imgPath
   FROM rec
-  WHERE rec_no = #{recNo}
+  WHERE recNo = #{recNo}
 </select>
 
 </mapper>

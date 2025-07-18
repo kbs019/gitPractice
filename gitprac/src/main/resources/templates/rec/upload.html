@@ -14,7 +14,7 @@
 <main class="rec-upload-container">
   <h2>✏️ 일지 작성</h2>
 
-  <form method="post" action="/rec/upload" enctype="multipart/form-data">
+  <form method="post" th:action="@{/rec/upload}" enctype="multipart/form-data">
 
     <!-- 작성자 (임시 하드코딩, 로그인 연동 시 변경 예정) -->
     <input type="hidden" name="writer" value="김가영" />
