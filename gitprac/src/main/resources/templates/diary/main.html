@@ -55,12 +55,34 @@
 </div>
 
 <!-- 글쓰기 폼 (숨김 상태) -->
-<div id="formArea" style="display:none; text-align:center; margin-top:20px;">
+<!-- <div id="formArea" style="display:none; text-align:center; margin-top:20px;">
     <form id="ajaxInsertForm" enctype="multipart/form-data">
         <input type="file" name="uploadFile" required><br>
+        <img id="previewImage" style="max-width: 200px; display: none;">
         <textarea name="content" placeholder="내용 입력" maxlength="200" style="width:300px; height:100px;"></textarea><br>
         <input type="hidden" name="diaryNo" id="diaryNo">
+        <input type="hidden" id="imgName" name="imgName">
+        <input type="hidden" id="imgPath" name="imgPath">
         <button type="button" id="submitBtn">등록</button>
+    </form>
+</div> -->
+
+<div id="formArea" style="display: none;">
+    <form id="ajaxInsertForm" method="post" enctype="multipart/form-data">
+        <input type="hidden" id="diaryNo" name="diaryNo">
+        <input type="hidden" id="imgName" name="imgName">
+        <input type="hidden" id="imgPath" name="imgPath">
+
+        <!-- 이미지 업로드 -->
+        <input type="file" id="uploadFile" name="uploadFile"><br>
+
+        <!-- 이미지 미리보기 -->
+        <img id="previewImage" style="max-width: 200px; display: none;"><br>
+
+        <!-- 텍스트 내용 -->
+        <textarea id="content" name="content" maxlength="200" placeholder="내용 입력"></textarea><br>
+
+        <button type="submit" id="submitBtn">등록</button>
     </form>
 </div>
 
@@ -77,16 +99,33 @@
         <p th:text="${d.content}"></p>
         <p th:text="${#temporals.format(d.reg, 'yyyy-MM-dd')}">z</p>
         <button th:attr="data-no=${d.diaryNo}" class="deleteBtn">삭제</button>
-        <button th:attr="data-no=${d.diaryNo}" th:attrappend=" data-content='${d.content}'" class="editBtn">수정</button>
-    </div>
+        <button 
+            th:attr="data-no=${d.diaryNo}" 
+            th:attrappend="
+                data-content='${d.content}' 
+                data-imgname='${d.imgName}' 
+                data-imgpath='${d.imgPath}'" 
+            class="editBtn">수정
+        </button>    </div>
 </div>
 
 <!-- 페이징 처리 -->
-
+<div class="paging" align="center" th:if="${count > 0}">
+    <span th:if="${startPage} > ${pageCount}">
+        <a th:href="@{|/diary/main?pageNum=${startPage - pageBlock}|}">[이전]</a>
+    </span>
+    <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <a th:href="@{|/diary/main?pageNum=${i}|}" th:text="'['+${i}+']'"></a>
+    </span>
+    <span th:if="${endPage} < ${pageCount}">
+        <a th:href="@{|/diary/main?pageNum=${startPage + pageBlock}|}">[다음]</a>
+    </span>
+</div>
 
 <script>
     $(function() {
         $('#writeBtn').click(function() {
+            $(this).hide();
             $('#formArea').toggle();
             $('#ajaxInsertForm')[0].reset();
             $('#diaryNo').val("");
@@ -96,7 +135,7 @@
         $('#submitBtn').click(function() {
             let form = $('#ajaxInsertForm')[0];
             let formData = new FormData(form);
-            let isUpdate = $('#diaryNo').val() !== "";
+            let isUpdate = $('#diaryNo').val() == "";
             let url = isUpdate ? '/diary/update' : '/diary/insert';
 
             $.ajax({
@@ -137,13 +176,26 @@
 
         $('.editBtn').click(function() {
             const no = $(this).data('no');
-            const content = $(this).attr('data-content');
+            const content = $(this).data('content');
+            const imgName = $(this).data('imgname');
+            const imgPath = $(this).data('imgpath');
 
             $('#formArea').show();
             $('#diaryNo').val(no);
             $('textarea[name="content"]').val(content);
             $('#submitBtn').text('수정');
+
+            // 이미지가 이미 업로드된 경우 표시
+            if (imgPath && imgName) {
+                const imgUrl = imgPath + imgName;
+                $('#previewImage').attr('src', imgUrl).show();
+                
+                // 기존 이미지 정보 hidden input으로 저장 (서버에 전달하기 위함)
+                $('#imgName').val(imgName);
+                $('#imgPath').val(imgPath);
+            }
         });
+
     });
 </script>
 

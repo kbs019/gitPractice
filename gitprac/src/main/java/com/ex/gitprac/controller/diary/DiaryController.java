@@ -1,6 +1,11 @@
 package com.ex.gitprac.controller.diary;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -133,11 +138,39 @@ public class DiaryController {
     }
 
     // 게시글 수정
-    @PostMapping("/update")
-    @ResponseBody
-    public String updateDiary(@ModelAttribute("dto") DiaryDTO dto) {
-        diaryService.updateDiary(dto);
-        return "updated";
+    @PostMapping("/diary/update")
+    public String updateDiary(@ModelAttribute DiaryDTO dto,
+                          @RequestParam(value = "uploadFile", required = false) MultipartFile uploadFile,
+                          Model model) {
+
+    // 기존 이미지 정보를 hidden input으로부터 받아온다고 가정
+    String existingImgName = dto.getImgName();
+    String existingImgPath = dto.getImgPath();
+
+    if (uploadFile == null || uploadFile.isEmpty()) {
+        // 새 파일 업로드 없을 경우 기존 이미지 유지
+        dto.setImgName(existingImgName);
+        dto.setImgPath(existingImgPath);
+    } else {
+        // 새 파일 업로드 처리
+        String fileName = uploadFile.getOriginalFilename();
+        String newName = UUID.randomUUID().toString().replace("-", "")+fileName;
+        String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\diaryUpload\\";
+        String uploadDir = "/diaryUpload/"; // 실제 경로로 설정
+        Path path = Paths.get(uploadDir, fileName);
+        try {
+            Files.copy(uploadFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            dto.setOriginalName(fileName);
+            dto.setImgName(newName);
+            dto.setImgPath(uploadDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+    diaryService.updateDiary(dto); // 서비스 호출
+    return "redirect:/diary/main";
+}
+
     
 }
