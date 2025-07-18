@@ -169,4 +169,12 @@
   <update id="updateIsAnswered">
     update qna_board set isAnswered = 0 where postNo=#{postNo}
   </update>
+
+
+  <!-- 관리자 페이지에서 list 출력 -->
+  <select id="listToAdmin" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
+    <![CDATA[
+    select * from ( select b.*, rownum r from ( select * from qna_board order by postNo desc ) b ) where r >= #{start} and r <= #{end}
+    ]]>
+  </select>
 </mapper>
