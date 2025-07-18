@@ -48,4 +48,57 @@
   <update id="isAnsweredChange">
     update qna_board set isAnswered=1 where postNo=#{postNo}
   </update>
+
+  <!-- 검색창 구현 -->
+    <!-- category 가 total 일 때, -->
+  <select id="searchListByTotal" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
+    <![CDATA[
+    select * from 
+      ( select b.*, rownum r from 
+        ( select * from qna_board 
+          where lower(title) like '%' || lower(trim(#{keyword})) || '%' 
+          or lower(content) like '%' || lower(trim(#{keyword})) || '%' 
+          or lower(writer) like '%' || lower(trim(#{keyword})) || '%' 
+          or lower(originalName) like '%' || lower(trim(#{keyword})) || '%' 
+          order by postNo desc 
+        ) b 
+      ) where r >= #{start} and r <= #{end}
+    ]]>
+  </select>
+    <!-- category 가 title 일 때, -->
+  <select id="searchListByTitle" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
+    <![CDATA[
+    select * from ( select b.*, rownum r from ( select * from qna_board where lower(title) like '%' || lower(trim(#{keyword})) || '%' order by postNo desc ) b ) where r >= #{start} and r <= #{end}
+    ]]>
+  </select>
+    <!-- category 가 content 일 때, -->
+  <select id="searchListByContent" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
+    <![CDATA[
+    select * from ( select b.*, rownum r from ( select * from qna_board where lower(content) like '%' || lower(trim(#{keyword})) || '%' order by postNo desc ) b ) where r >= #{start} and r <= #{end}
+    ]]>
+  </select>
+    <!-- category 가 titleAndContent 일 때, -->
+  <select id="searchListByTitleAndContent" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
+    <![CDATA[
+    select * from ( select b.*, rownum r from ( select * from qna_board where lower(title) like '%' || lower(trim(#{keyword})) || '%' or lower(content) like '%' || lower(trim(#{keyword})) || '%' order by postNo desc ) b ) where r >= #{start} and r <= #{end}
+    ]]>
+  </select>
+
+  <!-- 검색 결과에 대한 글갯수 조회 -->
+<select id="searchListCountByTotal" resultType="int">
+  select count(*) from qna_board 
+    where lower(title) like '%' || lower(trim(#{keyword})) || '%' 
+      or lower(content) like '%' || lower(trim(#{keyword})) || '%' 
+      or lower(writer) like '%' || lower(trim(#{keyword})) || '%' 
+      or lower(originalName) like '%' || lower(trim(#{keyword})) || '%'
+</select>
+<select id="searchListCountByTitle" resultType="int">
+  select count(*) from qna_board where lower(title) like '%' || lower(trim(#{keyword})) || '%' 
+</select>
+<select id="searchListCountByContent" resultType="int">
+  select count(*) from qna_board where lower(content) like '%' || lower(trim(#{keyword})) || '%' 
+</select>
+<select id="searchListCountByTitleAndContent" resultType="int">
+  select count(*) from qna_board where lower(title) like '%' || lower(trim(#{keyword})) || '%' or lower(content) like '%' || lower(trim(#{keyword})) || '%'
+</select>
 </mapper>

@@ -14,8 +14,16 @@ public class QnaReplyDTO {
 }
 /*
 create table qna_reply(
-    postNo      number,
-    replyNo     number,
-    writer
+    postNo          number,
+    replyNo         number,
+    writer          varchar2(20)        not null,
+    content         varchar2(4000)      not null,
+    reg             date                default sysdate,
+    constraint pk_qna_reply_01 primary key (replyNo),
+    constraint fk_qna_reply_01 foreign key (postNo) references qna_board (postNo)
 );
+
+create sequence qna_reply_seq nocache start with 1 increment by 1;
+
+commit;
 */

@@ -83,8 +83,43 @@ public class QnaBoardService {
         return qnaReplyMapper.replySelect(postNo);
     }
 
+    // 답변삭제 다시 진행해야함 -- 답글에 대한 postNo 조회 / 답변 삭제 / postNo 에 들어있는 replyNo 갯수 조회 / replyNo 갯수 0 이면, isAnswered 컬럼 0 으로 변경
     // 답변 삭제
     public int replyDelete( int replyNo ){
         return qnaReplyMapper.replyDelete(replyNo);
+    }
+
+    // 검색 결과에 따른 글목록 조회
+    public List<QnaBoardDTO> searchBoardList( String category, String keyword, int start, int end ){
+        List<QnaBoardDTO> list = new ArrayList<QnaBoardDTO>();
+
+        if( category.equals("total") ){
+            list = qnaBoardMapper.searchListByTotal(keyword, start, end);
+        } else if( category.equals("title") ){
+            list = qnaBoardMapper.searchListByTitle(keyword, start, end);
+        } else if( category.equals("content") ){
+            list = qnaBoardMapper.searchListByContent(keyword, start, end);
+        } else if( category.equals("titleAndContent") ){
+            list = qnaBoardMapper.searchListByTitleAndContent(keyword, start, end);
+        }
+
+        return list;
+    }
+
+    // 검색 결과에 따른 글갯수 조회
+    public int searchListCount( String category, String keyword ){
+        int count = 0;
+
+        if( category.equals("total") ){
+            count = qnaBoardMapper.searchListCountByTotal(keyword);
+        } else if( category.equals("title") ){
+            count = qnaBoardMapper.searchListCountByTitle(keyword);
+        } else if( category.equals("content") ){
+            count = qnaBoardMapper.searchListCountByContent(keyword);
+        } else if( category.equals("titleAndContent") ){
+            count = qnaBoardMapper.searchListCountByTitleAndContent(keyword);
+        }
+
+        return count;
     }
 }

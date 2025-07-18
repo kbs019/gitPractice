@@ -63,7 +63,7 @@ public class QnaBoardController {
         model.addAttribute("list", list);
         model.addAttribute("pageNum", pageNum);
 
-        return "/qna/list";
+        return "/qna/listPrac";
     }
 
     // 글작성 버튼을 눌렀을 때, 작동
@@ -221,5 +221,40 @@ public class QnaBoardController {
         }
 
         return result;
+    }
+
+    // 검색창 구현
+    @PostMapping("searchList")
+    public String searchList( @RequestParam(name="pageNum", defaultValue="1") int pageNum, @RequestParam("category") String category, @RequestParam("keyword") String keyword, Model model ){
+        int pageSize = 10;
+        int currentPage = pageNum;
+        int start = (currentPage - 1) * pageSize + 1;
+        int end = currentPage * pageSize;
+        int count = qnaBoardService.searchListCount(category, keyword);
+
+        List<QnaBoardDTO> list = null;
+        if( count > 0 ){
+            list = qnaBoardService.searchBoardList(category, keyword, start, end);
+        }else{
+            list = new ArrayList<QnaBoardDTO>();
+        }
+
+        int pageCount = (count/pageSize) + (count%pageSize == 0 ? 0 : 1);
+        int pageBlock = 10;
+        int startPage = (int) ((currentPage - 1) / pageBlock) * pageBlock + 1;
+        int endPage = startPage + pageBlock - 1;
+        if( endPage > pageCount ){
+            endPage = pageCount;
+        }
+
+        model.addAttribute("pageCount", pageCount);
+        model.addAttribute("pageBlock", pageBlock);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("count", count);
+        model.addAttribute("list", list);
+        model.addAttribute("pageNum", pageNum);
+
+        return "/qna/searchList";
     }
 }
