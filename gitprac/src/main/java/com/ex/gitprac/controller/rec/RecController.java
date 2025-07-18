@@ -112,7 +112,7 @@ public String saveRec(
             // }
 
             // 실제 저장
-            File fileToSave = new File(imgPath+imgName);
+            File fileToSave = new File(imgPath + imgName);
             mf.transferTo(fileToSave);
 
             // DTO에 정보 세팅
