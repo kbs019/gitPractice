@@ -103,7 +103,7 @@ public String saveRec(
             //                     "resources" + File.separator +
             //                     "static" + File.separator +
             //                     "recUpload";
-            String imgPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\recUpload\\";
+            String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\recUpload\\";
 
             // 폴더 없으면 생성
             // File uploadPath = new File(uploadDir);
@@ -112,7 +112,7 @@ public String saveRec(
             // }
 
             // 실제 저장
-            File fileToSave = new File(imgPath + imgName);
+            File fileToSave = new File(uploadPath + imgName);
             mf.transferTo(fileToSave);
 
             // DTO에 정보 세팅
@@ -125,12 +125,16 @@ public String saveRec(
             redirectAttributes.addFlashAttribute("msg", "이미지 업로드 실패");
             return "redirect:/rec/upload";
         }
+            // DB 저장
+        recService.save(rto);
+        redirectAttributes.addFlashAttribute("msg", "일지 등록 완료!");
+        return "redirect:/rec";
     }
-
     // DB 저장
     recService.save(rto);
     redirectAttributes.addFlashAttribute("msg", "일지 등록 완료!");
     return "redirect:/rec";
+
 }
 
 
