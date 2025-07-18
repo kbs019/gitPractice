@@ -84,17 +84,13 @@ public class QnaBoardService {
     }
 
     // 답변삭제 다시 진행해야함 -- 답글에 대한 postNo 조회 / 답변 삭제 / postNo 에 들어있는 replyNo 갯수 조회 / replyNo 갯수 0 이면, isAnswered 컬럼 0 으로 변경
-    // 답변 삭제
-    public int replyDelete( int replyNo ){
-        return qnaReplyMapper.replyDelete(replyNo);
-    }
-
+    
     // 답변 삭제
     public int replyDeleteNew( int replyNo ){
         int result = 0;
-
+        
         int selectPostNo = qnaReplyMapper.selectPostNo(replyNo);
-
+        
         if(qnaReplyMapper.replyDelete(replyNo) == 1){
             int replyNoCount = qnaReplyMapper.selectReplyNoCount( selectPostNo );
             
@@ -103,10 +99,15 @@ public class QnaBoardService {
             }
             result = 1;
         }
-
+        
         return result;
     }
 
+    // 답변 삭제                ------- 이거 안씀
+    public int replyDelete( int replyNo ){
+        return qnaReplyMapper.replyDelete(replyNo);
+    }
+    
     // 검색 결과에 따른 글목록 조회
     public List<QnaBoardDTO> searchBoardList( String category, String keyword, int start, int end ){
         List<QnaBoardDTO> list = new ArrayList<QnaBoardDTO>();
