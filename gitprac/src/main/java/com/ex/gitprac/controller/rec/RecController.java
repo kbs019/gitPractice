@@ -88,8 +88,8 @@ public String saveRec(
             String orgImgName = mf.getOriginalFilename();
 
             // 고유 파일명 (UUID + 확장자)
-            String ext = orgImgName.substring(orgImgName.lastIndexOf("."));
-            String imgName = UUID.randomUUID().toString().replace("-", "") + ext;
+            // String ext = orgImgName.substring(orgImgName.lastIndexOf("."));
+            String imgName = UUID.randomUUID().toString().replace("-", "") + orgImgName;
 
             // 저장 폴더 경로
             // String uploadDir = "D:" + File.separator +
@@ -112,13 +112,13 @@ public String saveRec(
             // }
 
             // 실제 저장
-            File fileToSave = new File(imgPath, imgName);
+            File fileToSave = new File(imgPath+imgName);
             mf.transferTo(fileToSave);
 
             // DTO에 정보 세팅
             rto.setOrgImgName(orgImgName);
             rto.setImgName(imgName);
-            rto.setImgPath("/recUpload/" + imgName);
+            rto.setImgPath("/recUpload/");
 
         } catch (Exception e) {
             e.printStackTrace();
