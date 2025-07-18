@@ -257,4 +257,39 @@ public class QnaBoardController {
 
         return "/qna/searchList";
     }
+
+    // 답변 완료된 글목록 출력
+    @GetMapping("listChecked")
+    public String searchList( @RequestParam(name="pageNum", defaultValue="1") int pageNum, Model model ){
+        int pageSize = 10;
+        int currentPage = pageNum;
+        int start = (currentPage - 1) * pageSize + 1;
+        int end = currentPage * pageSize;
+        int count = qnaBoardService.searchListCountByIsAnsweredChecked();
+
+        List<QnaBoardDTO> list = null;
+        if( count > 0 ){
+            list = qnaBoardService.isAnsweredStatusChecked(start, end);
+        }else{
+            list = new ArrayList<QnaBoardDTO>();
+        }
+
+        int pageCount = (count/pageSize) + (count%pageSize == 0 ? 0 : 1);
+        int pageBlock = 10;
+        int startPage = (int) ((currentPage - 1) / pageBlock) * pageBlock + 1;
+        int endPage = startPage + pageBlock - 1;
+        if( endPage > pageCount ){
+            endPage = pageCount;
+        }
+
+        model.addAttribute("pageCount", pageCount);
+        model.addAttribute("pageBlock", pageBlock);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("count", count);
+        model.addAttribute("list", list);
+        model.addAttribute("pageNum", pageNum);
+
+        return "/qna/searchList";
+    }
 }

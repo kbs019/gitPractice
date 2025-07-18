@@ -52,4 +52,9 @@ public interface QnaBoardMapper {
     public int searchListCountByContent(String keyword);
     // category 값이 titleAndContent 일 때의 검색결과에 대한 글갯수
     public int searchListCountByTitleAndContent(String keyword);
+
+    // 답변 완료된 질문만 보는 체크박스 클릭 시, 실행될 메서드
+    public List<QnaBoardDTO> isAnsweredStatusChecked(@Param("start") int start, @Param("end") int end );
+    // 답변 완료된 게시글의 갯수
+    public int searchListCountByIsAnsweredChecked();
 }

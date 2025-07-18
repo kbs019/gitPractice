@@ -8,6 +8,10 @@
 <body>
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
     <div align="center">
+        <span class="isAnswered-check">
+            <input type="checkbox" id="isAnsweredStatusCheck">
+            <span>답변완료된 질문만 보기</span>
+        </span>
         <span class="search-wrapper">
             <select id="category">
                 <option value="total">전체</option>
@@ -90,6 +94,26 @@
                         alert( error + ' 발생' );
                     }
                 });
+            });
+        });
+
+        $(document).ready(function(){
+            $('#isAnsweredStatusCheck').change(function(){
+                if( $(this).is(':checked') ){
+                    $.ajax({
+                        url : '/qna/listChecked',
+                        type : 'get',
+                        success : function(list){
+                            $('#list-wrapper').html(list);
+                        },
+                        error : function( xhr, status, error ){
+                            console.log(error + ' 발생');
+                            alert( error + ' 발생' );
+                        }
+                    });
+                } else {
+
+                }
             });
         });
     </script>

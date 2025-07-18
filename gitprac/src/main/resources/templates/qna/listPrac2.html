@@ -8,6 +8,10 @@
 <body>
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
     <div align="center">
+        <span class="isAnswered-check">
+            <input type="checkbox" id="isAnsweredStatusCheck">
+            <span>답변완료된 질문만 보기</span>
+        </span>
         <span class="search-wrapper">
             <select id="category">
                 <option value="total">전체</option>
@@ -66,31 +70,22 @@
     <!-- ajax 시작 -->
     <script>
         $(document).ready(function(){
+
+            // 검색 버튼 클릭
             $('#selectPostByKeyword').click(function(){
-                let category = $('#category').val();
-                let keyword = $('#keyword').val();
-
-                if( keyword.trim().length < 2 ){
-                    alert('2글자 이상 입력해주세요.');
-                    return;
-                }
-
-                $.ajax({
-                    url : '/qna/searchList',
-                    type : 'post',
-                    data : {
-                        category : category,
-                        keyword : keyword
-                    },
-                    success : function( a ){
-                        $('#list-wrapper').html(a);
-                    },
-                    error : function( xhr, status, error ){
-                        console.log(error+' 발생');
-                        alert( error + ' 발생' );
-                    }
-                });
+                searchPostList();
             });
+
+            // 체크박스 변경
+            $('#isAnsweredStatusCheck').change(function(){
+                searchPostList();
+            });
+
+            function searchPostList(){
+                $.ajax({
+                    
+                });
+            }
         });
     </script>
 </body>
