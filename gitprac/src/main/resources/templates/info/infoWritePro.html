@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <span th:if="${result == 1}">
+        <script>
+            alert("글 작성 완료");
+            window.location="/info/list";
+        </script>
+    </span>
+    <span th:unless="${result == 1}">
+        <script>
+            alert("다시 작성해주세요.");
+            history.go(-1);
+        </script>
+    </span>
+</body>
+</html>

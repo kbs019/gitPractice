@@ -1,6 +1,9 @@
 package com.ex.gitprac.data.info;
 
-import java.security.Timestamp;
+
+
+
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
@@ -10,7 +13,7 @@ public class InfoBoardDTO {
     private String  writer;
     private String  title;
     private String  content;
-    private Timestamp reg;
+    private LocalDateTime reg;
     private int     views;
     private String  category;
     private int     isFixed;
