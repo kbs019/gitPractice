@@ -16,20 +16,3 @@ public class InfoBoardDTO {
     private int     isFixed;
     private int     ref;
 }
-/* 
-create table info_board (
-    postNo    number            primary key,
-    category   varchar2(20)      not null,
-    title      varchar2(20)      not null,
-    writer     varchar2(20)      not null,
-    content    varchar2(4000)    not null,
-    reg        date              default sysdate,
-    views      number            default 0,
-    isFixed   number            default 0, 
-    ref        number            default 0
-);
-
-create sequence seq_info_post start with 1 increment by 1 nocache;
-
-commit;
-*/
