@@ -1,3 +1,5 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +39,7 @@
                 <th width="350">작성날짜</th>
             </tr>
             <tr height="30" align="center" th:each="dto : ${list}">
-                <td width="50" th:text="${dto.num}"></td>
+                <td width="50" th:text="${dto.postNo}"></td>
                 <th width="100" th:text="${dto.writer}"></th>
                 <th width="60"th:text="${dto.category}"></th>
                 <td width="350">

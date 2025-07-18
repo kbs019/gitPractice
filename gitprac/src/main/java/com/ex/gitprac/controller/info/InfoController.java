@@ -1,5 +1,6 @@
 package com.ex.gitprac.controller.info;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -78,5 +79,40 @@ public class InfoController {
         int result = infoBoardService.infoInsert(idto);
         model.addAttribute("result", result);
         return "info/infolist";
+    }
+
+    @GetMapping("listByCategory")
+    public String listByCategory( @RequestParam("category") String category, @RequestParam(name="pageNum", defaultValue = "1") int pageNum, Model model) {
+        
+        int pageSize=10;
+        int currentPage = pageNum;
+        int start = (currentPage-1)*pageSize+1;
+        int end = currentPage*pageSize;
+        int count = infoBoardService.countByCategory(category);
+
+        List<InfoBoardDTO> list = (count > 0) ? infoBoardService.infoBoardListByCategory(category, start, end) : Collections.EMPTY_LIST;
+        
+        int pageCount = count/pageSize + (count%pageSize == 0 ? 0 : 1);
+        int startPage = (int)((currentPage - 1)/10)*10+1;
+        int pageBlock = 10;
+        int endPage = startPage+pageBlock - 1;
+        if(endPage > pageCount){
+            endPage = pageCount;
+        } 
+
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("start", start);
+        model.addAttribute("end", end);
+        model.addAttribute("count", count);
+        model.addAttribute("list", list);
+        model.addAttribute("pageCount", pageCount);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("pageBlock", pageBlock);
+        model.addAttribute("endPage", endPage); 
+        model.addAttribute("pageNum", pageNum);
+        model.addAttribute("category", category);
+
+        return "info/infoList";
     }
 }

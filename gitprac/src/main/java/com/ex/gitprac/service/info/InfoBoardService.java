@@ -30,4 +30,11 @@ public class InfoBoardService {
         }
         return result;
     }
+    public int countByCategory(String category) {
+        return infoBoardMapper.infoCountByCategory(category);
+    }
+    public List<InfoBoardDTO> infoBoardListByCategory(String category, int start, int end) {
+        List<InfoBoardDTO> caList = infoBoardMapper.infoBoardByCategory(start, start, category);
+        return caList;
+    }
 }

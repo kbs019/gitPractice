@@ -3,7 +3,7 @@
     <header>
         <div id="header">
             <div id="header_top">
-                <a th:href="@{/mem/logout}">로그아웃</a>
+                <a th:href="@{/users/logout}">로그아웃</a>
                 <span th:if="${session.users.role} == 0">
                     <a th:href="@{/mem/myPage}">마이페이지</a>
                 </span>

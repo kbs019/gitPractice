@@ -34,6 +34,17 @@ public class UserController {
         }
         return "user/loginPro";
     } 
+
+    @GetMapping("logout")
+    public String logout( HttpSession session ) {
+        session.invalidate();
+        return "user/logout";
+    }
+    
+    public String getMethodName(@RequestParam String param) {
+        return new String();
+    }
+    
       
     @GetMapping("insert")
     public String userInsert() {
