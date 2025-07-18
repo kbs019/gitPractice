@@ -32,7 +32,7 @@
             <a th:href="@{|/qna/list?pageNum=${startPage - pageBlock}|}">[이전]</a>
         </span>
         <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-            <a th:href="@{|/qna/list?pageNum=${i}|}" th:text="'['+${i}+']'"></a>
+            <a th:href="@{|/qna/list?pageNum=${i}|}" th:text="'|'+${i}+'|'"></a>    &nbsp;
         </span>
         <span th:if="${endPage} < ${pageCount}">
             <a th:href="@{|/qna/list?pageNum=${startPage + pageBlock}|}">[다음]</a>

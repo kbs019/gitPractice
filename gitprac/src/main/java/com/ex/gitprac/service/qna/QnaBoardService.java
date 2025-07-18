@@ -122,4 +122,16 @@ public class QnaBoardService {
 
         return count;
     }
+
+    // 답변 완료된 글목록 조회
+    public List<QnaBoardDTO> isAnsweredStatusChecked(int start, int end){
+        List<QnaBoardDTO> list = qnaBoardMapper.isAnsweredStatusChecked(start, end);
+
+        return list;
+    }
+    // 답변 완료된 글갯수
+    public int searchListCountByIsAnsweredChecked(){
+        int result = qnaBoardMapper.searchListCountByIsAnsweredChecked();
+        return result;
+    }
 }
