@@ -13,7 +13,7 @@
 </header>
 
 <main class="rec-container">
-  <!-- 🔎 필터 영역 (향후 확장 가능) -->
+  <!-- 🔎 필터 영역 -->
   <section class="rec-filter">
     <div>
       <select id="petSelect" disabled>
@@ -21,42 +21,54 @@
       </select>
       <span>의 일지</span>
     </div>
-    <!-- 날짜 조회 폼 -->
-<form method="get" action="/rec">
-  <div>
-    <input type="date" id="startDate" name="startDate" th:value="${param.startDate}">
-    ~
-    <input type="date" id="endDate" name="endDate" th:value="${param.endDate}">
-    <button type="submit">조회</button>
-    <a href="/rec"><button type="button">전체 초기화</button></a>
-    <a href="/rec/upload">
-      <button type="button">글 작성</button>
-    </a>
-  </div>
-</form>
 
-
+    <!-- 날짜 조회 form -->
     <form method="get" action="/rec">
-  <div class="category-tabs">
-    <button type="submit" name="categoryGroup" value="밥/간식"
-            th:classappend="${param.categoryGroup == '밥/간식'} ? 'selected' : ''">
-      밥/간식
-    </button>
-    <button type="submit" name="categoryGroup" value="활동"
-            th:classappend="${param.categoryGroup == '활동'} ? 'selected' : ''">
-      활동
-    </button>
-    <button type="submit" name="categoryGroup" value="배변/배뇨"
-            th:classappend="${param.categoryGroup == '배변/배뇨'} ? 'selected' : ''">
-      배변/배뇨
-    </button>
-    <button type="submit" name="categoryGroup" value="병원/약"
-            th:classappend="${param.categoryGroup == '병원/약'} ? 'selected' : ''">
-      병원/약
-    </button>
-  </div>
-</form>
+      <div>
+        <input type="date" id="startDate" name="startDate" th:value="${param.startDate}">
+        ~
+        <input type="date" id="endDate" name="endDate" th:value="${param.endDate}">
+        
+        <input type="hidden" name="categoryGroup" id="hiddenCategoryGroup" th:value="${param.categoryGroup}">
 
+        <button type="submit">조회</button>
+        <button type="submit" name="reset" value="true">전체 초기화</button>
+        
+        <a href="/rec/upload">
+          <button type="button">글 작성</button>
+        </a>
+      </div>
+    </form>
+
+    <!-- 카테고리 그룹 form -->
+    <form id="categoryForm" method="get" action="/rec">
+      <!-- 날짜 값 전달용 hidden input -->
+      <input type="hidden" name="startDate" id="hiddenStartDate" th:value="${param.startDate}">
+      <input type="hidden" name="endDate" id="hiddenEndDate" th:value="${param.endDate}">
+
+      <div class="category-tabs">
+        <button type="submit" name="categoryGroup" value="밥/간식"
+                onclick="copyDates()" 
+                th:classappend="${param.categoryGroup == '밥/간식'} ? 'selected' : ''">
+          밥/간식
+        </button>
+        <button type="submit" name="categoryGroup" value="활동"
+                onclick="copyDates()" 
+                th:classappend="${param.categoryGroup == '활동'} ? 'selected' : ''">
+          활동
+        </button>
+        <button type="submit" name="categoryGroup" value="배변/배뇨"
+                onclick="copyDates()" 
+                th:classappend="${param.categoryGroup == '배변/배뇨'} ? 'selected' : ''">
+          배변/배뇨
+        </button>
+        <button type="submit" name="categoryGroup" value="병원/약"
+                onclick="copyDates()" 
+                th:classappend="${param.categoryGroup == '병원/약'} ? 'selected' : ''">
+          병원/약
+        </button>
+      </div>
+    </form>
   </section>
 
   <!-- 📋 일지 목록 출력 -->
@@ -65,7 +77,6 @@
       <thead>
         <tr>
           <th>번호</th>
-          <th>작성자</th>
           <th>카테고리</th>
           <th>제목</th>
           <th>작성일</th>
@@ -74,7 +85,6 @@
       <tbody>
         <tr th:each="rec : ${recList}">
           <td th:text="${rec.recNo}">1</td>
-          <td th:text="${rec.writer}">작성자</td>
           <td th:text="${rec.category}">카테고리</td>
           <td th:text="${rec.title}">제목</td>
           <td th:text="${rec.reg}">2025-07-18</td>
@@ -85,8 +95,14 @@
       </tbody>
     </table>
   </section>
-
 </main>
+
+<script>
+  function copyDates() {
+    document.getElementById("hiddenStartDate").value = document.getElementById("startDate").value;
+    document.getElementById("hiddenEndDate").value = document.getElementById("endDate").value;
+  }
+</script>
 
 </body>
 </html>
