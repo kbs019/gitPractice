@@ -20,9 +20,16 @@
 
 
   <!-- 글쓰기 -->
-  <insert id="infoBoardInsert">
-    insert into info_board values(seq_info_board.nextval, #{category}, #{title}, #{writer}, #{content}, sysdate, 0, 0 , 0)
+  <insert id="infoBoardInsert" parameterType="InfoBoardDTO">
+    <selectKey keyProperty="postNo" resultType="int" order="BEFORE">
+      SELECT seq_info_board.NEXTVAL FROM dual
+    </selectKey>
+      insert into info_board 
+      (post_no, category, title, writer, content, reg, views, is_fixed, ref)
+      values 
+      (#{postNo}, #{category}, #{title}, #{writer}, #{content}, sysdate, 0, 0 , 0)
   </insert>
+
 
 
   <!-- 게시글 조회 -->
