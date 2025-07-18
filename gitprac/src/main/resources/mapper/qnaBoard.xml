@@ -164,4 +164,9 @@
   <select id="searchListCountByTitleAndContent2" resultType="int">
     select count(*) from qna_board where ( lower(title) like '%' || lower(trim(#{keyword})) || '%' or lower(content) like '%' || lower(trim(#{keyword})) || '%' ) and isAnswered = 1
   </select>
+
+  <!-- 해당 게시글이 가지는 답변의 수가 0 일 경우, isAnswered 컬럼의 값을 0 으로 변경 -->
+  <update id="updateIsAnswered">
+    update qna_board set isAnswered = 0 where postNo=#{postNo}
+  </update>
 </mapper>

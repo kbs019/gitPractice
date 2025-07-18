@@ -44,7 +44,7 @@
                     <span th:text="${#temporals.format(qto.reg, 'yy.MM.dd HH:mm')}"></span>
                     <div class="post-isAnswered-status">
                         <span th:if="${qto.isAnswered == 0}">
-                            <span>답변 대기중</span>
+                            <span>미답변</span>
                         </span>
                         <span th:if="${qto.isAnswered == 1}">
                             <span>답변 완료</span>

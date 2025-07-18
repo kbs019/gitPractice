@@ -89,6 +89,24 @@ public class QnaBoardService {
         return qnaReplyMapper.replyDelete(replyNo);
     }
 
+    // 답변 삭제
+    public int replyDeleteNew( int replyNo ){
+        int result = 0;
+
+        int selectPostNo = qnaReplyMapper.selectPostNo(replyNo);
+
+        if(qnaReplyMapper.replyDelete(replyNo) == 1){
+            int replyNoCount = qnaReplyMapper.selectReplyNoCount( selectPostNo );
+            
+            if( replyNoCount == 0 ){
+                qnaBoardMapper.updateIsAnswered(selectPostNo);
+            }
+            result = 1;
+        }
+
+        return result;
+    }
+
     // 검색 결과에 따른 글목록 조회
     public List<QnaBoardDTO> searchBoardList( String category, String keyword, int start, int end ){
         List<QnaBoardDTO> list = new ArrayList<QnaBoardDTO>();

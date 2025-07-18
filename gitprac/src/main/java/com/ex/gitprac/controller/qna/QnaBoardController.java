@@ -223,7 +223,20 @@ public class QnaBoardController {
         return result;
     }
 
-    // 검색창 구현
+    // 답변 삭제 after
+    @PostMapping("replyDelete2")
+    @ResponseBody
+    public String replyDeleteNew( @RequestParam("replyNo") int replyNo ){
+        String result = "삭제를 실패하였습니다.";
+
+        if( qnaBoardService.replyDeleteNew(replyNo) == 1 ){
+            result = "삭제를 완료하였습니다.";
+        }
+
+        return result;
+    }
+
+    // 검색창 구현                         // 이거 안씀
     @PostMapping("searchList")
     public String searchList( @RequestParam(name="pageNum", defaultValue="1") int pageNum, @RequestParam("category") String category, @RequestParam("keyword") String keyword, Model model ){
         int pageSize = 10;
@@ -258,7 +271,7 @@ public class QnaBoardController {
         return "/qna/searchList";
     }
 
-    // 답변 완료된 글목록 출력
+    // 답변 완료된 글목록 출력              // 이거 안씀
     @GetMapping("listChecked")
     public String searchList( @RequestParam(name="pageNum", defaultValue="1") int pageNum, Model model ){
         int pageSize = 10;
@@ -322,4 +335,6 @@ public class QnaBoardController {
 
         return "/qna/searchList";
     }
+
+
 }
