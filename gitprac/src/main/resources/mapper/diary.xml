@@ -5,7 +5,7 @@
 <mapper namespace="com.ex.gitprac.repository.diary.DiaryMapper">
 
 <insert id="insertDiary"> 
-  INSERT INTO DIARY VALUES(DIARY_SEQ_NEXTVAL, #{writer}, #{content}, SYSDATE, #{imgName}, #{imgPath}, #{originalName}, 0);
+  INSERT INTO DIARY VALUES(DIARY_SEQ.NEXTVAL, #{writer}, #{content}, SYSDATE, #{imgName}, #{imgPath}, #{originalName}, 0);
 </insert>
 <select id="countDiary" resultType="int">
 SELECT * FROM DIARY WHERE WRITER = #{writer}
