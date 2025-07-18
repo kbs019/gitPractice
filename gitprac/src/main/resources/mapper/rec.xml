@@ -49,24 +49,23 @@
     AND reg < TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
   ]]>
 </if>
-      <if test="categoryGroup != null">
-        AND (
-          <choose>
-            <when test="categoryGroup eq '밥/간식'">
-              category IN ('밥', '간식')
-            </when>
-            <when test="categoryGroup eq '배변/배뇨'">
-              category IN ('배변', '배뇨')
-            </when>
-            <when test="categoryGroup eq '병원/약'">
-              category IN ('병원', '약')
-            </when>
-            <otherwise>
-              category = #{categoryGroup}
-            </otherwise>
-          </choose>
-        )
-      </if>
+      <if test="categoryGroup != null and categoryGroup != ''">
+  AND category IN
+  <choose>
+    <when test="categoryGroup == '밥/간식'">
+      ('밥', '간식')
+    </when>
+    <when test="categoryGroup == '배변/배뇨'">
+      ('배변', '배뇨')
+    </when>
+    <when test="categoryGroup == '병원/약'">
+      ('병원', '약')
+    </when>
+    <when test="categoryGroup == '활동'">
+      ('활동')
+    </when>
+  </choose>
+</if>
     </where>
     ORDER BY reg DESC
   </select>

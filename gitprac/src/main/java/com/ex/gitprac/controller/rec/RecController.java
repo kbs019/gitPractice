@@ -24,7 +24,7 @@ public class RecController {
     private final RecService recService;
 
     /**
-     * 🗂 일지 목록 조회 (필터 포함)
+     * 🗂 일지 목록 조회 (필터 포함 + 전체 초기화)
      */
     @GetMapping("")
     public String recListPage(
@@ -32,13 +32,27 @@ public class RecController {
         @RequestParam(name = "startDate", required = false) String startDate,
         @RequestParam(name = "endDate", required = false) String endDate,
         @RequestParam(name = "categoryGroup", required = false) String categoryGroup,
+        @RequestParam(name = "reset", required = false) String reset, // ✅ 추가!
         Model model
     ) {
-        List<RecDTO> recList = recService.getFilteredRecs(petNo, startDate, endDate, categoryGroup);
+        List<RecDTO> recList;
+
+        if ("true".equals(reset)) {
+            recList = recService.getAllRecs();
+            startDate = "";
+            endDate = "";
+            categoryGroup = "";
+        } else {
+            recList = recService.getFilteredRecs(petNo, startDate, endDate, categoryGroup);
+        }
+
         model.addAttribute("recList", recList);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+        model.addAttribute("categoryGroup", categoryGroup);
+
         return "rec/list";
     }
-
 
     /**
      * 📝 일지 작성 폼 페이지

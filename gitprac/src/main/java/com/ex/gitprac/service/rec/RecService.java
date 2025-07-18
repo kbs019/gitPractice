@@ -26,4 +26,5 @@ public class RecService {
     public List<RecDTO> getFilteredRecs(Integer petNo, String startDate, String endDate, String categoryGroup) {
         return recMapper.findFiltered(petNo, startDate, endDate, categoryGroup);
     }
+
 }

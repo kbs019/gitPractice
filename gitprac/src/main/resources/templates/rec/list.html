@@ -25,11 +25,11 @@
     <!-- 날짜 조회 form -->
     <form method="get" action="/rec">
       <div>
-        <input type="date" id="startDate" name="startDate" th:value="${param.startDate}">
+        <input type="date" id="startDate" name="startDate" th:value="${startDate}">
         ~
-        <input type="date" id="endDate" name="endDate" th:value="${param.endDate}">
+        <input type="date" id="endDate" name="endDate" th:value="${endDate}">
         
-        <input type="hidden" name="categoryGroup" id="hiddenCategoryGroup" th:value="${param.categoryGroup}">
+        <input type="hidden" name="categoryGroup" id="hiddenCategoryGroup" th:value="${categoryGroup}">
 
         <button type="submit">조회</button>
         <button type="submit" name="reset" value="true">전체 초기화</button>
