@@ -10,16 +10,16 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface RecMapper {
 
-    void insertRec(RecDTO rec);
+    public void insertRec(RecDTO rec);
 
-    List<RecDTO> findAll();
+    public List<RecDTO> findAll();
 
-    List<RecDTO> findFiltered(
+    public List<RecDTO> findFiltered(
         @Param("petNo") Integer petNo,
         @Param("startDate") String startDate,
         @Param("endDate") String endDate,
         @Param("categoryGroup") String categoryGroup
     );
 
-    RecDTO findByNo(@Param("recNo") int recNo);
+    public RecDTO findByNo(@Param("recNo") int recNo);
 }

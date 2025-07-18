@@ -28,6 +28,6 @@ public class RecService {
     }
 
     public RecDTO getRecByNo(int recNo) {
-       return recMapper.findByNo(recNo);
+        return recMapper.findByNo(recNo);
     }
 }
