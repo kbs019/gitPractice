@@ -4,13 +4,13 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ex.gitprac.repository.info.InfoBoardMapper">
   <sql id="wherePostNo">
-    where post_no = #{post_no}
+    where postNo = #{postNo}
   </sql>
 
   <!-- 게시글 리스트 -->
   <select id="infoBoardList" resultType="com.ex.gitprac.data.info.InfoBoardDTO">
     <![CDATA[
-      select * from ( select b.*, rownum r from ( select * from info_board order by post_no desc ) b ) where r >= #{start} and r <= #{end} 
+      select * from ( select b.*, rownum r from ( select * from info_board order by postNo desc ) b ) where r >= #{start} and r <= #{end} 
     ]]>
   </select>
   <!-- 게시글 카운트 -->
@@ -20,14 +20,21 @@
 
 
   <!-- 글쓰기 -->
-  <insert id="infoBoardInsert">
-    insert into info_board values(seq_info_board.nextval, #{category}, #{title}, #{writer}, #{content}, sysdate, 0, 0 , 0)
+  <insert id="infoBoardInsert" parameterType="com.ex.gitprac.data.info.InfoBoardDTO">
+    <selectKey keyProperty="postNo" resultType="int" order="BEFORE">
+      SELECT seq_info_board.NEXTVAL FROM dual
+    </selectKey>
+      insert into info_board 
+      (postNo, category, title, writer, content, reg, views, isFixed, ref)
+      values 
+      (#{postNo}, #{category}, #{title}, #{writer}, #{content}, sysdate, 0, 0 , 0)
   </insert>
+
 
 
   <!-- 게시글 조회 -->
   <select id="infoBoardContent" resultType="com.ex.gitprac.data.info.InfoBoardDTO">
-    select * from info_board where post_no=#{post_no}
+    select * from info_board where postNo=#{postNo}
   </select>
   <select id="infoCateBoardCount" resultType="int">
     SELECT COUNT(*) FROM info_board WHERE category = #{category}
@@ -35,7 +42,7 @@
 
   <select id="infoCateBoardList" resultType="com.ex.gitprac.data.info.InfoBoardDTO">
     <![CDATA[
-      SELECT * FROM ( SELECT b.*, ROWNUM r FROM ( SELECT * FROM info_board WHERE category = #{category} ORDER BY post_no DESC ) b ) WHERE r >= #{start} AND r <= #{end}
+      SELECT * FROM ( SELECT b.*, ROWNUM r FROM ( SELECT * FROM info_board WHERE category = #{category} ORDER BY postNo DESC ) b ) WHERE r >= #{start} AND r <= #{end}
     ]]>
   </select>
 

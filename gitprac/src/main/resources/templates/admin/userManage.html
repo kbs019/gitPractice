@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+    <div id="user-manage">
+        <h1>회원관리</h1>
+        <div id="select-users-info">
+            <!-- 검색창 위치 -->
+        </div>
+        <span class="users-count">전체 회원수</span>
+        <span th:text="${count}"></span>
+        <div id="users-info">
+            <div class="users-wrapper">
+                <div>
+                    <span>아이디</span>
+                    <span>이름</span>
+                    <span>닉네임</span>
+                    <span>가입일자</span>
+                    <span>현재 상태</span>
+                </div>
+                <div th:each="uto : ${list}">
+                    <span th:text="${uto.id}"></span>
+                    <span th:text="${uto.name}"></span>
+                    <span th:text="${uto.nick}"></span>
+                    <span th:text="${#temporals.format(uto.reg, 'yy.MM.dd')}"></span>
+                    <span th:if="${uto.status == 0}">
+                        <span>활동중</span>
+                    </span>
+                    <span th:if="${uto.status == 1}">
+                        <span>활동 정지</span>
+                    </span>
+                    <span th:if="${uto.status == 2}">
+                        <span>탈퇴</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

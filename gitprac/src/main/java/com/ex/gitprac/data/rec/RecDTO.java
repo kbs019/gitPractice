@@ -17,3 +17,9 @@ public class RecDTO {
     private String imgName;
     private String imgPath;
 }
+/* 
+create table rec(
+
+);
+*/
+

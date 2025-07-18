@@ -88,36 +88,37 @@ public String saveRec(
             String orgImgName = mf.getOriginalFilename();
 
             // 고유 파일명 (UUID + 확장자)
-            String ext = orgImgName.substring(orgImgName.lastIndexOf("."));
-            String imgName = UUID.randomUUID().toString().replace("-", "") + ext;
+            // String ext = orgImgName.substring(orgImgName.lastIndexOf("."));
+            String imgName = UUID.randomUUID().toString().replace("-", "") + orgImgName;
 
             // 저장 폴더 경로
-            String uploadDir = "D:" + File.separator +
-                               "oner" + File.separator +
-                               "VisualStudio" + File.separator +
-                               "githurb" + File.separator +
-                               "gitPractice" + File.separator +
-                               "gitprac" + File.separator +
-                               "src" + File.separator +
-                               "main" + File.separator +
-                               "resources" + File.separator +
-                               "static" + File.separator +
-                               "recUpload";
+            // String uploadDir = "D:" + File.separator +
+            //                     "oner" + File.separator +
+            //                     "VisualStudio" + File.separator +
+            //                     "githurb" + File.separator +
+            //                     "gitPractice" + File.separator +
+            //                     "gitprac" + File.separator +
+            //                     "src" + File.separator +
+            //                     "main" + File.separator +
+            //                     "resources" + File.separator +
+            //                     "static" + File.separator +
+            //                     "recUpload";
+            String imgPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\recUpload\\";
 
             // 폴더 없으면 생성
-            File uploadPath = new File(uploadDir);
-            if (!uploadPath.exists()) {
-                uploadPath.mkdirs();
-            }
+            // File uploadPath = new File(uploadDir);
+            // if (!uploadPath.exists()) {
+            //     uploadPath.mkdirs();
+            // }
 
             // 실제 저장
-            File fileToSave = new File(uploadPath, imgName);
+            File fileToSave = new File(imgPath + imgName);
             mf.transferTo(fileToSave);
 
             // DTO에 정보 세팅
             rto.setOrgImgName(orgImgName);
             rto.setImgName(imgName);
-            rto.setImgPath("/recUpload/" + imgName);
+            rto.setImgPath("/recUpload/");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,8 +140,8 @@ public String saveRec(
      */
     @GetMapping("/content/{recNo}")
     public String recContentPage(@PathVariable("recNo") int recNo, Model model) {
-        RecDTO rec = recService.getRecByNo(recNo);
-        model.addAttribute("rec", rec);
+        RecDTO rto = recService.getRecByNo(recNo);
+        model.addAttribute("rto", rto);
         return "rec/content";
     }
 }
