@@ -12,19 +12,19 @@ SELECT COUNT(*) FROM DIARY WHERE WRITER = #{writer}
 </select>
 <select id="listDiary" resultType="com.ex.gitprac.data.diary.DiaryDTO">
 <![CDATA[
-  SELECT * FROM (SELECT B.*, ROWNUM R FROM (SELECT * FROM DIARY WHERE WRITER = #{writer} ORDER BY DIARY_NO DESC) B) WHERE R >= #{start} AND R <= #{end}
+  SELECT * FROM (SELECT B.*, ROWNUM R FROM (SELECT * FROM DIARY WHERE WRITER = #{writer} ORDER BY diaryNo DESC) B) WHERE R >= #{start} AND R <= #{end}
 ]]>
 </select>
 <select id="listDiaryByDate" resultType="com.ex.gitprac.data.diary.DiaryDTO">
 <![CDATA[
-    SELECT * FROM (SELECT B.*, ROWNUM R FROM (SELECT * FROM DIARY WHERE WRITER = #{writer} AND REG BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD') ORDER BY DIARY_NO DESC) B ) WHERE R >= #{start} AND R <= #{end}
+    SELECT * FROM (SELECT B.*, ROWNUM R FROM (SELECT * FROM DIARY WHERE WRITER = #{writer} AND REG BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD') ORDER BY diaryNo DESC) B ) WHERE R >= #{start} AND R <= #{end}
 ]]>
 </select>
 
 <delete id="deleteDiary">
-    DELETE FROM DIARY WHERE DIARY_NO = #{diaryNo}
+    DELETE FROM DIARY WHERE diaryNo = #{diaryNo}
 </delete>
 <update id="updateDiary">
-    UPDATE DIARY SET CONTENT = #{content}, IMG_NAME = #{imgName}, IMG_PATH = #{imgPath}, ORIGINAL_NAME = #{originalName} WHERE DIARY_NO = #{diaryNo}
+    UPDATE DIARY SET CONTENT = #{content}, IMG_NAME = #{imgName}, IMG_PATH = #{imgPath}, ORIGINAL_NAME = #{originalName} WHERE diaryNo = #{diaryNo}
 </update>
 </mapper>

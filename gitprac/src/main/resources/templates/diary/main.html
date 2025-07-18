@@ -77,7 +77,7 @@
         <p th:text="${d.content}"></p>
         <p th:text="${#temporals.format(d.reg, 'yyyy-MM-dd')}">z</p>
         <button th:attr="data-no=${d.diaryNo}" class="deleteBtn">삭제</button>
-        <button th:attr="data-no=${d.diaryNo}" th:attrappend=" data-content='${d.content}'" class="editBtn">수정</button>
+        <button th:attr="data-no=${d.diaryNo}" th:attrappend=" data-content='${d.content}', data-imgName='${d.imgName}', data-imgPath='${d.imgPath}'" class="editBtn">수정</button>
     </div>
 </div>
 
@@ -138,10 +138,14 @@
         $('.editBtn').click(function() {
             const no = $(this).data('no');
             const content = $(this).attr('data-content');
-
+            const imgName = $(this).attr('data-imgName');
+            const imgPath = $(this).attr('data-imgPath');
+            
             $('#formArea').show();
             $('#diaryNo').val(no);
             $('textarea[name="content"]').val(content);
+            $('$imgName').val(imgName);
+            $('$imgPath').val(imgPath);
             $('#submitBtn').text('수정');
         });
     });
