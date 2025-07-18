@@ -78,4 +78,7 @@ public interface QnaBoardMapper {
     public List<QnaBoardDTO> isAnsweredStatusChecked(@Param("start") int start, @Param("end") int end );
     // 답변 완료된 게시글의 갯수
     public int searchListCountByIsAnsweredChecked();
+
+    // 게시글이 가지는 replyNo 가 0 이 되었을 때, isAnswered 컬럼의 값을 0 으로 변경
+    public void updateIsAnswered( int postNo );
 }
