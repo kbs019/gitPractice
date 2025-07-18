@@ -1,15 +1,8 @@
 package com.ex.gitprac.controller.diary;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
@@ -29,15 +22,13 @@ import com.ex.gitprac.data.diary.DiaryDTO;
 import com.ex.gitprac.data.user.UserDTO;
 import com.ex.gitprac.service.diary.DiaryService;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
 
 @Controller
-@RequestMapping("/diary/*")
+@RequestMapping("/diary/")
 @RequiredArgsConstructor
 public class DiaryController {
 
@@ -84,12 +75,11 @@ public class DiaryController {
         return "diary/main";
     }
     
-    @PostMapping("/insert")
+    @PostMapping("insert")
     @ResponseBody
     public String insertDiary(@RequestParam("uploadFile") MultipartFile uploadFile,
                               @RequestParam("content") String content,
-                              HttpSession session,
-                              HttpServletRequest request) {
+                              HttpSession session) {
         UserDTO udto = (UserDTO) session.getAttribute("users");
         String writer = udto.getNick();
         if (writer == null) return "nologin";
@@ -104,33 +94,34 @@ public class DiaryController {
         // 브라우저가 접근할 수 있는 URL 경로
         String imgWebPath = "/diaryUpload/";
         
-        File folder = new File(uploadPath);
-        if (!folder.exists()) {
-            folder.mkdirs();  // 존재하지 않으면 폴더 생성
-        }
-        DiaryDTO ddto = new DiaryDTO();
+        // File folder = new File(uploadPath);
+        // if (!folder.exists()) {
+        //     folder.mkdirs();  // 존재하지 않으면 폴더 생성
+        // }
+        DiaryDTO dto = new DiaryDTO();
 
         // 새로 생성된 이름과 경로를 qto 객체에 대입
-        ddto.setOriginalName(originalName);
-        ddto.setImgName(newName);
-        ddto.setImgPath(imgWebPath);
-        ddto.setWriter(writer);
-        ddto.setContent(content);
+        dto.setOriginalName(originalName);
+        dto.setImgName(newName);
+        dto.setImgPath(imgWebPath);
+        dto.setWriter(writer);
+        dto.setContent(content);
         // 경로와 파일명을 사용하여 File 객체 생성
         File f = new File(uploadPath + newName);
 
         try{
             // 파일 업로드 진행
             uploadFile.transferTo(f);
+
         }catch(Exception e){
             e.printStackTrace();
         }
-        diaryService.insertDiary(ddto);
-            return "success";
+        diaryService.insertDiary(dto);
+        return "success";
     }
 
     
-    @PostMapping("/delete")
+    @PostMapping("delete")
     @ResponseBody
     public String deleteDiary(@RequestParam("diaryNo") int diaryNo) {
         diaryService.deleteDiary(diaryNo);
@@ -138,39 +129,40 @@ public class DiaryController {
     }
 
     // 게시글 수정
-    @PostMapping("/diary/update")
+    @PostMapping("update")
     public String updateDiary(@ModelAttribute DiaryDTO dto,
-                          @RequestParam(value = "uploadFile", required = false) MultipartFile uploadFile,
-                          Model model) {
+                                @RequestParam(value = "uploadFile", required = false) MultipartFile uploadFile,
+                                Model model) {
 
-    // 기존 이미지 정보를 hidden input으로부터 받아온다고 가정
-    String existingImgName = dto.getImgName();
-    String existingImgPath = dto.getImgPath();
+        // 기존 이미지 정보를 hidden input으로부터 받아온다고 가정
+        String existingImgName = dto.getImgName();
+        String existingImgPath = dto.getImgPath();
 
-    if (uploadFile == null || uploadFile.isEmpty()) {
-        // 새 파일 업로드 없을 경우 기존 이미지 유지
-        dto.setImgName(existingImgName);
-        dto.setImgPath(existingImgPath);
-    } else {
-        // 새 파일 업로드 처리
-        String fileName = uploadFile.getOriginalFilename();
-        String newName = UUID.randomUUID().toString().replace("-", "")+fileName;
-        String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\diaryUpload\\";
-        String uploadDir = "/diaryUpload/"; // 실제 경로로 설정
-        Path path = Paths.get(uploadDir, fileName);
-        try {
-            Files.copy(uploadFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-            dto.setOriginalName(fileName);
+        if (uploadFile == null || uploadFile.isEmpty()) {
+            // 새 파일 업로드 없을 경우 기존 이미지 유지
+            dto.setImgName(existingImgName);
+            dto.setImgPath(existingImgPath);
+        } else {
+            // 새 파일 업로드 처리
+            String originalName = uploadFile.getOriginalFilename();
+            String newName = UUID.randomUUID().toString().replace("-", "")+originalName;
+            String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\diaryUpload\\";
+            String imgWebPath = "/diaryUpload/"; // 실제 경로로 설정
+            
+            dto.setOriginalName(originalName);
             dto.setImgName(newName);
-            dto.setImgPath(uploadDir);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+            dto.setImgPath(imgWebPath);
+            // 경로와 파일명을 사용하여 File 객체 생성
+            File f = new File(uploadPath + newName);
 
+            try{
+                // 파일 업로드 진행
+                uploadFile.transferTo(f);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
     diaryService.updateDiary(dto); // 서비스 호출
     return "redirect:/diary/main";
-}
-
-    
+    }
 }

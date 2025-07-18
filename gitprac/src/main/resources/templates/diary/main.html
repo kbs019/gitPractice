@@ -68,7 +68,7 @@
 </div> -->
 
 <div id="formArea" style="display: none;">
-    <form id="ajaxInsertForm" method="post" enctype="multipart/form-data">
+    <form id="ajaxInsertForm" method="post" enctype="multipart/form-data" style="text-align:center; margin-top:20px;">
         <input type="hidden" id="diaryNo" name="diaryNo">
         <input type="hidden" id="imgName" name="imgName">
         <input type="hidden" id="imgPath" name="imgPath">
@@ -102,10 +102,10 @@
         <button 
             th:attr="data-no=${d.diaryNo}" 
             th:attrappend="
-                data-content='${d.content}' 
-                data-imgname='${d.imgName}' 
-                data-imgpath='${d.imgPath}'" 
-            class="editBtn">수정
+                data-content='${d.content}',
+                data-imgName='${d.imgName}', 
+                data-imgPath='${d.imgPath}'" 
+            class="updateBtn">수정
         </button>    </div>
 </div>
 
@@ -132,16 +132,18 @@
             $('#submitBtn').text('등록');
         });
 
-        $('#submitBtn').click(function() {
+        $('#submitBtn').click(function(event) {
+            event.preventDefault();
             let form = $('#ajaxInsertForm')[0];
             let formData = new FormData(form);
-            let isUpdate = $('#diaryNo').val() == "";
-            let url = isUpdate ? '/diary/update' : '/diary/insert';
+            let isUpdate = $('#diaryNo').val() !== "";
+            let url = isUpdate ? "/diary/update" : "/diary/insert";
 
             $.ajax({
                 url: url,
-                type: 'POST',
+                type: 'post',
                 data: formData,
+                enctype: 'multipart/form-data',
                 processData: false,
                 contentType: false,
                 success: function(res) {
@@ -174,11 +176,11 @@
             });
         });
 
-        $('.editBtn').click(function() {
+        $('.updateBtn').click(function() {
             const no = $(this).data('no');
             const content = $(this).data('content');
-            const imgName = $(this).data('imgname');
-            const imgPath = $(this).data('imgpath');
+            const imgName = $(this).data('imgName');
+            const imgPath = $(this).data('imgPath');
 
             $('#formArea').show();
             $('#diaryNo').val(no);
