@@ -86,7 +86,9 @@
         <tr th:each="rec : ${recList}">
           <td th:text="${rec.recNo}">1</td>
           <td th:text="${rec.category}">카테고리</td>
-          <td th:text="${rec.title}">제목</td>
+          <td>
+            <a th:href="@{'/rec/content/' + ${rec.recNo}}" th:text="${rec.title}">제목</a>
+          </td>
           <td th:text="${rec.reg}">2025-07-18</td>
         </tr>
         <tr th:if="${#lists.isEmpty(recList)}">

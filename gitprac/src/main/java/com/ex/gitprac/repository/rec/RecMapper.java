@@ -20,4 +20,6 @@ public interface RecMapper {
         @Param("endDate") String endDate,
         @Param("categoryGroup") String categoryGroup
     );
+
+    RecDTO findByNo(@Param("recNo") int recNo);
 }

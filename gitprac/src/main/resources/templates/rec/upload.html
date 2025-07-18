@@ -14,7 +14,7 @@
 <main class="rec-upload-container">
   <h2>✏️ 일지 작성</h2>
 
-  <form action="/rec/upload" method="post">
+  <form method="post" action="/rec/upload" enctype="multipart/form-data">
 
     <!-- 작성자 (임시 하드코딩, 로그인 연동 시 변경 예정) -->
     <input type="hidden" name="writer" value="김가영" />
@@ -45,6 +45,11 @@
     <div class="form-group">
       <label for="title">제목:</label>
       <input type="text" name="title" id="title" maxlength="100" required>
+    </div>
+
+    <div class="image-wrapper">
+      <label for="image">이미지 첨부</label> &nbsp;
+      <input type="file" id="image" name="image">
     </div>
 
     <div class="form-group">

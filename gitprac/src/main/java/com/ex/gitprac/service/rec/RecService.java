@@ -27,4 +27,7 @@ public class RecService {
         return recMapper.findFiltered(petNo, startDate, endDate, categoryGroup);
     }
 
+    public RecDTO getRecByNo(int recNo) {
+       return recMapper.findByNo(recNo);
+    }
 }
