@@ -6,7 +6,7 @@
 <title>Document</title>
 </head>
 <body>
-<div th:relace="~{fragments/header.html :: headerFragment}"></div>
+<div th:replace="~{fragments/header.html :: headerFragment}"></div>
     <div align="center">
         <table width="800">
             <tr>
@@ -29,7 +29,7 @@
     </div>
     <div th:if="${count != 0}">
         <div align="center">
-            <select id="category" onchange="changeCategory(this.value)">
+            <select id="category" name="category" onchange="changeCategory(this.value)">
                 <option value="전체글" th:selected="${category} == '전체글'">전체글</option>
                 <option value="소형견" th:selected="${category} == '소형견'">소형견</option>
                 <option value="중형견" th:selected="${category} == '중형견'">중형견</option>
@@ -42,27 +42,27 @@
                 <th width="60">카테고리</th>
                 <th width="350">제목</th>
                 <th width="350">작성날짜</th>
-            </tr>
+            </tr>           
             <tr height="30" align="center" th:each="dto : ${list}">
-                <td width="50" th:text="${dto.num}"></td>
-                <th width="100" th:text="${dto.writer}"></th>
-                <th width="60"th:text="${dto.category}"></th>
+                <td width="50" th:text="${dto.postNo}"></td>
+                <td width="100" th:text="${dto.writer}"></td>
+                <td width="60"th:text="${dto.category}"></td>
                 <td width="350">
-                    <a th:href="@{|/info/content?num=${dto.num|&pageNum=${pageNum}}"th:text=${dto.title}</a>
+                    <a th:href="@{|/info/content?num=${dto.postNo}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
                 </td>
-                <td width="350" th:text="${dto.reg}"></td>
+                <td th:text="${#temporals.format(dto.reg, 'yy.MM.dd HH:mm')}" align="center"></td>
             </tr>
         </table>
     </div>
     <div class="paging" align="center" th:if="${count > 0}">
         <span th:if="${startPage} > ${pageCount}">
-            <a th:href="@{|/info/list?pageNum=${startPage - pageBlock}|}">[이전]</a>
+            <a th:href="@{|/info/list?pageNum=${startPage - pageBlock}&category=${category}|}">[이전]</a>
         </span>
         <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-            <a th:href="@{|/info/list?pageNum=${i}|}" th:text="'['+${i}+']'"></a>
+            <a th:href="@{|/info/list?pageNum=${i}&category=${category}|}" th:text="'['+${i}+']'"></a>
         </span>
         <span th:if="${endPage} < ${pageCount}">
-            <a th:href="@{|/info/list?pageNum=${startPage + pageBlock}|}">[다음]</a>
+            <a th:href="@{|/info/list?pageNum=${startPage + pageBlock}&category=${category}|}">[다음]</a>
         </span>
     </div>
 
@@ -71,7 +71,7 @@
             if (value === "전체글") {
                 location.href = "/info/list";
             } else {
-                location.href = "/info/listByCategory?category=" + encodeURIComponent(value);
+                location.href = "/info/list?category=" + encodeURIComponent(value);
             }
         }
     </script>

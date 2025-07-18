@@ -18,21 +18,32 @@ public class InfoBoardService {
     public int count() {
         return infoBoardMapper.infoBoardCount();
     }
+
+
     public List<InfoBoardDTO> infoBoardList(int start, int end){
         
         List<InfoBoardDTO> list = infoBoardMapper.infoBoardList(start, end);
         return list;
     }
+
+
     public int infoInsert( InfoBoardDTO idto ) {
-        int result = 0;
-        if( infoBoardMapper.infoBoardInsert(idto) == 1) {
-            result = 1;
-        }
+        System.out.println(">>> 글쓰기 전 postNo: " + idto.getPostNo());
+
+        int result = infoBoardMapper.infoBoardInsert(idto);
+
+        System.out.println(">>> 글쓰기 후 postNo: " + idto.getPostNo());
+        return result == 1 ? 1 : 0;
+    }
+
+
+    public int cateCount( String category) {
+        int result = infoBoardMapper.infoCateBoardCount(category);
+        System.out.println(">>> 카테고리 '" + category + "'의 게시글 수: " + result);
         return result;
     }
-    public int cateCount( String category) {
-        return infoBoardMapper.infoCateBoardCount(category);
-    }
+
+    
     public List<InfoBoardDTO> infoCateBoardList(String category, int start, int end) {
         List<InfoBoardDTO> cateList = infoBoardMapper.infoCateBoardList(category, start, end);
         return cateList;
