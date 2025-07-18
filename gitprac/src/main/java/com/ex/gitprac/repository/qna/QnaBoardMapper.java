@@ -81,4 +81,7 @@ public interface QnaBoardMapper {
 
     // 게시글이 가지는 replyNo 가 0 이 되었을 때, isAnswered 컬럼의 값을 0 으로 변경
     public void updateIsAnswered( int postNo );
+
+    // 관리자 페이지에서 게시글 목록 조회 ( 5개 출력 )
+    public List<QnaBoardDTO> listToAdmin( @Param("start") int start, @Param("end") int end );
 }

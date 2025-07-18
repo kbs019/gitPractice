@@ -2,7 +2,7 @@
     <span th:if="${session.users != null}">
     <header>
         <div id="header">
-            <div id="header_top">
+            <div id="header-top">
                 <a th:href="@{/user/logout}">로그아웃</a>
                 <span th:if="${session.users.role} == 0">
                     <a th:href="@{/mem/myPage}">마이페이지</a>
@@ -11,11 +11,11 @@
                     <A th:href="@{/mem/vetPage}">수의사 페이지</A>
                 </span>
                 <span th:if="${session.users.role} == 2">
-                    <a th:href="@{/admin/adminPage}">관리자 페이지</a>
+                    <a th:href="@{/admin/userManage}">관리자 페이지</a>
                 </span>
             </div>
 
-            <div id="header_middle">
+            <div id="header-middle">
                 <span th:if="${session.users.role} == 0">
                     <a th:href="@{/diary/main}">
                         <h1>하루犬과</h1>
@@ -33,13 +33,23 @@
                 </span>
             </div>
 
-            <div id="header_bottom">
-                <ul>
-                    <li><a th:href="@{/diary/main}">다이어리</a></li>
-                    <li><a th:href="@{/rec}">일지</a></li>
-                    <li><a th:href="@{/qna/list}">상담 게시판</a></li>
-                    <li><a th:href="@{/info/list}">정보 게시판</a></li>
-                </ul>
+            <div id="header-bottom">
+                <div th:if="${session.users.role == 0 || session.users.role == 1}">
+                    <ul>
+                        <li><a th:href="@{/diary/main}">다이어리</a></li>
+                        <li><a th:href="@{/rec}">일지</a></li>
+                        <li><a th:href="@{/qna/list}">상담 게시판</a></li>
+                        <li><a th:href="@{/info/list}">정보 게시판</a></li>
+                    </ul>
+                </div>
+                <div th:if="${session.users.role == 2}">
+                    <ul>
+                        <li><a th:href="@{/admin/notice}">공지사항</a></li>
+                        <li><a th:href="@{/admin/ask}">질의응답</a></li>
+                        <li><a th:href="@{/admin/userManage}">회원관리</a></li>
+                        <li><a th:href="@{/admin/postManage}">게시글관리</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </header>

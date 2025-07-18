@@ -1,18 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ex.gitprac.repository.user.UserMapper">	
 
     <!-- <insert id="userinsert">
-        insert into users values(#{id}, #{pw}, #{nick}, #{username}, #{birth}, #{email}, #{phone}, #{carrier}, sysdate)
+    insert into users values(#{id}, #{pw}, #{nick}, #{username}, #{birth}, #{email}, #{phone}, #{carrier}, sysdate)
     </insert> -->
-<insert id="userInsert">
+    <insert id="userInsert">
     insert into users  (id, pw, nick, name, birth, reg, email, phone, carrier) 
-                values (#{id}, #{pw}, #{nick}, #{name}, #{birth}, sysdate, #{email}, #{phone}, #{carrier})
-</insert>
-
+        values (#{id}, #{pw}, #{nick}, #{name}, #{birth}, sysdate, #{email}, #{phone}, #{carrier})
+    </insert>
+    
     <select id="loginCheck" resultType="com.ex.gitprac.data.user.UserDTO">
         select * from users where id=#{id} and pw=#{pw}
+    </select>
+
+    <!-- 전체회원조회 -->
+    <select id="selectAllUsers" resultType="com.ex.gitprac.data.user.UserDTO">
+        <![CDATA[
+        select * from ( select b.*, rownum r from ( select * from users order by reg desc ) b ) where r >= #{start} and r <= #{end}
+        ]]>
+    </select>
+
+    <!-- 전체 회원 수 -->
+    <select id="selectUsersCount" resultType="int">
+        select count(*) from users
+    </select>
+
+    <!-- 검색된 결과에 대한 회원 조회 -->
+    <select id="searchUser" resultType="com.ex.gitprac.data.user.UserDTO">
+        <![CDATA[
+        select * from ( select b.*, rownum r from ( select * from users where lower(nick) like '%' || lower(trim(#{keyword})) || '%' order by reg desc ) b ) where r >= #{start} and r <= #{end}
+        ]]>
+    </select>
+    <!-- 전체 회원 수 -->
+    <select id="searchUserCount" resultType="int">
+        select count(*) from users where lower(nick) like '%' || lower(trim(#{keyword})) || '%'
     </select>
 </mapper>

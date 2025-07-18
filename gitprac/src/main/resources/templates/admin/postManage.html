@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+    <div id="post-Management">
+        <div id="qna-board-connect">
+            <h1>상담 게시판</h1>
+            <span>
+                <h4><a th:href="@{/qna/list}">더보기</a></h4>
+            </span>
+            <div id="qna-list-wrapper">
+                <table>
+                    <tr>
+                        <td>제목</td>
+                        <td>작성자</td>
+                        <td>작성일자</td>
+                        <td>게시상태</td>
+                    </tr>
+                    <tr th:each="qto : ${list}">
+                        <td>
+                            <a th:href="@{/qto/content(postNo=${qto.postNo}, pageNum=${pageNum})}" th:text="${qto.title}"></a>
+                        </td>
+                        <td th:text="${qto.writer}"></td>
+                        <td th:text="${#temporals.format(qto.reg, 'yy.MM.dd HH:mm')}"></td>
+                        <td th:text="${qto.status}"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div id="info-board-connect">
+            <h1>정보공유 게시판</h1>
+            <span>
+                <h4><a th:href="@{/info/list}">더보기</a></h4>
+            </span>
+            <div id="info-list-wrapper">
+                <table>
+                    <tr>
+                        <td>제목</td>
+                        <td>작성자</td>
+                        <td>작성일자</td>
+                        <td>게시상태</td>
+                    </tr>
+                    <tr th:each="ito : ${list}">
+                        <td>
+                            <a th:href="@{/info/content(postNo=${ito.postNo}, pageNum=${pageNum})}" th:text="${ito.title}"></a>
+                        </td>
+                        <td th:text="${ito.writer}"></td>
+                        <td th:text="${#temporals.format(ito.reg, 'yy.MM.dd HH:mm')}"></td>
+                        <td th:text="${ito.status}"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
