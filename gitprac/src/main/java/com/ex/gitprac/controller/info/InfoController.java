@@ -5,17 +5,16 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ex.gitprac.data.info.InfoBoardDTO;
-import com.ex.gitprac.data.user.UserDTO;
 import com.ex.gitprac.service.info.InfoBoardService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/info/")
@@ -73,7 +72,7 @@ public String listByCategory(@RequestParam("category") String category,
     int end = currentPage * pageSize;
 
     int count;
-    List<InfoBoardDTO> list;
+    List<InfoBoardDTO> list = null;
 
     if ("전체글".equals(category) || "전체 글".equals(category)) {
         count = infoBoardService.count(); // 전체 게시글 수
