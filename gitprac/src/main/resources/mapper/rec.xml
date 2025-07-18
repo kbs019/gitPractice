@@ -76,17 +76,7 @@
   </select>
 
   <select id="findByNo" resultType="com.ex.gitprac.data.rec.RecDTO">
-  SELECT
-    recNo,
-    writer,
-    petNo,
-    category,
-    title,
-    content,
-    reg,
-    imgPath
-  FROM rec
-  WHERE recNo = #{recNo}
+  SELECT * FROM rec WHERE recNo = #{recNo}
 </select>
 
 </mapper>

@@ -59,11 +59,14 @@ public class AdminService {
     }
 
     // 정보 공유 게시판 조회
-    public List<InfoBoardDTO> infoBoardList(){
+    public List<InfoBoardDTO> infoBoardList( String category, int start, int end ){
         List<InfoBoardDTO> list = new ArrayList<InfoBoardDTO>();
 
-
+        list = infoBoardMapper.infoCateBoardList( category, start, end );
 
         return list;
     }
+
+    // 상당 게시판 게시글 갯수
+    
 }
