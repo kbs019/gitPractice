@@ -1,90 +1,151 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>나의 다이어리</title>
 
-<!-- 
- 뭘 해야할까 
-    게시글 출력
-    달력에 게시글 표시
-    달력에 맞게 게시글 조회
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        .diary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px auto;
+            max-width: 1000px;
+        }
+        .diary-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            background-color: #fff;
+        }
+        .diary-card img {
+            width: 100%;
+            max-height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .pagination {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .pagination a {
+            padding: 6px 12px;
+            margin: 0 5px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .pagination a.current-page {
+            font-weight: bold;
+            background-color: #333;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+<h2 style="text-align:center;">나의 다이어리</h2>
 
-    글 작성 버튼
-    다시 작성 버튼
-    submit 버튼
+<!-- 글쓰기 버튼 -->
+<div style="text-align:center;">
+    <button id="writeBtn">글 쓰기</button>
+</div>
 
-    게시글 수정
-    게시글 삭제
- -->
+<!-- 글쓰기 폼 (숨김 상태) -->
+<div id="formArea" style="display:none; text-align:center; margin-top:20px;">
+    <form id="ajaxInsertForm" enctype="multipart/form-data">
+        <input type="file" name="uploadFile" required><br>
+        <textarea name="content" placeholder="내용 입력" maxlength="200" style="width:300px; height:100px;"></textarea><br>
+        <input type="hidden" name="diaryNo" id="diaryNo">
+        <button type="button" id="submitBtn">등록</button>
+    </form>
+</div>
 
-
-<!-- 여기에는 헤더 인클루드 -->
-
-<!-- <div>여기는 달력</div> --> 
-<button id="calendarBtn">달력 펼치기</button>
-<div id="calendar"></div>
-
-
-<div id="formArea"></div>
-<button id="insert">글 쓰기</button>
-<!-- <div>여기는 글 목록 출력</div> -->
-<div th:if="${count == 0}">
+<!-- 게시글 없을 때 -->
+<div th:if="${count == 0}" style="text-align:center;">
     등록된 게시글이 없습니다.<br>
     게시글을 작성해주세요~
 </div>
 
-<div th:if="${count != 0}">
-<table>
-    <tr>
-        <td>
-            <img th:src="@{${ddto.imgPath} + ${ddto.imgName}}"/>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div th:text="${ddto.content}"></div>
-        </td>
-    </tr>
-        <tr>
-            <div th:text="${ddto.content}" id="contentDisplay"></div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <button id="update">수정하기</button>
-        </td>
-    </tr>
-</table>
+<!-- 바둑판 게시글 출력 -->
+<div class="diary-grid" th:if="${count != 0}">
+    <div class="diary-card" th:each="d : ${list}">
+        <img th:if="${d.imgPath != null}" th:src="@{${d.imgPath} + ${d.imgName}}" alt="사진">
+        <p th:text="${d.content}"></p>
+        <p th:text="${#temporals.format(d.reg, 'yyyy-MM-dd')}">z</p>
+        <button th:attr="data-no=${d.diaryNo}" class="deleteBtn">삭제</button>
+        <button th:attr="data-no=${d.diaryNo}" th:attrappend=" data-content='${d.content}'" class="editBtn">수정</button>
+    </div>
 </div>
 
+<!-- 페이징 처리 -->
+
+
 <script>
-    document.getElementById("calendarBtn").onclick = () =>{
-        // 버튼 추가
-        const addCalendar = document.createElement("form");
-        addCalendar.setAttribute("action", "/diary/insert");
-        addCalendar.setAttribute("method", "post");
-        addCalendar.innerHTML = 
-        `
-        <input type="date" name="startDate"/>
-        <input type="date" name="endDate"/>
-        `;
-        document.getElementById("calendar").appendChild(addCalendar);
-    };
+    $(function() {
+        $('#writeBtn').click(function() {
+            $('#formArea').toggle();
+            $('#ajaxInsertForm')[0].reset();
+            $('#diaryNo').val("");
+            $('#submitBtn').text('등록');
+        });
 
-    document.getElementById("insert").onclick = () => {
-        // 버튼 숨기기
-        document.getElementById("insert").style.display = "none";
+        $('#submitBtn').click(function() {
+            let form = $('#ajaxInsertForm')[0];
+            let formData = new FormData(form);
+            let isUpdate = $('#diaryNo').val() !== "";
+            let url = isUpdate ? '/diary/update' : '/diary/insert';
 
-        const insertForm = document.createElement("form");
-        insertForm.setAttribute("action", "/diary/insert");
-        insertForm.setAttribute("method", "multi-part/form");
-        insertForm.setAttribute("enctype", "multipart/form-data");
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(res) {
+                    if (res === 'success' || res === 'updated') {
+                        alert('저장 완료');
+                        location.reload();
+                    } else if (res === 'nologin') {
+                        alert('로그인이 필요합니다.');
+                    } else {
+                        alert('처리 실패');
+                    }
+                },
+                error: function() {
+                    alert('서버 오류');
+                }
+            });
+        });
 
-        insertForm.innerHTML = 
-        `
-        <input type="file" name="uploadFile"><br>
-        <textarea name="content" maxlength="200" placeholder="내용 입력"></textarea><br>
-        <button type="submit">등록</button>
-        `;
+        $('.deleteBtn').click(function() {
+            const no = $(this).data('no');
+            if (!confirm('정말 삭제하시겠습니까?')) return;
 
-        document.getElementById("formArea").appendChild(insertForm);
-        
-    };
+            $.post('/diary/delete', { diaryNo: no }, function(res) {
+                if (res === 'deleted') {
+                    alert('삭제 완료');
+                    location.reload();
+                } else {
+                    alert('삭제 실패');
+                }
+            });
+        });
+
+        $('.editBtn').click(function() {
+            const no = $(this).data('no');
+            const content = $(this).attr('data-content');
+
+            $('#formArea').show();
+            $('#diaryNo').val(no);
+            $('textarea[name="content"]').val(content);
+            $('#submitBtn').text('수정');
+        });
+    });
 </script>
+
+</body>
+</html>
