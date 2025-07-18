@@ -17,7 +17,7 @@ import com.ex.gitprac.data.rec.RecDTO;
 import com.ex.gitprac.service.rec.RecService;
 
 @Controller
-@RequestMapping("/rec/*")
+@RequestMapping("/rec")
 @RequiredArgsConstructor
 public class RecController {
 
@@ -26,7 +26,7 @@ public class RecController {
     /**
      * 🗂 일지 목록 조회 (필터 포함)
      */
-    @GetMapping("/rec")
+    @GetMapping("")
     public String recListPage(
         @RequestParam(name = "petNo", required = false) Integer petNo,
         @RequestParam(name = "startDate", required = false) String startDate,
@@ -43,7 +43,7 @@ public class RecController {
     /**
      * 📝 일지 작성 폼 페이지
      */
-    @GetMapping("/rec/upload")
+    @GetMapping("/upload")
     public String uploadPage() {
         return "rec/upload";
     }
@@ -51,7 +51,7 @@ public class RecController {
     /**
      * ✅ 일지 등록 처리
      */
-    @PostMapping("/rec/upload")
+    @PostMapping("/upload")
     public String saveRec(
         @ModelAttribute RecDTO recDTO,
         RedirectAttributes redirectAttributes

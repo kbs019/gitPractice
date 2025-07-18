@@ -15,6 +15,7 @@
     )
   </insert>
 
+  <!-- ✅ 여기 줄바꿈 문제 수정함 -->
   <select id="findAll" resultType="com.ex.gitprac.data.rec.RecDTO">
     SELECT
       rec_no AS recNo,
@@ -30,41 +31,44 @@
 
   <select id="findFiltered" resultType="com.ex.gitprac.data.rec.RecDTO">
     SELECT
-     rec_no AS recNo,
-     writer,
-     pet_no AS petNo,
-     category,
-     title,
-     content,
-     reg
-   FROM rec
-   <where>
-     <if test="petNo != null">
+      rec_no AS recNo,
+      writer,
+      pet_no AS petNo,
+      category,
+      title,
+      content,
+      reg
+    FROM rec
+    <where>
+      <if test="petNo != null">
         pet_no = #{petNo}
       </if>
-     <if test="startDate != null and endDate != null">
-       AND reg BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
-     </if>
-     <if test="categoryGroup != null">
-       AND (
-         <choose>
-           <when test="categoryGroup eq '밥/간식'">
-             category IN ('밥', '간식')
-           </when>
-           <when test="categoryGroup eq '배변/배뇨'">
-             category IN ('배변', '배뇨')
-           </when>
-           <when test="categoryGroup eq '병원/약'">
-             category IN ('병원', '약')
-           </when>
-           <otherwise>
-             category = #{categoryGroup}
-           </otherwise>
-         </choose>
-       )
-     </if>
-   </where> 
-   ORDER BY reg DESC
+      <if test="startDate != null and endDate != null">
+  <![CDATA[
+    AND reg >= TO_DATE(#{startDate}, 'YYYY-MM-DD')
+    AND reg < TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+  ]]>
+</if>
+      <if test="categoryGroup != null">
+        AND (
+          <choose>
+            <when test="categoryGroup eq '밥/간식'">
+              category IN ('밥', '간식')
+            </when>
+            <when test="categoryGroup eq '배변/배뇨'">
+              category IN ('배변', '배뇨')
+            </when>
+            <when test="categoryGroup eq '병원/약'">
+              category IN ('병원', '약')
+            </when>
+            <otherwise>
+              category = #{categoryGroup}
+            </otherwise>
+          </choose>
+        )
+      </if>
+    </where>
+    ORDER BY reg DESC
   </select>
 
 </mapper>
