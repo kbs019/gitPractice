@@ -82,8 +82,30 @@
             });
 
             function searchPostList(){
+                let category = $('#category').val();
+                let keyword = $('#keyword').val().trim();
+                let isAnswered = $('#isAnsweredStatusCheck').is(':checked') ? 1 : 0;
+
+                if( keyword.length > 0 && keyword.length < 2 ){
+                    alert('2글자 이상 입력해주세요.');
+                    return;
+                }
+
                 $.ajax({
-                    
+                    url : '/qna/searchList2',
+                    type : 'post',
+                    data : {
+                        category : category,
+                        keyword : keyword,
+                        isAnswered : isAnswered
+                    },
+                    success : function(list){
+                        $('#list-wrapper').html(list);
+                    },
+                    error : function( xhr, status, error ){
+                        console.log(error + ' 오류 발생');
+                        alert('오류 발생');
+                    }
                 });
             }
         });

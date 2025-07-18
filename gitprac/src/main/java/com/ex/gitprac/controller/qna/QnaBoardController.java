@@ -63,7 +63,7 @@ public class QnaBoardController {
         model.addAttribute("list", list);
         model.addAttribute("pageNum", pageNum);
 
-        return "/qna/listPrac";
+        return "/qna/listPrac2";
     }
 
     // 글작성 버튼을 눌렀을 때, 작동
@@ -273,6 +273,36 @@ public class QnaBoardController {
         }else{
             list = new ArrayList<QnaBoardDTO>();
         }
+
+        int pageCount = (count/pageSize) + (count%pageSize == 0 ? 0 : 1);
+        int pageBlock = 10;
+        int startPage = (int) ((currentPage - 1) / pageBlock) * pageBlock + 1;
+        int endPage = startPage + pageBlock - 1;
+        if( endPage > pageCount ){
+            endPage = pageCount;
+        }
+
+        model.addAttribute("pageCount", pageCount);
+        model.addAttribute("pageBlock", pageBlock);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("count", count);
+        model.addAttribute("list", list);
+        model.addAttribute("pageNum", pageNum);
+
+        return "/qna/searchList";
+    }
+
+    // 검색 + 답변 여부 선택
+    @PostMapping("searchList2")
+    public String searchList2( @RequestParam(name="pageNum", defaultValue="1") int pageNum, @RequestParam("category") String category, @RequestParam("keyword") String keyword, @RequestParam("isAnswered") int isAnswered , Model model) {
+        int pageSize = 10;
+        int currentPage = pageNum;
+        int start = (currentPage - 1) * pageSize + 1;
+        int end = currentPage * pageSize;
+        int count = qnaBoardService.searchListCount2(category, keyword, isAnswered);
+        List<QnaBoardDTO> list = qnaBoardService.searchBoardList2(category, keyword, isAnswered, start, end);
+        
 
         int pageCount = (count/pageSize) + (count%pageSize == 0 ? 0 : 1);
         int pageBlock = 10;

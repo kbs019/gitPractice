@@ -134,4 +134,62 @@ public class QnaBoardService {
         int result = qnaBoardMapper.searchListCountByIsAnsweredChecked();
         return result;
     }
+    
+    // 검색 결과에 따른 글목록 조회
+    public List<QnaBoardDTO> searchBoardList2( String category, String keyword, int isAnswered, int start, int end ){
+        List<QnaBoardDTO> list = new ArrayList<QnaBoardDTO>();
+
+        if( isAnswered == 0 ){
+            if( category.equals("total") ){
+                list = qnaBoardMapper.searchListByTotal(keyword, start, end);
+            } else if( category.equals("title") ){
+                list = qnaBoardMapper.searchListByTitle(keyword, start, end);
+            } else if( category.equals("content") ){
+                list = qnaBoardMapper.searchListByContent(keyword, start, end);
+            } else if( category.equals("titleAndContent") ){
+                list = qnaBoardMapper.searchListByTitleAndContent(keyword, start, end);
+            }
+        } else if( isAnswered == 1 ){
+            if( category.equals("total") ){
+                list = qnaBoardMapper.searchListByTotal2(keyword, isAnswered, start, end);
+            } else if( category.equals("title") ){
+                list = qnaBoardMapper.searchListByTitle2(keyword, isAnswered, start, end);
+            } else if( category.equals("content") ){
+                list = qnaBoardMapper.searchListByContent2(keyword, isAnswered, start, end);
+            } else if( category.equals("titleAndContent") ){
+                list = qnaBoardMapper.searchListByTitleAndContent2(keyword, isAnswered, start, end);
+            }
+        }
+
+        return list;
+    }
+
+    // 검색 결과에 따른 글갯수 조회
+    public int searchListCount2( String category, String keyword, int isAnswered ){
+        int count = 0;
+
+        if( isAnswered == 0 ){
+            if( category.equals("total") ){
+                count = qnaBoardMapper.searchListCountByTotal(keyword);
+            } else if( category.equals("title") ){
+                count = qnaBoardMapper.searchListCountByTitle(keyword);
+            } else if( category.equals("content") ){
+                count = qnaBoardMapper.searchListCountByContent(keyword);
+            } else if( category.equals("titleAndContent") ){
+                count = qnaBoardMapper.searchListCountByTitleAndContent(keyword);
+            }
+        } else if( isAnswered == 1 ){
+            if( category.equals("total") ){
+                count = qnaBoardMapper.searchListCountByTotal2(keyword, isAnswered);
+            } else if( category.equals("title") ){
+                count = qnaBoardMapper.searchListCountByTitle2(keyword, isAnswered);
+            } else if( category.equals("content") ){
+                count = qnaBoardMapper.searchListCountByContent2(keyword, isAnswered);
+            } else if( category.equals("titleAndContent") ){
+                count = qnaBoardMapper.searchListCountByTitleAndContent2(keyword, isAnswered);
+            }
+        }
+
+        return count;
+    }
 }
