@@ -48,7 +48,7 @@
                 <td width="100" th:text="${dto.writer}"></td>
                 <td width="60"th:text="${dto.category}"></td>
                 <td width="350">
-                    <a th:href="@{|/info/content?num=${dto.postNo}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
+                    <a th:href="@{|/info/content?postNo=${dto.postNo}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
                 </td>
                 <td th:text="${#temporals.format(dto.reg, 'yy.MM.dd HH:mm')}" align="center"></td>
             </tr>
