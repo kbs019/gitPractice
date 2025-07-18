@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>하루犬과 - 일지 상세</title>
+</head>
+<body>
+
+  <main>
+    <section>
+      <h1 th:text="${rec.title}">제목</h1>
+
+      <div>
+        <p>카테고리: <span th:text="${rec.category}">카테고리</span></p>
+        <!-- 🔧 수정: 날짜 포맷 방식 변경 -->
+        <p>작성일: <span th:text="${#temporals.format(rec.reg, 'yyyy-MM-dd')}">작성일</span></p>
+      </div>
+
+      <hr>
+
+      <div th:text="${rec.content}">
+        본문 내용
+      </div>
+
+      <br>
+
+      <div th:if="${rec.imgPath != null and rec.imgName != null}">
+  <img th:src="@{${rec.imgPath} + ${rec.imgName}}" style="max-width: 400px;" alt="첨부 이미지">
+</div>
+  <br>
+
+      <a href="/rec">← 목록으로 돌아가기</a>
+    </section>
+  </main>
+
+</body>
+</html>

@@ -13,4 +13,7 @@ public class RecDTO {
     private String title;
     private String content;
     private LocalDate reg;
+    private String orgImgName;
+    private String imgName;
+    private String imgPath;
 }

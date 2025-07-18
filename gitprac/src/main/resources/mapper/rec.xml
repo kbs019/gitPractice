@@ -5,15 +5,20 @@
 <mapper namespace="com.ex.gitprac.repository.rec.RecMapper">
 
   <insert id="insertRec" parameterType="com.ex.gitprac.data.rec.RecDTO">
-    <selectKey keyProperty="recNo" resultType="int" order="BEFORE">
-      SELECT rec_seq.NEXTVAL FROM dual
-    </selectKey>
-    INSERT INTO rec (
-      rec_no, writer, pet_no, category, title, content, reg
-    ) VALUES (
-      #{recNo}, #{writer}, #{petNo}, #{category}, #{title}, #{content}, SYSDATE
-    )
-  </insert>
+  <selectKey keyProperty="recNo" resultType="int" order="BEFORE">
+    SELECT rec_seq.NEXTVAL FROM dual
+  </selectKey>
+  INSERT INTO rec (
+    rec_no, writer, pet_no, category, title, content, reg,
+    org_img_name, img_name, img_path
+  ) VALUES (
+    #{recNo}, #{writer}, #{petNo}, #{category}, #{title}, #{content}, SYSDATE,
+    #{orgImgName, jdbcType=VARCHAR},
+    #{imgName, jdbcType=VARCHAR},
+    #{imgPath, jdbcType=VARCHAR}
+  )
+</insert>
+
 
   <!-- ✅ 여기 줄바꿈 문제 수정함 -->
   <select id="findAll" resultType="com.ex.gitprac.data.rec.RecDTO">
@@ -69,6 +74,19 @@
     </where>
     ORDER BY reg DESC
   </select>
+
+  <select id="findByNo" resultType="com.ex.gitprac.data.rec.RecDTO">
+  SELECT
+    rec_no AS recNo,
+    writer,
+    pet_no AS petNo,
+    category,
+    title,
+    content,
+    reg
+  FROM rec
+  WHERE rec_no = #{recNo}
+</select>
 
 </mapper>
 
