@@ -8,83 +8,82 @@
 <body>
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
     <div align="center">
-        <table width="800">
-            <tr>
-                <td>
-                    <select id="category">
-                        <option value="title">제목</option>
-                        <option value="content">내용</option>
-                        <option value="titleAndContent">제목+내용</option>
-                    </select>
-                    <input type="text" id="keyword" placeholder="2글자 이상 작성해주세요.">
-                    <button type="button" id="selectPostByKeyword">검색</button>
-                </td>
-                <td align="right">
-                    <a th:href="@{/qna/write}">글쓰기</a>
-                </td>
-            </tr>
-        </table>
+        <span class="search-wrapper">
+            <select id="category">
+                <option value="total">전체</option>
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="titleAndContent">제목+내용</option>
+            </select>
+            <input type="text" id="keyword" placeholder="2글자 이상 작성해주세요.">
+            <button type="button" id="selectPostByKeyword">검색</button>
+        </span>
+        <span class="writeBtn">
+            <a th:href="@{/qna/write}">글쓰기</a>
+        </span>
     </div>
-    <div th:if="${count == 0}">
-        <table align="center" width="800">
-            <tr>
-                <td><h3>게시판에 작성된 글이 없습니다.</h3></td>
-            </tr>
-        </table>
-    </div>
-    <div th:if="${count != 0}">
-        <table align="center" width="800">
-            <tr height="30">
-                <th width="350">글제목</th>
-                <th width="100">작성자</th>
-                <th width="150">답변 여부</th>
-                <th width="200">작성일</th>
-            </tr>
-            <tr height="30" th:each="qto : ${list}">
-                <td align="center">
-                    <a th:href="@{|/qna/content?postNo=${qto.postNo}&pageNum=${pageNum}|}" th:text="${qto.title}"></a>
-                </td>
-                <td th:text="${qto.writer}" align="center"></td>
-                <td align="center">
-                    <span th:if="${qto.isAnswered == 0}">
-                        <span>답변 대기중</span>
+    <div id="list-wrapper">
+        <div th:if="${count == 0}">
+            <span><h3>게시판에 작성된 글이 없습니다.</h3></span>
+        </div>
+        <div th:if="${count != 0}">
+            <div align="center" width="800">
+                <div class="post-info" th:each="qto : ${list}">
+                    <div class="post-title-wrapper">
+                        <a th:href="@{|/qna/content?postNo=${qto.postNo}&pageNum=${pageNum}|}" th:text="${qto.title}"></a>
+                    </div>
+                    <span class="post-writer-wrapper" th:text="${qto.writer}"></span>
+                    <span class="post-views-wrapper">
+                        <span>조회수 : </span>
+                        <span th:text="${qto.views}"></span>
                     </span>
-                    <span th:if="${qto.isAnswered == 1}">
-                        <span>답변 완료</span>
-                    </span>
-                </td>
-                <td th:text="${#temporals.format(qto.reg, 'yy/MM/dd HH:mm')}" align="center"></td>
-            </tr>
-        </table>
-    </div>
-    <div class="paging" align="center" th:if="${count > 0}">
-        <span th:if="${startPage} > ${pageCount}">
-            <a th:href="@{|/qna/list?pageNum=${startPage - pageBlock}|}">[이전]</a>
-        </span>
-        <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-            <a th:href="@{|/qna/list?pageNum=${i}|}" th:text="'['+${i}+']'"></a>
-        </span>
-        <span th:if="${endPage} < ${pageCount}">
-            <a th:href="@{|/qna/list?pageNum=${startPage + pageBlock}|}">[다음]</a>
-        </span>
+                    <span th:text="${#temporals.format(qto.reg, 'yy.MM.dd HH:mm')}"></span>
+                    <div class="post-isAnswered-status">
+                        <span th:if="${qto.isAnswered == 0}">
+                            <span>답변 대기중</span>
+                        </span>
+                        <span th:if="${qto.isAnswered == 1}">
+                            <span>답변 완료</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="paging" align="center" th:if="${count > 0}">
+            <span th:if="${startPage} > ${pageCount}">
+                <a th:href="@{|/qna/list?pageNum=${startPage - pageBlock}|}">[이전]</a>
+            </span>
+            <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                <a th:href="@{|/qna/list?pageNum=${i}|}" th:text="'['+${i}+']'"></a>
+            </span>
+            <span th:if="${endPage} < ${pageCount}">
+                <a th:href="@{|/qna/list?pageNum=${startPage + pageBlock}|}">[다음]</a>
+            </span>
+        </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- ajax 시작 -->
     <script>
         $(document).ready(function(){
-            let category = $('#category').val();
-            let keyword = $('#keyword').val();
             $('#selectPostByKeyword').click(function(){
+                let category = $('#category').val();
+                let keyword = $('#keyword').val();
+
+                if( keyword.trim().length < 2 ){
+                    alert('2글자 이상 입력해주세요.');
+                    return;
+                }
+
                 $.ajax({
-                    url : '/qna/findList',
+                    url : '/qna/searchList',
                     type : 'post',
                     data : {
                         category : category,
                         keyword : keyword
                     },
                     success : function( a ){
-                        $('#boardList').html(a);
+                        $('#list-wrapper').html(a);
                     },
                     error : function( xhr, status, error ){
                         console.log(error+' 발생');

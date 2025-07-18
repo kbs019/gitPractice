@@ -29,9 +29,27 @@ public interface QnaBoardMapper {
     // 글 삭제
     public void postDelete(int postNo);
 
-    // 일지 조회
-    // public RecBoardDTO recordSelect(String writer);
-
     // 답변 작성에 의해 isAnswered 컬럼의 값 변경
     public void isAnsweredChange(int postNo);
+
+    // 모든 컬럼에 대한 검색결과(글목록)
+    public List<QnaBoardDTO> searchListByTotal(@Param("keyword") String keyword, @Param("start") int start, @Param("end") int end);
+
+    // category 값이 title 일 때의 검색결과에 대한 글목록
+    public List<QnaBoardDTO> searchListByTitle(@Param("keyword") String keyword, @Param("start") int start, @Param("end") int end);
+
+    // category 값이 content 일 때의 검색결과에 대한 글목록
+    public List<QnaBoardDTO> searchListByContent(@Param("keyword") String keyword, @Param("start") int start, @Param("end") int end);
+
+    // category 값이 titleAndContent 일 때의 검색결과에 대한 글목록
+    public List<QnaBoardDTO> searchListByTitleAndContent(@Param("keyword") String keyword, @Param("start") int start, @Param("end") int end);
+
+    // 모든 컬럼에 대한 검색 결과(글 갯수)
+    public int searchListCountByTotal(String keyword);
+    // category 값이 title 일 때의 검색결과에 대한 글갯수
+    public int searchListCountByTitle(String keyword);
+    // category 값이 content 일 때의 검색결과에 대한 글갯수
+    public int searchListCountByContent(String keyword);
+    // category 값이 titleAndContent 일 때의 검색결과에 대한 글갯수
+    public int searchListCountByTitleAndContent(String keyword);
 }
