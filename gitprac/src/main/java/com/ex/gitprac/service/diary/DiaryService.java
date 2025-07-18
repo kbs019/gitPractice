@@ -23,12 +23,17 @@ public class DiaryService {
         int result = diaryMapper.countDiary(writer);
         return result;
     }
-    public List<DiaryDTO> listDiary(int start, int end, String writer){
-        List<DiaryDTO> list = diaryMapper.listDiary(start, end, writer);
+    public List<DiaryDTO> listDiary(String writer, int start, int end){
+        List<DiaryDTO> list = diaryMapper.listDiary(writer, start, end);
         return list;
     }
-    public DiaryDTO contentDiary(int diaryNo){
-        DiaryDTO ddto = diaryMapper.contentDiary(diaryNo);
-        return ddto;
+    public List<DiaryDTO> listDiaryByDate(String writer, String startDate, String endDate, int start, int end) {
+        return diaryMapper.listDiaryByDate(writer, startDate, endDate, start, end);
+    }
+    public void deleteDiary(int diaryNo) {
+        diaryMapper.deleteDiary(diaryNo);
+    }
+    public void updateDiary(DiaryDTO dto) {
+        diaryMapper.updateDiary(dto);
     }
 }

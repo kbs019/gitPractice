@@ -3,34 +3,37 @@ package com.ex.gitprac.data.diary;
 import java.time.LocalDate;
 
 import lombok.Data;
+
 @Data
 public class PetDTO {
 
     private int petNo;
     private String writer;
-    private String dogBreed;
-    private int dogAge;
-    private int dogSize;
-    private int dogWeight;
-    private LocalDate dogBirth;
+    private String petName;
+    private String petBreed;
+    private int petAge;
+    private int petSize;
+    private int petWeight;
+    private LocalDate petBirth;
 }
 /* 
 CREATE TABLE PET(
 
     PET_NO NUMBER PRIMARY KEY,
     WRITER VARCHAR2(50),
-    DOG_BREED VARCHAR2(50),
-    DOG_AGE NUMBER,
-    DOG_SIZE NUMBER,
-    DOG_WEIGHT NUMBER,
-    DOG_BIRTH DATE
+    PET_NAME VARCHAR2(50),
+    PET_BREED VARCHAR2(50),
+    PET_AGE NUMBER,
+    PET_SIZE NUMBER,
+    PET_WEIGHT NUMBER,
+    PET_BIRTH DATE
 );
 
 CREATE SEQUENCE PET_SEQ NO CACHE;
 
 SELECT * FROM PET;
 
-INSERT INTO PET VALUES(PET_SEQ_NEXTVAL, ?, ?, ?, ?, ?, ?);
+INSERT INTO PET VALUES(PET_SEQ_NEXTVAL, ?, ?, ?, ?, ?, ?, ?);
 
 DROP TABLE PET;
 
