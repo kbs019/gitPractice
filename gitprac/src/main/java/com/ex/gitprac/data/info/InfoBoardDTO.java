@@ -13,7 +13,7 @@ public class InfoBoardDTO {
     private String  content;
     private LocalDateTime reg;
     private int     views;
-    private int     isFixed;
+    private int     status;
     private int     ref;
 }
 /* 
@@ -25,7 +25,7 @@ create table info_board (
     content    varchar2(4000)    not null,
     reg        date              default sysdate,
     views      number            default 0,
-    isFixed   number            default 0, 
+    status   number            default 0, 
     ref        number            default 0
 );
 

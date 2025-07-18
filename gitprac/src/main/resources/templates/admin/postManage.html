@@ -8,10 +8,10 @@
 <body>
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
     <div id="post-Management">
-        <div id="qna-board-connect">
-            <h1>상담 게시판</h1>
+        <div id="qna-board-connect" align="center">
             <span>
-                <h4><a th:href="@{/qna/list}">더보기</a></h4>
+                <h1>상담 게시판</h1>
+                <span><a th:href="@{/qna/list}">더보기</a></span>
             </span>
             <div id="qna-list-wrapper">
                 <table>
@@ -19,20 +19,27 @@
                         <td>제목</td>
                         <td>작성자</td>
                         <td>작성일자</td>
-                        <td>게시상태</td>
+                        <td>제재 여부</td>
                     </tr>
-                    <tr th:each="qto : ${list}">
+                    <tr th:each="qto : ${qnaList}">
                         <td>
-                            <a th:href="@{/qto/content(postNo=${qto.postNo}, pageNum=${pageNum})}" th:text="${qto.title}"></a>
+                            <a th:href="@{|/qna/content?postNo=${qto.postNo}&pageNum=${pageNum}|}" th:text="${qto.title}"></a>
                         </td>
                         <td th:text="${qto.writer}"></td>
                         <td th:text="${#temporals.format(qto.reg, 'yy.MM.dd HH:mm')}"></td>
-                        <td th:text="${qto.status}"></td>
+                        <td>
+                            <span th:if="${qto.status == 0}">
+                                <span></span>
+                            </span>
+                            <span th:if="${qto.status == 1}">
+                                <span>숨김 처리됨</span>
+                            </span>
+                        </td>
                     </tr>
                 </table>
             </div>
         </div>
-        <div id="info-board-connect">
+        <div id="info-board-connect" align="center">
             <h1>정보공유 게시판</h1>
             <span>
                 <h4><a th:href="@{/info/list(category='전체글')}">더보기</a></h4>
@@ -43,15 +50,22 @@
                         <td>제목</td>
                         <td>작성자</td>
                         <td>작성일자</td>
-                        <td>게시상태</td>
+                        <td>제재 여부</td>
                     </tr>
-                    <tr th:each="ito : ${list}">
+                    <tr th:each="ito : ${infoList}">
                         <td>
                             <a th:href="@{/info/content(postNo=${ito.postNo}, pageNum=${pageNum})}" th:text="${ito.title}"></a>
                         </td>
                         <td th:text="${ito.writer}"></td>
                         <td th:text="${#temporals.format(ito.reg, 'yy.MM.dd HH:mm')}"></td>
-                        <td th:text="${ito.status}"></td>
+                        <td>
+                            <span th:if="${ito.status == 0}">
+                                <span></span>
+                            </span>
+                            <span th:if="${ito.status == 1}">
+                                <span>숨김 처리됨</span>
+                            </span>
+                        </td>
                     </tr>
                 </table>
             </div>

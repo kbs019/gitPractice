@@ -1,19 +1,16 @@
 <span th:if="${session.users} != null">
     <span th:if="${session.users.role} == 0">
         <script>
-            alert('메인1로 이동');
             window.location='/qna/list';
         </script>
     </span>
     <span th:if="${session.users.role} == 1">
         <script>
-            alert('메인2로 이동');
-            window.location='@{/user/main2}';
+            window.location='/user/main2';
         </script>메인2</span>
     <span th:if="${session.users.role} == 2">
         <script>
-            alert('메인1로 이동');
-            window.location='@{/user/main1}';
+            window.location='/admin/userManage';
         </script>
     </span>
 </span>

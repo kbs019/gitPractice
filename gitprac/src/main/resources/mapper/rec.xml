@@ -79,5 +79,10 @@
     SELECT * FROM rec WHERE recNo = #{recNo}
   </select>
 
+  <!-- 글작성 -->
+  <!-- <insert id="recordInsert">
+    insert into rec values( rec_seq.nextval, #{} );
+  </insert> -->
+
 </mapper>
 

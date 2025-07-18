@@ -27,7 +27,7 @@
                     </a>
                 </span>
                 <span th:if="${session.users.role} == 2">
-                    <a th:href="@{/admin/adminPage}">
+                    <a th:href="@{/admin/userManage}">
                         <h1>하루犬과</h1>
                     </a>
                 </span>
@@ -47,7 +47,7 @@
                         <li><a th:href="@{/admin/notice}">공지사항</a></li>
                         <li><a th:href="@{/admin/ask}">질의응답</a></li>
                         <li><a th:href="@{/admin/userManage}">회원관리</a></li>
-                        <li><a th:href="@{/admin/postManage}">게시글관리</a></li>
+                        <li><a th:href="@{/admin/postManage(category='전체글')}">게시글관리</a></li>
                     </ul>
                 </div>
             </div>
