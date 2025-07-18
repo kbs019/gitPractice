@@ -12,6 +12,7 @@ public interface QnaBoardMapper {
 
     // 글갯수
     public int boardCount();
+
     // 글목록
     public List<QnaBoardDTO> boardList(@Param("start") int start, @Param("end") int end);
 
@@ -20,6 +21,7 @@ public interface QnaBoardMapper {
 
     // 조회수 증가
     public void viewsUp(int postNo);
+    
     // 글 내용
     public QnaBoardDTO postContent(int postNo);
 

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,50 +62,50 @@ public class InfoController {
     //     return "info/infoList";
     // }
 
-@GetMapping("list")
-public String listByCategory(@RequestParam("category") String category,
-                             @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                             Model model) {
+    @GetMapping("list")
+    public String listByCategory(@RequestParam(name = "category", required = false, defaultValue = "전체글") String category,
+                                @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
+                                Model model) {
 
-    int pageSize = 10;
-    int currentPage = pageNum;
-    int start = (currentPage - 1) * pageSize + 1;
-    int end = currentPage * pageSize;
+        int pageSize = 10;
+        int currentPage = pageNum;
+        int start = (currentPage - 1) * pageSize + 1;
+        int end = currentPage * pageSize;
 
-    int count;
-    List<InfoBoardDTO> list = null;
+        int count;
+        List<InfoBoardDTO> list = null;
 
-    if ("전체글".equals(category) || "전체 글".equals(category)) {
-        count = infoBoardService.count(); // 전체 게시글 수
-        list = infoBoardService.infoBoardList(start, end); // 전체 리스트
-    } else {
-        count = infoBoardService.cateCount(category);
-        list = (count > 0)
-            ? infoBoardService.infoCateBoardList(category, start, end)
-            : Collections.emptyList();
+        if ("전체글".equals(category) || "전체 글".equals(category)) {
+            count = infoBoardService.count(); // 전체 게시글 수
+            list = infoBoardService.infoBoardList(start, end); // 전체 리스트
+        } else {
+            count = infoBoardService.cateCount(category);
+            list = (count > 0)
+                ? infoBoardService.infoCateBoardList(category, start, end)
+                : Collections.emptyList();
+        }
+
+        int pageCount = count / pageSize + (count % pageSize == 0 ? 0 : 1);
+        int startPage = (int) ((currentPage - 1) / 10) * 10 + 1;
+        int pageBlock = 10;
+        int endPage = startPage + pageBlock - 1;
+        if (endPage > pageCount) endPage = pageCount;
+
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("start", start);
+        model.addAttribute("end", end);
+        model.addAttribute("count", count);
+        model.addAttribute("list", list);
+        model.addAttribute("pageCount", pageCount);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("pageBlock", pageBlock);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("pageNum", pageNum);
+        model.addAttribute("category", category);
+
+        return "info/infoList";
     }
-
-    int pageCount = count / pageSize + (count % pageSize == 0 ? 0 : 1);
-    int startPage = (int) ((currentPage - 1) / 10) * 10 + 1;
-    int pageBlock = 10;
-    int endPage = startPage + pageBlock - 1;
-    if (endPage > pageCount) endPage = pageCount;
-
-    model.addAttribute("pageSize", pageSize);
-    model.addAttribute("currentPage", currentPage);
-    model.addAttribute("start", start);
-    model.addAttribute("end", end);
-    model.addAttribute("count", count);
-    model.addAttribute("list", list);
-    model.addAttribute("pageCount", pageCount);
-    model.addAttribute("startPage", startPage);
-    model.addAttribute("pageBlock", pageBlock);
-    model.addAttribute("endPage", endPage);
-    model.addAttribute("pageNum", pageNum);
-    model.addAttribute("category", category);
-
-    return "info/infoList";
-}
 
     @GetMapping("write")
     public String write() {
@@ -121,5 +122,13 @@ public String listByCategory(@RequestParam("category") String category,
         int result = infoBoardService.infoInsert(idto);
         model.addAttribute("result", result);
         return "info/infoWritePro";
+    }
+
+    @GetMapping("content")
+    public String content( @RequestParam("postNo") int postNo, @ModelAttribute("pageNum") int pageNum, Model model) {
+        InfoBoardDTO idto = infoBoardService.InfopostContent(postNo);
+        model.addAttribute("idto", idto);
+
+        return "info/content";
     }
 }

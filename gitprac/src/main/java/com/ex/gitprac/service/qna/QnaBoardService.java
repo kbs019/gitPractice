@@ -18,6 +18,7 @@ public class QnaBoardService {
 
     private final QnaBoardMapper qnaBoardMapper;
     private final QnaReplyMapper qnaReplyMapper;
+    
     // 글 갯수
     public int boardCount(){
         return qnaBoardMapper.boardCount();
