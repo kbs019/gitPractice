@@ -1,3 +1,5 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 <!-- 
  뭘 해야할까 
     게시글 출력
@@ -29,6 +31,27 @@
         </tr>
     </table>
 </div>
+
+<div th:if="${count != 0}">
+<table>
+    <tr>
+        <td>
+            <img th:src="@{${ddto.imgPath} + ${ddto.imgName}}"/>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div th:text="${ddto.content}" id="contentDisplay"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <button id="update">수정하기</button>
+        </td>
+    </tr>
+</table>
+</div>
+
 <script>
     document.getElementById("insert").onclick = () => {
         // 버튼 숨기기
