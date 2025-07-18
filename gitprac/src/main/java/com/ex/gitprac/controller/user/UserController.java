@@ -38,7 +38,7 @@ public class UserController {
     @GetMapping("logout")
     public String logout( HttpSession session ) {
         session.invalidate();
-        return "user/logout";
+        return "user/loginForm";
     }
     
     public String getMethodName(@RequestParam String param) {

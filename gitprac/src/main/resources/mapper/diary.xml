@@ -19,8 +19,3 @@ SELECT * FROM DIARY WHERE WRITER = #{writer}
 SELECT * FROM DIARY WHERE DIARY_NO = #{diaryNo}
 </select>
 </mapper>
-<!-- 
-select * from (select b.*, rownum r from 
-(select * from diary order by ) b) 
-where r >= #{start} and r <= #{end}
- -->

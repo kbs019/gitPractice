@@ -31,7 +31,7 @@ public class InfoBoardService {
         return result;
     }
     public int cateCount( String category) {
-        return infoBoardMapper.infoCateBoardCount();
+        return infoBoardMapper.infoCateBoardCount(category);
     }
     public List<InfoBoardDTO> infoCateBoardList(String category, int start, int end) {
         List<InfoBoardDTO> cateList = infoBoardMapper.infoCateBoardList(category, start, end);
