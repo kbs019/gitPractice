@@ -20,6 +20,6 @@ public interface InfoBoardMapper {
     public void readCountUp(int num);
     public int infoBoardUpdate(InfoBoardDTO infoBoardDTO);
     public int infoBoardDelete(int num);
-    public int infoCountByCategory(@Param("category") String category);
-    public List<InfoBoardDTO> infoBoardByCategory(@Param("start") int start, @Param("end") int end, @Param("category") String category);
+    public int infoCateBoardCount(@Param("category") String category);
+    public List<InfoBoardDTO> infoCateBoardList(@Param("category") String category, @Param("start") int start, @Param("end") int end );
 }
