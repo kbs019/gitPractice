@@ -27,21 +27,6 @@ public class InfoBoardService {
         return list;
     }
     
-    // 글 조회
-    public InfoBoardDTO InfopostContent( int postNo ) {
-        return infoBoardMapper.infoBoardContent(postNo);
-    }
-
-    // 글 쓰기
-    public int infoInsert( InfoBoardDTO idto ) {
-        System.out.println(">>> 글쓰기 전 postNo: " + idto.getPostNo());
-
-        int result = infoBoardMapper.infoBoardInsert(idto);
-
-        System.out.println(">>> 글쓰기 후 postNo: " + idto.getPostNo());
-        return result == 1 ? 1 : 0;
-    }
-
     // 카테 글 개수
     public int cateCount( String category) {
         int result = infoBoardMapper.infoCateBoardCount(category);
@@ -53,5 +38,25 @@ public class InfoBoardService {
     public List<InfoBoardDTO> infoCateBoardList(String category, int start, int end) {
         List<InfoBoardDTO> cateList = infoBoardMapper.infoCateBoardList(category, start, end);
         return cateList;
+    }
+    
+    // 글 쓰기
+    public int infoInsert( InfoBoardDTO idto ) {
+        System.out.println(">>> 글쓰기 전 postNo: " + idto.getPostNo());
+        
+        int result = infoBoardMapper.infoBoardInsert(idto);
+
+        System.out.println(">>> 글쓰기 후 postNo: " + idto.getPostNo());
+        return result == 1 ? 1 : 0;
+    }
+    
+    // 글 조회
+    public InfoBoardDTO InfopostContent( int postNo ) {
+        return infoBoardMapper.infoPostContent(postNo);
+    }
+
+    // 글 수정
+    public int infoPostUpdate ( InfoBoardDTO idto) {
+        return infoBoardMapper.infoPostUpdate(idto);
     }
 }
