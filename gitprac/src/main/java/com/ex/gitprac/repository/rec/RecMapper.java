@@ -22,4 +22,12 @@ public interface RecMapper {
     );
 
     public RecDTO findByNo(@Param("recNo") int recNo);
+
+    int updateRec(RecDTO recDTO);
+    int deleteRec(int recNo);
+    RecDTO getRecByNo(int recNo);
+
+    List<RecDTO> findRecListWithPaging(@Param("offset") int offset, @Param("limit") int limit);
+
+    
 }

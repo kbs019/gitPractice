@@ -40,7 +40,6 @@
 
     <!-- 카테고리 그룹 form -->
     <form id="categoryForm" method="get" action="/rec">
-      <!-- 날짜 값 전달용 hidden input -->
       <input type="hidden" name="startDate" id="hiddenStartDate" th:value="${param.startDate}">
       <input type="hidden" name="endDate" id="hiddenEndDate" th:value="${param.endDate}">
 
@@ -78,9 +77,10 @@
           <th>카테고리</th>
           <th>제목</th>
           <th>작성일</th>
+          <th>관리</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="recListContainer">
         <tr th:each="rec : ${recList}">
           <td th:text="${rec.recNo}">1</td>
           <td th:text="${rec.category}">카테고리</td>
@@ -88,12 +88,22 @@
             <a th:href="@{'/rec/content/' + ${rec.recNo}}" th:text="${rec.title}">제목</a>
           </td>
           <td th:text="${rec.reg}">2025-07-18</td>
+          <td>
+            <a th:href="@{'/rec/edit/' + ${rec.recNo}}" class="btn btn-sm btn-warning">수정</a>
+            <a th:href="@{'/rec/delete/' + ${rec.recNo}}" class="btn btn-sm btn-danger"
+               onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
+          </td>
         </tr>
         <tr th:if="${#lists.isEmpty(recList)}">
           <td colspan="5">등록된 일지가 없습니다.</td>
         </tr>
       </tbody>
     </table>
+
+    <!-- 👇 더보기 버튼 -->
+    <div style="text-align:center; margin-top:1rem;">
+      <button id="loadMoreBtn">더보기</button>
+    </div>
   </section>
 </main>
 
@@ -102,6 +112,45 @@
     document.getElementById("hiddenStartDate").value = document.getElementById("startDate").value;
     document.getElementById("hiddenEndDate").value = document.getElementById("endDate").value;
   }
+</script>
+
+<script>
+  let offset = 15;
+  const limit = 15;
+
+  document.getElementById("loadMoreBtn").addEventListener("click", function () {
+    fetch(`/rec/more?offset=${offset}&limit=${limit}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.length === 0) {
+          document.getElementById("loadMoreBtn").style.display = 'none';
+          return;
+        }
+
+        const container = document.getElementById("recListContainer");
+        data.forEach(rec => {
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+            <td>${rec.recNo}</td>
+            <td>${rec.category}</td>
+            <td><a href="/rec/content/${rec.recNo}">${rec.title}</a></td>
+            <td>${rec.reg}</td>
+            <td>
+              <a href="/rec/edit/${rec.recNo}" class="btn btn-sm btn-warning">수정</a>
+              <a href="/rec/delete/${rec.recNo}" class="btn btn-sm btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
+            </td>
+          `;
+
+          container.appendChild(row);
+        });
+
+        offset += limit;
+      })
+      .catch(err => {
+        console.error("로드 실패", err);
+      });
+  });
 </script>
 
 </body>

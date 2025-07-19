@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="/css/rec.css">  <!-- 임시입니다 -->
 </head>
 <body>
   <div th:replace="~{fragments/header.html :: headerFragment}"></div>
@@ -13,6 +14,11 @@
         <p>카테고리: <span th:text="${rto.category}">카테고리</span></p>
         <!-- 🔧 수정: 날짜 포맷 방식 변경 -->
         <p>작성일: <span th:text="${#temporals.format(rto.reg, 'yyyy-MM-dd')}">작성일</span></p>
+      </div>
+
+      <div class="btn-group">
+        <a th:href="@{|/rec/edit/${rto.recNo}|}" class="btn btn-warning">수정</a>
+        <a th:href="@{|/rec/delete/${rto.recNo}|}" class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
       </div>
 
       <hr>

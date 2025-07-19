@@ -5,19 +5,19 @@
 <mapper namespace="com.ex.gitprac.repository.rec.RecMapper">
 
   <insert id="insertRec" parameterType="com.ex.gitprac.data.rec.RecDTO">
-  <selectKey keyProperty="recNo" resultType="int" order="BEFORE">
-    SELECT rec_seq.NEXTVAL FROM dual
-  </selectKey>
-  INSERT INTO rec (
-    recNo, writer, petNo, category, title, content, reg,
-    orgImgName, imgName, imgPath
-  ) VALUES (
-    #{recNo}, #{writer}, #{petNo}, #{category}, #{title}, #{content}, SYSDATE,
-    #{orgImgName, jdbcType=VARCHAR},
-    #{imgName, jdbcType=VARCHAR},
-    #{imgPath, jdbcType=VARCHAR}
-  )
-</insert>
+    <selectKey keyProperty="recNo" resultType="int" order="BEFORE">
+      SELECT rec_seq.NEXTVAL FROM dual
+    </selectKey>
+    INSERT INTO rec (
+      recNo, writer, petNo, category, title, content, reg,
+      orgImgName, imgName, imgPath
+    ) VALUES (
+      #{recNo}, #{writer}, #{petNo}, #{category}, #{title}, #{content}, SYSDATE,
+      #{orgImgName, jdbcType=VARCHAR},
+      #{imgName, jdbcType=VARCHAR},
+      #{imgPath, jdbcType=VARCHAR}
+    )
+  </insert>
 
 
   <!-- ✅ 여기 줄바꿈 문제 수정함 -->
@@ -48,29 +48,30 @@
       <if test="petNo != null">
         petNo = #{petNo}
       </if>
-      <if test="startDate != null and endDate != null">
-  <![CDATA[
-    AND reg >= TO_DATE(#{startDate}, 'YYYY-MM-DD')
-    AND reg < TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
-  ]]>
-</if>
+      <if test="startDate != null and startDate != '1900-01-01' 
+          and endDate != null and endDate != '2100-12-31'">
+          <![CDATA[
+          AND reg >= TO_DATE(#{startDate}, 'YYYY-MM-DD')
+          AND reg < TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+        ]]>
+      </if>
       <if test="categoryGroup != null and categoryGroup != ''">
-  AND category IN
-  <choose>
-    <when test="categoryGroup == '밥/간식'">
-      ('밥', '간식')
-    </when>
-    <when test="categoryGroup == '배변/배뇨'">
-      ('배변', '배뇨')
-    </when>
-    <when test="categoryGroup == '병원/약'">
-      ('병원', '약')
-    </when>
-    <when test="categoryGroup == '활동'">
-      ('활동')
-    </when>
-  </choose>
-</if>
+        AND category IN
+        <choose>
+          <when test="categoryGroup == '밥/간식'">
+            ('밥', '간식')
+          </when>
+          <when test="categoryGroup == '배변/배뇨'">
+            ('배변', '배뇨')
+          </when>
+          <when test="categoryGroup == '병원/약'">
+            ('병원', '약')
+          </when>
+          <when test="categoryGroup == '활동'">
+            ('활동')
+          </when>
+        </choose>
+      </if>
     </where>
     ORDER BY reg DESC
   </select>
@@ -83,6 +84,27 @@
   <!-- <insert id="recordInsert">
     insert into rec values( rec_seq.nextval, #{} );
   </insert> -->
+
+  <update id="updateRec" parameterType="com.ex.gitprac.data.rec.RecDTO">
+    UPDATE rec
+    SET title = #{title},
+        content = #{content},
+        category = #{category}
+    WHERE recNo = #{recNo}
+  </update>
+
+  <delete id="deleteRec" parameterType="int">
+    DELETE FROM rec
+    WHERE recNo = #{recNo}
+  </delete>
+
+  <select id="findRecListWithPaging" resultType="com.ex.gitprac.data.rec.RecDTO">
+    SELECT *
+    FROM rec
+    ORDER BY reg DESC
+    OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+  </select>
+
 
 </mapper>
 
