@@ -39,7 +39,8 @@
                         <li><a th:href="@{/diary/main}">다이어리</a></li>
                         <li><a th:href="@{/rec}">일지</a></li>
                         <li><a th:href="@{/qna/list}">상담 게시판</a></li>
-                        <li><a th:href="@{/info/list(category='전체글')}">정보 게시판</a></li>
+                        <li><a th:href="@{/info/list}">정보 게시판</a></li>
+                        <!-- <li><a th:href="@{/info/list(category='전체글')}">정보 게시판</a></li> -->
                     </ul>
                 </div>
                 <div th:if="${session.users.role == 2}">
@@ -47,7 +48,9 @@
                         <li><a th:href="@{/admin/notice}">공지사항</a></li>
                         <li><a th:href="@{/admin/ask}">질의응답</a></li>
                         <li><a th:href="@{/admin/userManage}">회원관리</a></li>
-                        <li><a th:href="@{/admin/postManage(category='전체글')}">게시글관리</a></li>
+                        <li><a th:href="@{/admin/postManage}">게시글관리</a></li>
+                        <li><a th:href="@{/admin/postManage}">게시글관리</a></li>
+                        <!-- <li><a th:href="@{/admin/postManage(category='전체글')}">게시글관리</a></li> -->
                     </ul>
                 </div>
             </div>
