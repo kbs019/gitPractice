@@ -5,12 +5,12 @@
 <mapper namespace="com.ex.gitprac.repository.ask.AskReplyMapper">	
     <!-- 답변 작성 -->
     <insert id="replyInsert">
-        insert into ask_reply values(#{postNo}, ask_reply_seq.nextval, #{writer}, #{content}, sysdate)
+        insert into ask_reply values(#{askNo}, ask_reply_seq.nextval, #{writer}, #{content}, sysdate)
     </insert>
 
     <!-- 답변 조회 -->
     <select id="replyList" resultType="com.ex.gitprac.data.ask.AskReplyDTO">
-        select * from ask_reply where postNo=#{postNo} order by reg desc
+        select * from ask_reply where askNo=#{askNo} order by reg desc
     </select>
 
     <!-- 답변 삭제 -->
@@ -20,16 +20,16 @@
 
     <!-- 답변에 대한 게시글 번호 조회 -->
     <select id="selectAskNo" resultType="int">
-        select postNo from ask_reply where replyNo=#{replyNo}
+        select askNo from ask_reply where replyNo=#{replyNo}
     </select>
 
     <!-- 게시글의 달려있는 답변 수 조회 -->
     <select id="selectReplyNoCount" resultType="int">
-        select count(replyNo) from ask_reply where postNo=#{postNo}
+        select count(replyNo) from ask_reply where askNo=#{askNo}
     </select>
 
     <!-- 게시글 삭제 시, 해당 게시글의 모든 답변 삭제 -->
     <delete id="allReplyDelete">
-        delete from ask_reply where postNo=#{postNo}
+        delete from ask_reply where askNo=#{askNo}
     </delete>
 </mapper>

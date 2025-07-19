@@ -1,0 +1,13 @@
+<div class="reply-list">
+    <span th:each="arto : ${list}" class="reply-item">
+        <div class="reply-content">
+            <div th:text="${arto.content}"></div>
+            <span th:text="${arto.writer}"></span>
+            <span th:text="${#temporals.format(arto.reg, 'yy/MM/dd HH:mm')}"></span>
+        </div>
+        <input type="hidden" class="replyNo" th:value="${arto.replyNo}">
+        <span th:if="${session.users.role == 2}">
+            <button class="replyDelete">삭제</button>
+        </span>
+    </span>
+</div>

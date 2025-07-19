@@ -11,6 +11,7 @@ public class AskDTO {
     private String writer;
     private String content;
     private LocalDateTime reg;
+    private int category;
     private int views;
     private String imgName;
     private String imgPath;
@@ -24,6 +25,7 @@ create table ask(
     writer          varchar2(50),
     content         varchar2(4000)      not null,
     reg             date                default sysdate,
+    category        number,
     views           number              default 0,
     imgName         varchar2(500),
     imgPath         varchar2(500),

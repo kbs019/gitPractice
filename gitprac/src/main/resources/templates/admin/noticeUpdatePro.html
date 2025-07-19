@@ -1,0 +1,12 @@
+<span th:if="${result == 1}">
+    <script>
+        alert("게시글이 수정되었습니다.");
+        window.location="/admin/noticeContent?noticeNo=[[${nto.noticeNo}]]&pageNum=[[${pageNum}]]";
+    </script>
+</span>
+<span th:unless="${result == 0}">
+    <script>
+        alert("게시글 수정에 실패하였습니다.");
+        history.go(-1);
+    </script>
+</span>
