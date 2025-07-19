@@ -17,11 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ex.gitprac.data.qna.QnaBoardDTO;
 import com.ex.gitprac.data.qna.QnaReplyDTO;
-import com.ex.gitprac.data.user.UserDTO;
 
 import com.ex.gitprac.service.qna.QnaBoardService;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -74,40 +72,37 @@ public class QnaBoardController {
 
     // 글작성 form 에서 업로드 버튼을 눌렀을 때, 작동
     @PostMapping("write")
-    public String write( @RequestParam("image") MultipartFile mf, QnaBoardDTO qto, Model model, HttpSession session ){
-        // 세션에 저장된 user 객체 꺼내기
-        UserDTO user = (UserDTO) session.getAttribute("users");
-        // user 객체의 nick 컬럼의 값을 꺼내어 writer 에 대입
-        String writer = user.getNick();
-        // writer 를 qto 객체에 저장
-        qto.setWriter(writer);
+    public String write( @RequestParam("image") MultipartFile mf, QnaBoardDTO qto, Model model){
+        int result = 0;
 
-        // 원본 파일명을 출력
-        String originalName = mf.getOriginalFilename();
-        // 이미지 파일의 중복을 피하기 위해 새로운 이미지 파일의 이름 생성
-        String newName = UUID.randomUUID().toString().replace("-", "")+originalName;
-        // 현재 프로젝트 내의 이미지 파일을 저장할 폴더의 경로를 지정
-        String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\qnaUpload\\";
-        // 브라우저가 접근할 수 있는 URL 경로
-        String imgWebPath = "/qnaUpload/";
-        
-        // 새로 생성된 이름과 경로를 qto 객체에 대입
-        qto.setOriginalName(originalName);
-        qto.setImgName(newName);
-        qto.setImgPath(imgWebPath);
-
-        
-        try{
-            // 경로와 파일명을 사용하여 File 객체 생성
-            File f = new File(uploadPath + newName);
-            // 파일 업로드 진행
-            mf.transferTo(f);
-        }catch(Exception e){
-            e.printStackTrace();
+        if( mf != null && !mf.isEmpty() ){
+            // 원본 파일명을 출력
+            String originalName = mf.getOriginalFilename();
+            // 이미지 파일의 중복을 피하기 위해 새로운 이미지 파일의 이름 생성
+            String newName = UUID.randomUUID().toString().replace("-", "")+originalName;
+            // 현재 프로젝트 내의 이미지 파일을 저장할 폴더의 경로를 지정
+            String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\qnaUpload\\";
+            // 브라우저가 접근할 수 있는 URL 경로
+            String imgWebPath = "/qnaUpload/";
+            
+            // 새로 생성된 이름과 경로를 qto 객체에 대입
+            qto.setOriginalName(originalName);
+            qto.setImgName(newName);
+            qto.setImgPath(imgWebPath);
+    
+            
+            try{
+                // 경로와 파일명을 사용하여 File 객체 생성
+                File f = new File(uploadPath + newName);
+                // 파일 업로드 진행
+                mf.transferTo(f);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
 
         // DB 작업의 결과를 담는다.
-        int result = qnaBoardService.postInsert(qto);
+        result = qnaBoardService.postInsert(qto);
 
         model.addAttribute("result", result);
 
@@ -137,14 +132,13 @@ public class QnaBoardController {
     // updateForm 에서 수정 버튼을 클릭했을때, 작동
     @PostMapping("update")
     public String updatePro( @RequestParam("image") MultipartFile mf, @ModelAttribute("pageNum") int pageNum, QnaBoardDTO qto, Model model ){
-
-        String newName = UUID.randomUUID().toString().replace("-", "") + mf.getOriginalFilename();
-        String filePath = new File("").getAbsolutePath() + "\\src\\main\\resources\\static\\qnaUpload\\";
-        String originalFileName = mf.getOriginalFilename();
-        String imgWebPath = "/qnaUpload/";
-
         if( mf != null && !mf.isEmpty() ){
-        // image 라는 file 타입의 input 태그에 들어온 값이 있다면
+            // image 라는 file 타입의 input 태그에 들어온 값이 있다면
+            String newName = UUID.randomUUID().toString().replace("-", "") + mf.getOriginalFilename();
+            String filePath = new File("").getAbsolutePath() + "\\src\\main\\resources\\static\\qnaUpload\\";
+            String originalFileName = mf.getOriginalFilename();
+            String imgWebPath = "/qnaUpload/";
+
             try{
                 File f = new File(filePath + qto.getImgName());
                 if( f.exists() ){
@@ -177,8 +171,14 @@ public class QnaBoardController {
         String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\qnaUpload\\";
         String uploadName = qto.getImgName();
 
-        File f = new File(uploadPath + uploadName);
-        f.delete();
+        try{
+            File f = new File(uploadPath + uploadName);
+            if( f.exists() ){
+                f.delete();
+            }
+        }catch( Exception e ){
+            e.printStackTrace();
+        }
 
         int result = qnaBoardService.postDelete(postNo);
 

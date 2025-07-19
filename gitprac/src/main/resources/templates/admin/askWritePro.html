@@ -1,0 +1,12 @@
+<span th:if="${result == 1}">
+    <script>
+        alert('게시글이 작성되었습니다.');
+        window.location="/admin/ask";
+    </script>
+</span>
+<span th:unless="${result == 1}">
+    <script>
+        alert('게시글 작성에 실패하였습니다.');
+        history.back();
+    </script>
+</span>

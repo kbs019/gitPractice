@@ -17,7 +17,7 @@
 
     <!-- 글작성 -->
     <insert id="noticeInsert">
-        insert into notice values( notice_seq.nextval, #{title}, #{writer}, #{content}, sysdate, 0, #{imgName}, #{imgPath}, #{originalName} )
+        insert into notice values( notice_seq.nextval, #{title}, #{writer}, #{content}, sysdate, 0, #{imgName, jdbcType=VARCHAR}, #{imgPath, jdbcType=VARCHAR}, #{originalName, jdbcType=VARCHAR} )
     </insert>
 
     <!-- 글내용 -->

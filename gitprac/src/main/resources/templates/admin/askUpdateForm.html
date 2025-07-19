@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+    <div class="body">
+        <div class="body-top" align="center">
+            <h2>질의응답 수정</h2>
+            <hr width="400" align="center">
+        </div>
+        <div class="body-content">
+            <form th:action="@{/admin/askUpdate}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="pageNum" th:value="${pageNum}">
+                <input type="hidden" name="askNo" th:value="${ato.askNo}">
+                <div class="update" align="center">
+                    <div class="title-wrapper">
+                        <label for="title">제목</label> : 
+                        <input type="text" id="title" name="title" th:value="${ato.title}" required>
+                    </div>
+                    <div class="writer-wrapper">
+                        <input type="hidden" name="writer" th:value="${ato.writer}">
+                        <span>작성자 : <span th:text="${ato.writer}"></span></span>
+                    </div>
+                    <div class="category-wrapper">
+                        <select name="category">
+                            <option value="0" th:selected="${ato.category} == '0'">문의</option>
+                            <option value="1" th:selected="${ato.category} == '1'">신고</option>
+                        </select>
+                    </div>
+                    <div class="image-wrapper">
+                        <label for="image">첨부파일</label> &nbsp;
+                        <input type="file" id="image" name="image">
+                        <div th:if="${ato.originalName != null}">
+                            <div>기존 이미지</div>
+                            <img th:src="@{|${ato.imgPath + ato.imgName}|}">
+                            <input type="hidden" name="originalName" th:value="${ato.originalName}">
+                            <input type="hidden" name="imgName" th:value="${ato.imgName}">
+                            <input type="hidden" name="imgPath" th:value="${ato.imgPath}">
+                        </div>
+                    </div>
+                    <div class="content-wrapper">
+                        <label for="content">내용</label>    <br>
+                        <textarea id="content" name="content" th:text="${ato.content}" required></textarea>
+                    </div>
+                    <div class="btns-wrapper">
+                        <span class="reset-button">
+                            <button type="reset">다시 작성</button>
+                        </span> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="submit-button">
+                            <button type="submit">수정하기</button>
+                        </span> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="cancel-button">
+                            <button onclick="window.location='history.go(-1);'">취소</button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

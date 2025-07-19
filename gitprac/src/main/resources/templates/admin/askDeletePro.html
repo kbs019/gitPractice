@@ -1,7 +1,7 @@
 <span th:if="${result == 1}">
     <script>
-        alert('공지사항이 삭제되었습니다.');
-        window.location="/admin/notice?pageNum=[[${pageNum}]]";
+        alert('게시글이 삭제되었습니다.');
+        window.location="/admin/ask?pageNum=[[${pageNum}]]";
     </script>
 </span>
 <span th:unless="${result == 1}">
