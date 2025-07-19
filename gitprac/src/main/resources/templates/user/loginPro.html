@@ -1,19 +1,37 @@
-<span th:if="${session.users} != null">
-    <span th:if="${session.users.role} == 0">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <span th:if="${result == 1}">
         <script>
-            window.location='/qna/list';
+            alert("로그인 성공");
+        </script>
+        <span th:if="${session.users} != null">
+            <span th:if="${session.users.role} == 0">
+                <script>
+                    window.location='/qna/list';
+                </script>
+            </span>
+            <span th:if="${session.users.role} == 1">
+                <script>
+                    window.location='/user/main2';
+                </script>메인2</span>
+            <span th:if="${session.users.role} == 2">
+                <script>
+                    window.location='/admin/userManage';
+                </script>
+            </span>
+        </span>
+    </span>
+    <span th:if="${result == 0}">
+        <script>
+            alert("로그인 실패");
+            history.go(-1);
         </script>
     </span>
-    <span th:if="${session.users.role} == 1">
-        <script>
-            window.location='/user/main2';
-        </script>메인2</span>
-    <span th:if="${session.users.role} == 2">
-        <script>
-            window.location='/admin/userManage';
-        </script>
-    </span>
-</span>
-<span th:if="@{session.users} == null">
-    history.go(-1);
-</span>
+</body>
+</html>

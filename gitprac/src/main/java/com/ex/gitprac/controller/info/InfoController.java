@@ -26,9 +26,9 @@ public class InfoController {
 
     // 정보 게시판 카테고리 글 리스트
     @GetMapping("list")
-    public String listByCategory(@RequestParam(name = "category", required = false, defaultValue = "전체글") String category,
-                                @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                                Model model) {
+    public String listByCategory(   @RequestParam(name = "category", required = false, defaultValue = "전체글") String category,
+                                    @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
+                                    Model model) {
 
         int pageSize = 10;
         int currentPage = pageNum;
@@ -78,7 +78,9 @@ public class InfoController {
 
     // 글작성 Form 눌렀을 시 실행
     @PostMapping("write")
-    public String writePro( InfoBoardDTO idto, HttpSession session, Model model) {
+    public String writePro( InfoBoardDTO idto, 
+                            HttpSession session, 
+                            Model model) {
         
         // UserDTO user = (UserDTO)session.getAttribute("users");
         // String writer = user.getNick();
@@ -91,7 +93,9 @@ public class InfoController {
 
     // 게시판의 게시글 제목 클릭이 실행
     @GetMapping("content")
-    public String content( @RequestParam("postNo") int postNo, @ModelAttribute("pageNum") int pageNum, Model model) {
+    public String content(  @RequestParam("postNo") int postNo, 
+                            @ModelAttribute("pageNum") int pageNum, 
+                            Model model) {
         InfoBoardDTO idto = infoBoardService.InfopostContent(postNo);
         model.addAttribute("idto", idto);
 
@@ -99,14 +103,24 @@ public class InfoController {
     }
 
     @GetMapping("update")
-    public String infoUpdateForm( @RequestParam(name = "category") String category, 
-                                  @RequestParam(name = "pageNum") int pageNum, 
-                                  @RequestParam(name = "postNo") int postNo,
-                                  Model model) {
+    public String infoUpdateForm(   @RequestParam(name = "category") String category, 
+                                    @RequestParam(name = "pageNum") int pageNum, 
+                                    @RequestParam(name = "postNo") int postNo,
+                                    Model model) {
 
         InfoBoardDTO idto = infoBoardService.InfopostContent(postNo);
         model.addAttribute("idto", idto);
         
         return "info/infoUpdateForm";
+    }
+    @PostMapping("update")
+    public String infoUpdatePro(    @RequestParam("category") String category,
+                                    @ModelAttribute("pageNum") int pageNum,
+                                    InfoBoardDTO idto, Model model) {
+        
+        int result = infoBoardService.infoPostUpdate(idto);
+        model.addAttribute("result", result);
+
+        return "info/infoUpdatePro";
     }
 }

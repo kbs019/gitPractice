@@ -6,10 +6,10 @@ window.location='/info/list?category=전체글';
 <html lang="en">
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-   
-     <!-- Summernote -->
-     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
+
+    <!-- Summernote -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,13 +23,13 @@ window.location='/info/list?category=전체글';
             <hr width="400" align="center"> 
         </div>
         <div class="body-content">
-            <form th:action="@{/info/write}" method="post" enctype="multipart/form-data">
+            <form th:action="@{/info/update}" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="pageNum" th:value="${pageNum}"/>
                 <input type="hidden" name="postNo" th:value="${idto.postNo}" />
                 <div class="writeForm-wrapper" align="center">
                     <div>
                         <label for="category">카테고리</label>
-                        <select id="category" name="category">
+                        <select id="category" name="category" th:value="${idto.category}">
                             <option value="전체글" selected>전체글</option>
                             <option value="소형견">소형견</option>
                             <option value="중형견">중형견</option>
@@ -38,7 +38,7 @@ window.location='/info/list?category=전체글';
                     </div>
                     <div class="title-wrapper">
                         <label for="title">글 제목</label>
-                        <input type="text" id="title" name="title" required />
+                        <input type="text" id="title" name="title" th:value="${idto.title}" required />
                     </div>
                     <div class="writer-wrapper">
                         <input type="hidden" name="writer" th:value="${session.users.nick}"/>
@@ -46,7 +46,12 @@ window.location='/info/list?category=전체글';
                     </div>
                     <div class="content-wrapper"> 
                         <label for="summernote">글 내용</label>
-                        <textarea id="summernote" name="content" required></textarea>
+                        <!-- 방법 1 textarea 에는 th:value 가 안된다 이유로는 input 태그에서만 가능 하기 때문.  
+                        <textarea id="summernote" name="content" th:text="${idto.content}" required></textarea>  -->
+                        <!-- 방법 2 -->
+                        <textarea id="summernote" name="content" th:text="${idto.content}" required>  
+                            [[${idto.content}]]
+                        </textarea>
                     </div>
                     <div class="writePage-button">
                         <span class="submit-button">
