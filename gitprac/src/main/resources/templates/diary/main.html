@@ -57,12 +57,17 @@
 <!-- 글쓰기 폼 (숨김 상태) -->
 <div id="formArea" style="display:none; text-align:center; margin-top:20px;">
     <form id="ajaxInsertForm" enctype="multipart/form-data">
-        <input type="file" name="uploadFile" required><br>
-        <textarea name="content" placeholder="내용 입력" maxlength="200" style="width:300px; height:100px;"></textarea><br>
         <input type="hidden" name="diaryNo" id="diaryNo">
+        <input type="hidden" name="imgName" id="imgName">
+        <input type="hidden" name="imgPath" id="imgPath">
+        <input type="file" id="uploadFile" name="uploadFile" required><br>
+        <img id="previewImage" style="max-width: 200px; display: none;"><br>
+        <textarea name="content" id="content" placeholder="내용 입력" maxlength="200" style="width:300px; height:100px;"></textarea><br>
         <button type="button" id="submitBtn">등록</button>
+        <button type="button" id="cancelBtn" style="display:none;">수정 취소</button>
     </form>
 </div>
+
 
 <!-- 게시글 없을 때 -->
 <div th:if="${count == 0}" style="text-align:center;">
@@ -77,7 +82,14 @@
         <p th:text="${d.content}"></p>
         <p th:text="${#temporals.format(d.reg, 'yyyy-MM-dd')}">z</p>
         <button th:attr="data-no=${d.diaryNo}" class="deleteBtn">삭제</button>
-        <button th:attr="data-no=${d.diaryNo}" th:attrappend=" data-content='${d.content}', data-imgName='${d.imgName}', data-imgPath='${d.imgPath}'" class="editBtn">수정</button>
+        <button class="updateBtn"
+                th:data-no="${d.diaryNo}"
+                th:data-content="${d.content}"
+                th:data-imgname="${d.imgName}"
+                th:data-imgpath="${d.imgPath}">
+            수정
+        </button>
+        
     </div>
 </div>
 
@@ -85,15 +97,34 @@
 
 
 <script>
-    $(function() {
-        $('#writeBtn').click(function() {
+    $(function () {
+        // 글쓰기 버튼 클릭
+        $('#writeBtn').click(function () {
+            $(this).hide();
             $('#formArea').toggle();
             $('#ajaxInsertForm')[0].reset();
             $('#diaryNo').val("");
             $('#submitBtn').text('등록');
+            $('#previewImage').hide();
         });
 
-        $('#submitBtn').click(function() {
+        // 이미지 업로드 시 미리보기
+        $('#uploadFile').on('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewImage').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(file);
+            } else {
+                $('#previewImage').hide();
+            }
+        });
+
+        // 등록/수정 버튼
+        $('#submitBtn').click(function (event) {
+            event.preventDefault();
             let form = $('#ajaxInsertForm')[0];
             let formData = new FormData(form);
             let isUpdate = $('#diaryNo').val() !== "";
@@ -103,9 +134,10 @@
                 url: url,
                 type: 'POST',
                 data: formData,
+                enctype: 'multipart/form-data',
                 processData: false,
                 contentType: false,
-                success: function(res) {
+                success: function (res) {
                     if (res === 'success' || res === 'updated') {
                         alert('저장 완료');
                         location.reload();
@@ -115,17 +147,18 @@
                         alert('처리 실패');
                     }
                 },
-                error: function() {
+                error: function () {
                     alert('서버 오류');
                 }
             });
         });
 
-        $('.deleteBtn').click(function() {
+        // 삭제 버튼
+        $('.deleteBtn').click(function () {
             const no = $(this).data('no');
             if (!confirm('정말 삭제하시겠습니까?')) return;
 
-            $.post('/diary/delete', { diaryNo: no }, function(res) {
+            $.post('/diary/delete', { diaryNo: no }, function (res) {
                 if (res === 'deleted') {
                     alert('삭제 완료');
                     location.reload();
@@ -135,21 +168,46 @@
             });
         });
 
-        $('.editBtn').click(function() {
+        // 수정 버튼
+        $('.updateBtn').click(function () {
             const no = $(this).data('no');
-            const content = $(this).attr('data-content');
-            const imgName = $(this).attr('data-imgName');
-            const imgPath = $(this).attr('data-imgPath');
-            
+            const content = $(this).data('content');
+            const imgName = $(this).data('imgname'); // 소문자 key
+            const imgPath = $(this).data('imgpath'); // 소문자 key
+
             $('#formArea').show();
+            $('#writeBtn').hide();
+            $('#cancelBtn').show();
             $('#diaryNo').val(no);
-            $('textarea[name="content"]').val(content);
-            $('$imgName').val(imgName);
-            $('$imgPath').val(imgPath);
+            $('#content').val(content);
             $('#submitBtn').text('수정');
+
+            if (imgPath && imgName) {
+                const imgUrl = (imgPath.endsWith('/') ? imgPath : imgPath + '/') + imgName;
+                $('#previewImage').attr('src', imgUrl).show();
+                $('#imgName').val(imgName);
+                $('#imgPath').val(imgPath);
+            } else {
+                $('#previewImage').hide();
+                $('#imgName').val('');
+                $('#imgPath').val('');
+            }
+        });
+
+        // 수정 취소 버튼
+        $('#cancelBtn').click(function () {
+            $('#ajaxInsertForm')[0].reset();
+            $('#formArea').hide();
+            $('#writeBtn').show();
+            $('#previewImage').hide();
+            $('#submitBtn').text('등록');
+            $('#diaryNo').val('');
+            $('#imgName').val('');
+            $('#imgPath').val('');
         });
     });
 </script>
+
 
 </body>
 </html>
