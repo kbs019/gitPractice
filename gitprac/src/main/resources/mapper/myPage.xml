@@ -2,4 +2,30 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ex.gitprac.repository.myPage.MyPageMapper"></mapper>
+<mapper namespace="com.ex.gitprac.repository.myPage.MyPageMapper">
+<select id="getUser" resultType="com.ex.gitprac.data.user.UserDTO">
+SELECT * FROM USERS WHERE id = #{id}
+</select>
+<update id="updateUser">
+UPDATE USERS SET pw=#{pw} nick=#{nick} email=#{email} phone=#{phone} carrier=#{carrier}
+</update>
+<update id="deleteUser">
+UPDATE USERS SET status = 2 where id=#{id}
+</update>
+
+<select id="getPet" resultType="com.ex.gitprac.data.pet.PetDTO">
+SELECT * FROM PET WEHRE id = #{id}
+</select>
+<insert id="insertPet">
+INSERT INTO PET VALUES(petNo = PET_SEQ.NEXTVAL, id = #{id}, petName=#{petName}, petBreed=#{petBreed}, petAge=#{petAge}, petSize=#{petSize}, petWeight=#{petWeight}, petBirth=#{petBirth})
+</insert>
+<update id="updatePet">
+UPDATE PET SET petName=#{petName}, petBreed=#{petBreed}, petAge=#{petAge}, petSize=#{petSize}, petWeight=#{petWeight}, petBirth=#{petBirth}
+</update>
+<delete id="deletePet">
+DELETE FROM PET WHERE petNo = #{petNo}
+</delete>
+<delete id="deletePetRec">
+DELETE FROM REC WHERE petNo = #{petNo}
+</delete>
+</mapper>

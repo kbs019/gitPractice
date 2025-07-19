@@ -164,7 +164,6 @@ public class DiaryController {
                 folder.mkdirs();  // 존재하지 않으면 폴더 생성
             }
             
-
             // 새로 생성된 이름과 경로를 qto 객체에 대입
             dto.setOriginalName(originalName);
             dto.setImgName(newName);
