@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ex.gitprac.data.info.InfoBoardDTO;
 import com.ex.gitprac.data.qna.QnaBoardDTO;
 import com.ex.gitprac.data.user.UserDTO;
 import com.ex.gitprac.service.admin.AdminService;
@@ -94,36 +95,35 @@ public class AdminController {
 
     // 게시글 관리로 이동
     @GetMapping("postManage")
-    public String postManage( Model model, @RequestParam(name="pageNum", defaultValue="1") int pageNum ){
+    public String postManage( Model model, @RequestParam(name="pageNum", defaultValue="1") int pageNum, @RequestParam("category") String category ){
 
-        int pageSize = 10;
+        int pageSize = 5;
         int currentPage = pageNum;
         int start = (currentPage - 1) * pageSize + 1;
         int end = currentPage * pageSize;
-        int count = adminService.boardCount();
+        int qnaCount = adminService.boardCount();
 
-        List<QnaBoardDTO> list = null;
-        if( count > 0 ){
-            list = adminService.qnaBoardList( start, end );
+        List<QnaBoardDTO> qnaList = null;
+        if( qnaCount > 0 ){
+            qnaList = adminService.qnaBoardList( start, end );
         }else {
-            list = new ArrayList<QnaBoardDTO>();
-        }
-        
-        int pageCount = (count/pageSize) + (count%pageSize == 0 ? 0 : 1);
-        int pageBlock = 10;
-        int startPage = (int) ((currentPage - 1) / pageBlock) * pageBlock + 1;
-        int endPage = startPage + pageBlock - 1;
-        if( endPage > pageCount ){
-            endPage = pageCount;
+            qnaList = new ArrayList<QnaBoardDTO>();
         }
 
-        model.addAttribute("pageCount", pageCount);
-        model.addAttribute("pageBlock", pageBlock);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        model.addAttribute("count", count);
-        model.addAttribute("list", list);
+        int infoCount = adminService.infoCateBoardCount( category );
+        List<InfoBoardDTO> infoList = null;
+        if( infoCount > 0 ){
+            infoList = adminService.infoCateBoardList( category, start, end );
+        }else {
+            infoList = new ArrayList<InfoBoardDTO>();
+        }
+
+        model.addAttribute("qnaCount", qnaCount);
+        model.addAttribute("qnaList", qnaList);
+        model.addAttribute("infoCount", infoCount);
+        model.addAttribute("infoList", infoList);
         model.addAttribute("pageNum", pageNum);
+        model.addAttribute("category", category);
 
         return "/admin/postManage";
     }

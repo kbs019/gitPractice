@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ex.gitprac.repository.ask.AskMapper">
+    <!-- 전체 게시글 수 -->
+    <select id="askCount" resultType="int">
+        select count(*) from ask
+    </select>
+
+    <!-- 전체 게시글 (글목록) 조회 -->
+    <select id="askList" resultType="com.ex.gitprac.data.ask.AskDTO">
+        <![CDATA[
+            select * from ( select n.*, rownum r from ( select * from ask order by askNo desc ) n ) where r >= #{start} and r <= #{end}
+        ]]>
+    </select>
+
+    <!-- 글작성 -->
+    <insert id="askInsert">
+        insert into ask values( ask_seq.nextval, #{title}, #{writer}, #{content}, sysdate, 0, #{imgName}, #{imgPath}, #{originalName}, 0 )
+    </insert>
+
+    <!-- 글내용 -->
+    <select id="askContent" resultType="com.ex.gitprac.data.ask.AskDTO">
+        select * from ask where askNo=#{askNo}
+    </select>
+
+    <!-- 조회수 증가 -->
+    <update id="viewsUp">
+        update ask set views=views+1 where askNo=#{askNo}
+    </update>
+
+    <!-- 글수정 -->
+    <update id="askUpdate">
+        update ask set title=#{title}, writer=#{writer}, content=#{content}, imgName=#{imgName}, imgPath=#{imgPath}, originalName=#{originalName} where askNo=#{askNo}
+    </update>
+
+    <!-- 글삭제 -->
+    <delete id="askDelete">
+        delete from ask where askNo=#{askNo}
+    </delete>
+
+    <!-- 답변 작성 시, isAnswered 컬럼값 1로 변경 -->
+    <update id="updateIsAnsweredUp">
+        update ask set isAnswered = 1 where askNo=#{askNo}
+    </update>
+
+    <!-- 해당 글의 모든 답변 삭제 시, isAnswered 컬럼값 0 으로 변경 -->
+    <update id="updateIsAnsweredDown">
+        update ask set isAnswered = 0 where askNo=#{askNo}
+    </update>
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ex.gitprac.repository.notice.NoticeMapper">
+    <!-- 전체 게시글 수 -->
+    <select id="noticeCount" resultType="int">
+        select count(*) from notice
+    </select>
+
+    <!-- 전체 게시글 (글목록) 조회 -->
+    <select id="noticeList" resultType="com.ex.gitprac.data.notice.NoticeDTO">
+        <![CDATA[
+            select * from ( select n.*, rownum r from ( select * from notice order by noticeNo desc ) n ) where r >= #{start} and r <= #{end}
+        ]]>
+    </select>
+
+    <!-- 글작성 -->
+    <insert id="noticeInsert">
+        insert into notice values( notice_seq.nextval, #{title}, #{writer}, #{content}, sysdate, 0, #{imgName}, #{imgPath}, #{originalName} )
+    </insert>
+
+    <!-- 글내용 -->
+    <select id="noticeContent" resultType="com.ex.gitprac.data.notice.NoticeDTO">
+        select * from notice where noticeNo=#{noticeNo}
+    </select>
+
+    <!-- 조회수 증가 -->
+    <update id="viewsUp">
+        update notice set views=views+1 where noticeNo=#{noticeNo}
+    </update>
+
+    <!-- 글수정 -->
+    <update id="noticeUpdate">
+        update notice set title=#{title}, writer=#{writer}, content=#{content}, imgName=#{imgName}, imgPath=#{imgPath}, originalName=#{originalName} where noticeNo=#{noticeNo}
+    </update>
+
+    <!-- 글삭제 -->
+    <delete id="noticeDelete">
+        delete from notice where noticeNo=#{noticeNo}
+    </delete>
+</mapper>

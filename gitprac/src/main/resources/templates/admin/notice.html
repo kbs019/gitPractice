@@ -6,6 +6,56 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+    <h1>공지사항</h1>
+    <div id="notice-wrapper">
+        <div align="center">	
+            <table width="800">		
+                <tr>
+                    <td align="right">
+                        <a th:href="@{/admin/noticeWrtie}">글쓰기</a>				
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div th:if="${count == 0}">
+            <table border="1" cellspacing="0" cellpadding="0" align="center" width="800">
+                <tr align="center">
+                    <td><h3>게시판에 저장된 게시글이 없습니다.</h3></td>
+                </tr>
+            </table>
+        </div>
+        <div th:if="${count != 0}">
+            <table border="1" cellspacing="0" cellpadding="0" align="center" width="800">
+                <tr height="30">
+                    <th width="400">글제목</th>
+                    <th width="100">작성자</th>
+                    <th width="200">작성일</th>
+                    <th width="100">조회수</th>
+                </tr>			
+                <tr height="30" th:each="dto : ${list}">
+                    <td th:text="${dto.num}" align="center"></td>
+                    <td>
+                        <a th:href="@{|/board/content?num=${dto.num}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
+                    </td>
+                    <td th:text="${dto.writer}" align="center"></td>
+                    <td th:text="${#temporals.format(dto.reg, 'yy-MM-dd HH:mm')}" align="center"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div align="center" th:if="${count > 0}">
+            <span th:if="${startPage} > ${pageBlock}">
+                <a th:href="@{|/board/list?pageNum=${startPage - pageBlock}|}">[이전]</a>
+            </span>
+            <span th:each=" i : ${#numbers.sequence(startPage, endPage)} ">
+                <a th:href="@{|/board/list?pageNum=${i}|}" th:text="'['+${i}+']'"></a>
+            </span>
+            <span th:if="${endPage} < ${pageCount}">
+                <a th:href="@{|/board/list?pageNum=${startPage + pageBlock}|}">[다음]</a>
+            </span>
+        </div>
+    </div>
 </body>
 </html>
