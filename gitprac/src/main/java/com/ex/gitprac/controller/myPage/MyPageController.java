@@ -15,7 +15,7 @@ public class MyPageController {
 
     @GetMapping("main")
     public String main() {
-        return "mypage/mypage";
+        return "myPage/myPage";
     }
 
     
