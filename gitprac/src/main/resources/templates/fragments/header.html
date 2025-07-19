@@ -4,11 +4,8 @@
         <div id="header">
             <div id="header-top">
                 <a th:href="@{/user/logout}">로그아웃</a>
-                <span th:if="${session.users.role} == 0">
+                <span th:if="${session.users.role == 0 || session.users.role == 1}">
                     <a th:href="@{/myPage/main}">마이페이지</a>
-                </span>
-                <span th:if="${session.users.role} == 1">
-                    <A th:href="@{/mem/vetPage}">수의사 페이지</A>
                 </span>
                 <span th:if="${session.users.role} == 2">
                     <a th:href="@{/admin/userManage}">관리자 페이지</a>
@@ -16,13 +13,8 @@
             </div>
 
             <div id="header-middle">
-                <span th:if="${session.users.role} == 0">
+                <span th:if="${session.users.role == 0 || session.users.role == 1}">
                     <a th:href="@{/diary/main}">
-                        <h1>하루犬과</h1>
-                    </a>
-                </span>
-                <span th:if="${session.users.role} == 1">
-                    <a th:href="@{/mem/vetPage}">
                         <h1>하루犬과</h1>
                     </a>
                 </span>

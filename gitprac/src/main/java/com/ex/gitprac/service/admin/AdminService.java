@@ -161,6 +161,16 @@ public class AdminService {
         return askMapper.askDelete(askNo);
     }
 
+    // isAnswered 컬럼값에 의한 게시글 갯수 조회
+    public int askCountByIsAnswered( int isAnswered ){
+        return askMapper.askCountByIsAnswered( isAnswered );
+    }
+
+    // isAnswered 컬럼값에 의한 게시글 조회
+    public List<AskDTO> askListByIsAnswered( int isAnswered, int start, int end ){
+        return askMapper.askListByIsAnswered( isAnswered, start, end );
+    }
+
     // 답변 리스트 조회
     public List<AskReplyDTO> replyList( int askNo ){
         return askReplyMapper.replyList(askNo);

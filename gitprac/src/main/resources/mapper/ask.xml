@@ -49,4 +49,16 @@
     <update id="updateIsAnsweredDown">
         update ask set isAnswered = 0 where askNo=#{askNo}
     </update>
+
+    <!-- isAnswered 컬럼값에 따른 게시글 갯수 조회 -->
+    <select id="askCountByIsAnswered" resultType="int">
+        select count(*) from ask where isAnswered=#{isAnswered}
+    </select>
+
+    <!-- isAnswered 컬럼에 따른 게시글 조회 -->
+    <select id="askListByIsAnswered" resultType="com.ex.gitprac.data.ask.AskDTO">
+    <![CDATA[
+    select * from ( select b.*, rownum r from ( select * from ask where isAnswered = #{isAnswered} order by askNo desc ) b ) where r >= #{start} and r <= #{end}
+    ]]>
+    </select>
 </mapper>
