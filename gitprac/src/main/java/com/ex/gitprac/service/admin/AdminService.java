@@ -108,7 +108,7 @@ public class AdminService {
     }
 
     // 공지사항 글 내용 조회
-    public NoticeDTO noticeContentForUpdate( int noticeNo ){
+    public NoticeDTO noticeContentForBtns( int noticeNo ){
         return noticeMapper.noticeContent(noticeNo);
     }
 

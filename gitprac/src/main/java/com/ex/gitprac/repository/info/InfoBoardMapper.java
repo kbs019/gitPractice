@@ -20,11 +20,11 @@ public interface InfoBoardMapper {
     // 글 리스트
     public List<InfoBoardDTO> infoBoardList(@Param("start") int start, @Param("end") int end);
     // 글 조회
-    public InfoBoardDTO infoBoardContent(int num);
+    public InfoBoardDTO infoPostContent(int num);
     // 조회수 증가
     public void viewsUp(int num);
     // 글 수정
-    public int infoBoardUpdate(InfoBoardDTO infoBoardDTO);
+    public int infoPostUpdate(InfoBoardDTO infoBoardDTO);
     // 글 삭제
     public int infoBoardDelete(int num);
     // 카테고리 글 갯수

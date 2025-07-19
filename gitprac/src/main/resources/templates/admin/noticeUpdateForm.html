@@ -9,41 +9,36 @@
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
     <div class="body">
         <div class="body-top" align="center">
-            <h2>글 수정</h2>
+            <h2>공지사항 수정</h2>
             <hr width="400" align="center">
         </div>
         <div class="body-content">
-            <form th:action="@{/qna/update}" method="post" enctype="multipart/form-data">
+            <form th:action="@{/admin/noticeUpdate}" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="pageNum" th:value="${pageNum}">
-                <input type="hidden" name="postNo" th:value="${qto.postNo}">
+                <input type="hidden" name="noticeNo" th:value="${nto.noticeNo}">
                 <div class="update" align="center">
                     <div class="title-wrapper">
-                        <label for="title">글 제목</label> : 
-                        <input type="text" id="title" name="title" th:value="${qto.title}" required>
+                        <label for="title">제목</label> : 
+                        <input type="text" id="title" name="title" th:value="${nto.title}" required>
                     </div>
                     <div class="writer-wrapper">
-                        <input type="hidden" name="writer" th:value="${qto.writer}">
-                        <span>작성자 : <span th:text="${qto.writer}"></span></span>
+                        <input type="hidden" name="writer" th:value="${nto.writer}">
+                        <span>작성자 : <span th:text="${nto.writer}"></span></span>
                     </div>
                     <div class="image-wrapper">
                         <label for="image">첨부파일</label> &nbsp;
                         <input type="file" id="image" name="image">
-                        <div th:if="${qto.originalName != null}">
+                        <div th:if="${nto.originalName != null}">
                             <div>기존 이미지</div>
-                            <img th:src="@{|${qto.imgPath + qto.imgName}|}">
-                            <input type="hidden" name="originalName" th:value="${qto.originalName}">
-                            <input type="hidden" name="imgName" th:value="${qto.imgName}">
-                            <input type="hidden" name="imgPath" th:value="${qto.imgPath}">
+                            <img th:src="@{|${nto.imgPath + nto.imgName}|}">
+                            <input type="hidden" name="originalName" th:value="${nto.originalName}">
+                            <input type="hidden" name="imgName" th:value="${nto.imgName}">
+                            <input type="hidden" name="imgPath" th:value="${nto.imgPath}">
                         </div>
                     </div>
-                    <div class="record-wrapper">
-                        <span>일지 공유 여부 선택</span>    &nbsp;&nbsp;
-                        Yes <input type="radio" name="showRecord" value="1" th:checked="${qto.showRecord} == '1'">    &nbsp;&nbsp;
-                        No <input type="radio" name="showRecord" value="0" th:checked="${qto.showRecord} == '0'"> 
-                    </div>
                     <div class="content-wrapper">
-                        <label for="content">글 내용</label>    <br>
-                        <textarea id="content" name="content" th:text="${qto.content}" required></textarea>
+                        <label for="content">내용</label>    <br>
+                        <textarea id="content" name="content" th:text="${nto.content}" required></textarea>
                     </div>
                     <div class="btns-wrapper">
                         <span class="reset-button">
@@ -51,7 +46,7 @@
                         </span> &nbsp;&nbsp;&nbsp;&nbsp;
                         <span class="submit-button">
                             <button type="submit">수정하기</button>
-                        </span>
+                        </span> &nbsp;&nbsp;&nbsp;&nbsp;
                         <span class="cancel-button">
                             <button onclick="window.location='history.go(-1);'">취소</button>
                         </span>

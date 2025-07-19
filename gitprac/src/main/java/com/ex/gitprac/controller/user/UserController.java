@@ -26,11 +26,16 @@ public class UserController {
         return "user/loginForm";
     }
     @PostMapping("login")
-    public String loginForm( @RequestParam("id") String id, @RequestParam("pw") String pw, HttpSession session ) {
+    public String loginForm(    @RequestParam("id") String id, 
+                                @RequestParam("pw") String pw,  
+                                HttpSession session, Model model) {
 
         UserDTO udto = userService.loginCheck(id, pw);
         if( udto != null ) {
             session.setAttribute("users", udto);
+            model.addAttribute("result", 1);
+        }else {
+            model.addAttribute("result", 0);
         }
         return "user/loginPro";
     } 
@@ -45,7 +50,7 @@ public class UserController {
         return new String();
     }
     
-      
+
     @GetMapping("insert")
     public String userInsert() {
         return "user/insertForm";

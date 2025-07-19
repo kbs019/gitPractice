@@ -24,48 +24,11 @@ public class InfoController {
 
     private final InfoBoardService infoBoardService;
 
-    // @GetMapping("list")
-    // public String infoList(Model model, @RequestParam(name = "pageNum", defaultValue = "1") int pageNum ) {
-
-    //     int pageSize=10;
-    //     int currentPage = pageNum;
-    //     int start = (currentPage-1)*pageSize+1;
-    //     int end = currentPage*pageSize;
-    //     int count = infoBoardService.count();
-
-    //     List<InfoBoardDTO> list = null;
-    //     if( count > 0 ) {
-    //         list = infoBoardService.infoBoardList(start, end);
-    //     }else {
-    //         list = Collections.EMPTY_LIST;
-    //     }
-    //     int pageCount = count/pageSize + (count%pageSize == 0 ? 0 : 1);
-    //     int startPage = (int)((currentPage - 1)/10)*10+1;
-    //     int pageBlock = 10;
-    //     int endPage = startPage+pageBlock - 1;
-    //     if(endPage > pageCount){
-    //         endPage = pageCount;
-    //     } 
-
-    //     model.addAttribute("pageSize", pageSize);
-    //     model.addAttribute("currentPage", currentPage);
-    //     model.addAttribute("start", start);
-    //     model.addAttribute("end", end);
-    //     model.addAttribute("count", count);
-    //     model.addAttribute("list", list);
-    //     model.addAttribute("pageCount", pageCount);
-    //     model.addAttribute("startPage", startPage);
-    //     model.addAttribute("pageBlock", pageBlock);
-    //     model.addAttribute("endPage", endPage); 
-    //     model.addAttribute("pageNum", pageNum);
-
-    //     return "info/infoList";
-    // }
-
+    // 정보 게시판 카테고리 글 리스트
     @GetMapping("list")
-    public String listByCategory(@RequestParam(name = "category", required = false, defaultValue = "전체글") String category,
-                                @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                                Model model) {
+    public String listByCategory(   @RequestParam(name = "category", required = false, defaultValue = "전체글") String category,
+                                    @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
+                                    Model model) {
 
         int pageSize = 10;
         int currentPage = pageNum;
@@ -107,13 +70,17 @@ public class InfoController {
         return "info/infoList";
     }
 
+    // 글 작성 버튼 누를시 작동
     @GetMapping("write")
     public String write() {
         return "info/infoWriteForm";
     }
 
+    // 글작성 Form 눌렀을 시 실행
     @PostMapping("write")
-    public String writePro( InfoBoardDTO idto, HttpSession session, Model model) {
+    public String writePro( InfoBoardDTO idto, 
+                            HttpSession session, 
+                            Model model) {
         
         // UserDTO user = (UserDTO)session.getAttribute("users");
         // String writer = user.getNick();
@@ -124,11 +91,36 @@ public class InfoController {
         return "info/infoWritePro";
     }
 
+    // 게시판의 게시글 제목 클릭이 실행
     @GetMapping("content")
-    public String content( @RequestParam("postNo") int postNo, @ModelAttribute("pageNum") int pageNum, Model model) {
+    public String content(  @RequestParam("postNo") int postNo, 
+                            @ModelAttribute("pageNum") int pageNum, 
+                            Model model) {
         InfoBoardDTO idto = infoBoardService.InfopostContent(postNo);
         model.addAttribute("idto", idto);
 
         return "info/content";
+    }
+
+    @GetMapping("update")
+    public String infoUpdateForm(   @RequestParam(name = "category") String category, 
+                                    @RequestParam(name = "pageNum") int pageNum, 
+                                    @RequestParam(name = "postNo") int postNo,
+                                    Model model) {
+
+        InfoBoardDTO idto = infoBoardService.InfopostContent(postNo);
+        model.addAttribute("idto", idto);
+        
+        return "info/infoUpdateForm";
+    }
+    @PostMapping("update")
+    public String infoUpdatePro(    @RequestParam("category") String category,
+                                    @ModelAttribute("pageNum") int pageNum,
+                                    InfoBoardDTO idto, Model model) {
+        
+        int result = infoBoardService.infoPostUpdate(idto);
+        model.addAttribute("result", result);
+
+        return "info/infoUpdatePro";
     }
 }
