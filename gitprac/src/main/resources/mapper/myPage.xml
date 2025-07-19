@@ -7,7 +7,7 @@
 SELECT * FROM USERS WHERE id = #{id}
 </select>
 <update id="updateUser">
-UPDATE USERS SET pw=#{pw} nick=#{nick} email=#{email} phone=#{phone} carrier=#{carrier}
+UPDATE USERS SET pw=#{pw} nick=#{nick} email=#{email} phone=#{phone} carrier=#{carrier} WHERE id=#{id}
 </update>
 <update id="deleteUser">
 UPDATE USERS SET status = 2 where id=#{id}
@@ -20,7 +20,7 @@ SELECT * FROM PET WEHRE id = #{id}
 INSERT INTO PET VALUES(petNo = PET_SEQ.NEXTVAL, id = #{id}, petName=#{petName}, petBreed=#{petBreed}, petAge=#{petAge}, petSize=#{petSize}, petWeight=#{petWeight}, petBirth=#{petBirth})
 </insert>
 <update id="updatePet">
-UPDATE PET SET petName=#{petName}, petBreed=#{petBreed}, petAge=#{petAge}, petSize=#{petSize}, petWeight=#{petWeight}, petBirth=#{petBirth}
+UPDATE PET SET petName=#{petName}, petBreed=#{petBreed}, petAge=#{petAge}, petSize=#{petSize}, petWeight=#{petWeight}, petBirth=#{petBirth} WHERE petNo=#{petNo}
 </update>
 <delete id="deletePet">
 DELETE FROM PET WHERE petNo = #{petNo}
