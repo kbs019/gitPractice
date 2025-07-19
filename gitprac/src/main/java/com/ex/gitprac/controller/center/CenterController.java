@@ -216,6 +216,36 @@ public class CenterController {
         return "center/askDeletePro";
     }
 
+    // userManage 에서 체크박스 선택으로 미답변 게시글 출력
+    // 답변 여부 선택
+    @PostMapping("askListByIsAnswered")
+    public String searchList2( @RequestParam(name="pageNum", defaultValue="1") int pageNum, @RequestParam("isAnswered") int isAnswered , Model model) {
+        int pageSize = 10;
+        int currentPage = pageNum;
+        int start = (currentPage - 1) * pageSize + 1;
+        int end = currentPage * pageSize;
+        int count = centerService.askCountByIsAnswered(isAnswered);
+        List<AskDTO> list = centerService.askListByIsAnswered(isAnswered, start, end);
+        
+        int pageCount = (count/pageSize) + (count%pageSize == 0 ? 0 : 1);
+        int pageBlock = 10;
+        int startPage = (int) ((currentPage - 1) / pageBlock) * pageBlock + 1;
+        int endPage = startPage + pageBlock - 1;
+        if( endPage > pageCount ){
+            endPage = pageCount;
+        }
+
+        model.addAttribute("pageCount", pageCount);
+        model.addAttribute("pageBlock", pageBlock);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("count", count);
+        model.addAttribute("list", list);
+        model.addAttribute("pageNum", pageNum);
+
+        return "/center/askListByIsAnswered";
+    }
+
     // ajax 로 넘어온 댓글 작성
     @PostMapping("askReplyInsert")
     @ResponseBody
