@@ -26,7 +26,7 @@ public interface InfoBoardMapper {
     // 글 수정
     public int infoPostUpdate(InfoBoardDTO infoBoardDTO);
     // 글 삭제
-    public int infoBoardDelete(int num);
+    public int infoPostDelete(int num);
     // 카테고리 글 갯수
     public int infoCateBoardCount(@Param("category") String category);
     // 카테고리 글 리스트
