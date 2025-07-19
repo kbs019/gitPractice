@@ -8,7 +8,7 @@ import lombok.Data;
 public class PetDTO {
 
     private int petNo;
-    private String writer;
+    private String id;
     private String petName;
     private String petBreed;
     private int petAge;

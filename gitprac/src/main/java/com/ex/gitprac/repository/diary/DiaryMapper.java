@@ -16,4 +16,5 @@ public interface DiaryMapper {
     public List<DiaryDTO> listDiaryByDate(@Param("writer") String writer, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("start") int start, @Param("end") int end);
     public void deleteDiary(@Param("diaryNo") int diaryNo);
     public void updateDiary(DiaryDTO dto);
+    public DiaryDTO getDiary(@Param("diaryNo") int diaryNo);
 }
