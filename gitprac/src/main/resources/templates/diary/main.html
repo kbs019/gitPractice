@@ -94,6 +94,17 @@
 </div>
 
 <!-- 페이징 처리 -->
+<div class="paging" align="center" th:if="${count > 0}">
+    <span th:if="${startPage} > ${pageCount}">
+        <a th:href="@{|/diary/main?pageNum=${startPage - pageBlock}|}">[이전]</a>
+    </span>
+    <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <a th:href="@{|/diary/main?pageNum=${i}|}" th:text="'['+${i}+']'"></a>
+    </span>
+    <span th:if="${endPage} < ${pageCount}">
+        <a th:href="@{|/diary/main?pageNum=${startPage + pageBlock}|}">[다음]</a>
+    </span>
+</div>
 
 
 <script>
