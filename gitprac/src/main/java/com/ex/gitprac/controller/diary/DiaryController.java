@@ -119,6 +119,21 @@ public class DiaryController {
     @PostMapping("delete")
     @ResponseBody
     public String deleteDiary(@RequestParam("diaryNo") int diaryNo) {
+        
+        DiaryDTO dto = diaryService.getDiary(diaryNo);
+
+        String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\diaryUpload\\";
+        String uploadName = dto.getImgName();
+
+        try{
+            File f = new File(uploadPath + uploadName);
+            if( f.exists() ){
+                f.delete();
+            }
+        }catch( Exception e ){
+            e.printStackTrace();
+        }
+
         diaryService.deleteDiary(diaryNo);
         return "deleted";
     }
@@ -162,6 +177,14 @@ public class DiaryController {
             File folder = new File(uploadPath);
             if (!folder.exists()) {
                 folder.mkdirs();  // 존재하지 않으면 폴더 생성
+            }
+            try{
+                File f = new File(uploadPath + dto.getImgName());
+                if( f.exists() ){
+                    f.delete();
+                }
+            }catch( Exception e ){
+                e.printStackTrace();
             }
             
             // 새로 생성된 이름과 경로를 qto 객체에 대입
