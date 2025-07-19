@@ -1,0 +1,32 @@
+.cs-sidebar {
+    width: 200px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-right: 1px solid #ccc;
+}
+
+.cs-sidebar h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.cs-sidebar ul {
+    padding: 0;
+    margin: 0;
+}
+
+.cs-sidebar ul li {
+    list-style: none;
+    margin-bottom: 10px;
+}
+
+.cs-sidebar ul li a {
+    text-decoration: none;
+    color: #4B0082;
+    font-weight: bold;
+}
+
+.cs-sidebar ul li a:hover {
+    text-decoration: underline;
+}

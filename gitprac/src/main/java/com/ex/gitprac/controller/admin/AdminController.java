@@ -12,15 +12,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ex.gitprac.data.ask.AskDTO;
+import com.ex.gitprac.data.ask.AskReplyDTO;
 import com.ex.gitprac.data.info.InfoBoardDTO;
 import com.ex.gitprac.data.notice.NoticeDTO;
 import com.ex.gitprac.data.qna.QnaBoardDTO;
 import com.ex.gitprac.data.user.UserDTO;
 import com.ex.gitprac.service.admin.AdminService;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -104,7 +106,7 @@ public class AdminController {
     // ==================================== 게시글 관리 ======================================
     // 게시글 관리로 이동
     @GetMapping("postManage")
-    public String postManage( Model model, @RequestParam(name="pageNum", defaultValue="1") int pageNum, @RequestParam("category") String category ){
+    public String postManage( Model model, @RequestParam(name="pageNum", defaultValue="1") int pageNum ){
 
         int pageSize = 5;
         int currentPage = pageNum;
@@ -119,10 +121,10 @@ public class AdminController {
             qnaList = new ArrayList<QnaBoardDTO>();
         }
 
-        int infoCount = adminService.infoCateBoardCount( category );
+        int infoCount = adminService.infoBoardCount();
         List<InfoBoardDTO> infoList = null;
         if( infoCount > 0 ){
-            infoList = adminService.infoCateBoardList( category, start, end );
+            infoList = adminService.infoBoardList( start, end );
         }else {
             infoList = new ArrayList<InfoBoardDTO>();
         }
@@ -132,7 +134,6 @@ public class AdminController {
         model.addAttribute("infoCount", infoCount);
         model.addAttribute("infoList", infoList);
         model.addAttribute("pageNum", pageNum);
-        model.addAttribute("category", category);
 
         return "/admin/postManage";
     }
@@ -183,23 +184,27 @@ public class AdminController {
     // 글작성 작성
     @PostMapping("noticeWrite")
     public String noticeWritePro( NoticeDTO nto, Model model, @RequestParam("image") MultipartFile mf ){
-        String originalName = mf.getOriginalFilename();
-        String newName = UUID.randomUUID().toString().replace("-", "") + originalName;
-        String uploadPath = new File("").getAbsolutePath() + "\\src\\main\\resources\\static\\noticeUpload\\";
-        String imgWebPath = "/noticeUpload/";
+        int result = 0;
 
-        nto.setOriginalName(originalName);
-        nto.setImgName(newName);
-        nto.setImgPath(imgWebPath);
-
-        try{
-            File f = new File(uploadPath + newName);
-            mf.transferTo(f);
-        } catch( Exception e ){
-            e.printStackTrace();
+        if( mf != null && !mf.isEmpty() ){
+            String originalName = mf.getOriginalFilename();
+            String newName = UUID.randomUUID().toString().replace("-", "") + originalName;
+            String uploadPath = new File("").getAbsolutePath() + "\\src\\main\\resources\\static\\noticeUpload\\";
+            String imgWebPath = "/noticeUpload/";
+    
+            nto.setOriginalName(originalName);
+            nto.setImgName(newName);
+            nto.setImgPath(imgWebPath);
+    
+            try{
+                File f = new File(uploadPath + newName);
+                mf.transferTo(f);
+            } catch( Exception e ){
+                e.printStackTrace();
+            }
         }
 
-        int result = adminService.noticeInsert(nto);
+        result = adminService.noticeInsert(nto);
 
         model.addAttribute("result", result);
 
@@ -227,13 +232,13 @@ public class AdminController {
     // 글 수정 DB 작업
     @PostMapping("noticeUpdate")
     public String noticeUpdatePro( @RequestParam("image") MultipartFile mf, NoticeDTO nto, @ModelAttribute("pageNum") int pageNum, Model model ){
-        String originalName = mf.getOriginalFilename();
-        String newName = UUID.randomUUID().toString().replace("-","") + originalName;
-        String uploadPath = new File("").getAbsolutePath() + "\\src\\main\\resources\\static\\noticeUpload\\";
-        String imgWebPath = "/noticeUpload/";
-
         if( mf != null && !mf.isEmpty() ){
-        // image 라는 file 타입의 input 태그에 들어온 값이 있다면
+            // image 라는 file 타입의 input 태그에 들어온 값이 있다면
+            String originalName = mf.getOriginalFilename();
+            String newName = UUID.randomUUID().toString().replace("-","") + originalName;
+            String uploadPath = new File("").getAbsolutePath() + "\\src\\main\\resources\\static\\noticeUpload\\";
+            String imgWebPath = "/noticeUpload/";
+
             try{
                 File f = new File(uploadPath + nto.getImgName());
                 if( f.exists() ){
@@ -285,7 +290,212 @@ public class AdminController {
     // ========================================= 질의응답 ======================================
     // 질의응답 이동
     @GetMapping("ask")
-    public String ask(){
+    public String ask( Model model, @RequestParam(name="pageNum", defaultValue="1") int pageNum ){
+        int pageSize = 10;
+        int currentPage = pageNum;
+        int start = (currentPage - 1) * pageSize + 1;
+        int end = currentPage * pageSize;
+        int count = adminService.askCount();
+
+        List<AskDTO> list = null;
+        if( count > 0 ){
+            list = adminService.askList( start, end );
+        }else {
+            list = new ArrayList<AskDTO>();
+        }
+        
+        int pageCount = (count/pageSize) + (count%pageSize == 0 ? 0 : 1);
+        int pageBlock = 10;
+        int startPage = (int) ((currentPage - 1) / pageBlock) * pageBlock + 1;
+        int endPage = startPage + pageBlock - 1;
+        if( endPage > pageCount ){
+            endPage = pageCount;
+        }
+
+        model.addAttribute("pageCount", pageCount);
+        model.addAttribute("pageBlock", pageBlock);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("count", count);
+        model.addAttribute("list", list);
+        model.addAttribute("pageNum", pageNum);
+
         return "/admin/ask";
+    }
+
+    @GetMapping("askWrite")
+    public String askWriteForm(){
+        return "/admin/askWriteForm";
+    }
+
+    @PostMapping("askWrite")
+    public String askWritePro( AskDTO ato, Model model, @RequestParam("image") MultipartFile mf ){
+        int result = 0;
+
+        if( mf != null && !mf.isEmpty() ){
+            String originalName = mf.getOriginalFilename();
+            String newName = UUID.randomUUID().toString().replace("-", "") + originalName;
+            String uploadPath = new File("").getAbsolutePath() + "\\src\\main\\resources\\static\\askUpload\\";
+            String imgWebPath = "/askUpload/";
+    
+            ato.setOriginalName(originalName);
+            ato.setImgName(newName);
+            ato.setImgPath(imgWebPath);
+    
+            try{
+                File f = new File(uploadPath + newName);
+                mf.transferTo(f);
+            } catch( Exception e ){
+                e.printStackTrace();
+            }
+        }
+
+        result = adminService.askInsert(ato);
+
+        model.addAttribute("result", result);
+
+        return "/admin/askWritePro";
+    }
+
+    // 글 내용 ( + 조회수 증가 )
+    @GetMapping("askContent")
+    public String askContent( @RequestParam("askNo") int askNo, @ModelAttribute("pageNum") int pageNum, Model model ){
+        AskDTO ato = adminService.askContent( askNo );
+
+        model.addAttribute("ato", ato);
+        return "admin/askContent";
+    }
+
+    // 글수정 페이지로 이동
+    @GetMapping("askUpdate")
+    public String askUpdateForm( @RequestParam("askNo") int askNo, @ModelAttribute("pageNum") int pageNum, Model model ){
+        AskDTO ato = adminService.askContentForBtns(askNo);
+
+        model.addAttribute("ato", ato);
+        return "admin/askUpdateForm";
+    }
+
+    // 글 수정 DB 작업
+    @PostMapping("askUpdate")
+    public String askUpdatePro( @RequestParam("image") MultipartFile mf, AskDTO ato, Model model, @ModelAttribute("pageNum") int pageNum ){
+        
+        if( mf != null && !mf.isEmpty() ){
+            // image 라는 file 타입의 input 태그에 들어온 값이 있다면
+            String originalName = mf.getOriginalFilename();
+            String newName = UUID.randomUUID().toString().replace("-", "") + originalName;
+            String uploadPath = new File("").getAbsolutePath() + "\\src\\main\\resources\\static\\askUpload\\";
+            String imgWebPath = "/askUpload/";
+            
+            try{
+                File f = new File(uploadPath + ato.getImgName());
+                if( f.exists() ){
+                    f.delete();
+                }
+
+                File nf = new File(uploadPath + newName);
+                mf.transferTo(nf);
+            }catch( Exception e ){
+                e.printStackTrace();
+            }
+
+            ato.setImgName(newName);
+            ato.setImgPath(imgWebPath);
+            ato.setOriginalName(originalName);
+        }
+
+        int result = adminService.askUpdate(ato);
+        model.addAttribute("result", result);
+        model.addAttribute("ato", ato);
+
+        return "admin/askUpdatePro";
+    }
+
+    @GetMapping("askDelete")
+    public String askDelete( @RequestParam("askNo") int askNo, @ModelAttribute("pageNum") int pageNum, Model model ){
+        AskDTO ato = adminService.askContentForBtns(askNo);
+
+        String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\askUpload\\";
+        String uploadName = ato.getImgName();
+
+        try{
+            File f = new File(uploadPath + uploadName);
+            f.delete();
+        }catch( Exception e ){
+            e.printStackTrace();
+        }
+
+        int result = adminService.askDelete(askNo);
+
+        model.addAttribute("result", result);
+
+        return "admin/askDeletePro";
+    }
+
+    // userManage 에서 체크박스 선택으로 미답변 게시글 출력
+    // 답변 여부 선택
+    @PostMapping("askListByIsAnswered")
+    public String searchList2( @RequestParam(name="pageNum", defaultValue="1") int pageNum, @RequestParam("isAnswered") int isAnswered , Model model) {
+        int pageSize = 10;
+        int currentPage = pageNum;
+        int start = (currentPage - 1) * pageSize + 1;
+        int end = currentPage * pageSize;
+        int count = adminService.askCountByIsAnswered(isAnswered);
+        List<AskDTO> list = adminService.askListByIsAnswered(isAnswered, start, end);
+        
+        int pageCount = (count/pageSize) + (count%pageSize == 0 ? 0 : 1);
+        int pageBlock = 10;
+        int startPage = (int) ((currentPage - 1) / pageBlock) * pageBlock + 1;
+        int endPage = startPage + pageBlock - 1;
+        if( endPage > pageCount ){
+            endPage = pageCount;
+        }
+
+        model.addAttribute("pageCount", pageCount);
+        model.addAttribute("pageBlock", pageBlock);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("count", count);
+        model.addAttribute("list", list);
+        model.addAttribute("pageNum", pageNum);
+
+        return "/admin/askListByIsAnswered";
+    }
+
+    // ajax 로 넘어온 댓글 작성
+    @PostMapping("askReplyInsert")
+    @ResponseBody
+    public String replyInsert( @RequestParam("askNo") int askNo, @RequestParam("writer") String writer, @RequestParam("content") String content ){
+
+        String message = "댓글 작성에 실패하였습니다.";
+
+        if( adminService.replyInsert(askNo, writer, content) == 1 ){
+            message = "댓글 작성에 성공했습니다.";
+        }
+
+        return message;
+    }
+
+    // 댓글 리스트 출력
+    @PostMapping("askReplyList")
+    public String replyList( @RequestParam("askNo") int askNo, Model model ){
+
+        List<AskReplyDTO> list = adminService.replyList(askNo);
+
+        model.addAttribute("list", list);
+
+        return "/admin/askReplyList";
+    }
+
+    // 답변 삭제
+    @PostMapping("replyDelete")
+    @ResponseBody
+    public String replyDelete( @RequestParam("replyNo") int replyNo ){
+        String result = "삭제를 실패하였습니다.";
+
+        if( adminService.replyDelete(replyNo) == 1 ){
+            result = "삭제를 완료하였습니다.";
+        }
+
+        return result;
     }
 }

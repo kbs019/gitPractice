@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/centersidebar.css">
 </head>
 <body>
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-    <h1>공지사항</h1>
+    <div class="sidebar-wrapper">
+        <div th:replace="~{fragments/centersidebar.html :: centersidebar}"></div>
+    </div>
+    <h1 align="center">공지사항</h1>
     <div id="notice-wrapper">
-        <div align="center">	
+        <div align="center" th:if="${session.users.role == 2}">	
             <table width="800">		
                 <tr>
                     <td align="right">
@@ -36,7 +40,7 @@
                 </tr>			
                 <tr height="30" th:each="nto : ${list}">
                     <td>
-                        <a th:href="@{|/admin/noticeContent?noticeNo=${nto.noticeNo}&pageNum=${pageNum}|}" th:text="${nto.title}"></a>
+                        &nbsp; <a th:href="@{|/center/noticeContent?noticeNo=${nto.noticeNo}&pageNum=${pageNum}|}" th:text="${nto.title}"></a>
                     </td>
                     <td th:text="${nto.writer}" align="center"></td>
                     <td th:text="${#temporals.format(nto.reg, 'yy.MM.dd HH:mm')}" align="center"></td>
@@ -47,13 +51,13 @@
 
         <div align="center" th:if="${count > 0}">
             <span th:if="${startPage} > ${pageBlock}">
-                <a th:href="@{|/admin/notice?pageNum=${startPage - pageBlock}|}">[이전]</a>
+                <a th:href="@{|/center/notice?pageNum=${startPage - pageBlock}|}">[이전]</a>
             </span>
             <span th:each=" i : ${#numbers.sequence(startPage, endPage)} ">
-                <a th:href="@{|/admin/notice?pageNum=${i}|}" th:text="'['+${i}+']'"></a>
+                <a th:href="@{|/center/notice?pageNum=${i}|}" th:text="'['+${i}+']'"></a>
             </span>
             <span th:if="${endPage} < ${pageCount}">
-                <a th:href="@{|/admin/notice?pageNum=${startPage + pageBlock}|}">[다음]</a>
+                <a th:href="@{|/center/notice?pageNum=${startPage + pageBlock}|}">[다음]</a>
             </span>
         </div>
     </div>

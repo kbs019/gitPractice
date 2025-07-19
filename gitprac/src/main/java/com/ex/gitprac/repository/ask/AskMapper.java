@@ -37,4 +37,10 @@ public interface AskMapper {
 
     // 게시글의 모든 답변 삭제 시, isAnswered 컬럼값 0 으로 변경
     public void updateIsAnsweredDown( int askNo );
+
+    // isAnswered 컬럼값에 따른 게시글 갯수 조회
+    public int askCountByIsAnswered( int isAnswered );
+
+    // isAnswered 컬럼값에 따른 게시글 조회
+    public List<AskDTO> askListByIsAnswered( @Param("isAnswered") int isAnswered, @Param("start") int start, @Param("end") int end );
 }

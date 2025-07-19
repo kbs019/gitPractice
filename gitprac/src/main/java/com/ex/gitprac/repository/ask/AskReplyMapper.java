@@ -15,7 +15,7 @@ public interface AskReplyMapper {
     public int replyInsert( @Param("askNo") int askNo, @Param("writer") String writer, @Param("content") String content );
 
     // 답변 리스트 조회
-    public List<AskReplyDTO> replyList( int postNo );
+    public List<AskReplyDTO> replyList( int askNo );
 
     // 답변 삭제
     public int replyDelete( int replyNo );
@@ -24,8 +24,8 @@ public interface AskReplyMapper {
     public int selectAskNo( int replyNo );
 
     // 게시글 번호에 대한 답변 수 조회
-    public int selectReplyNoCount( int postNo );
+    public int selectReplyNoCount( int askNo );
 
     // 게시글 번호에 대한 모든 답변 삭제
-    public void allReplyDelete( int postNo );
+    public void allReplyDelete( int askNo );
 }

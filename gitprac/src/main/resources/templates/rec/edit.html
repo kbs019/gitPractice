@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>일지 수정</title>
+</head>
+<body>
+  <h1>일지 수정</h1>
+
+  <form th:action="@{/rec/edit}" th:object="${rec}" method="post">
+    <input type="hidden" th:field="*{recNo}" />
+
+    <label>제목</label>
+    <input type="text" th:field="*{title}" required />
+
+    <label>카테고리</label>
+    <input type="text" th:field="*{category}" required />
+
+    <label>내용</label>
+    <textarea th:field="*{content}" rows="10"></textarea>
+
+    <button type="submit">저장</button>
+  </form>
+</body>
+</html>

@@ -17,8 +17,9 @@
 
   <!-- 글 작성 -->
   <insert id="postInsert" parameterType="com.ex.gitprac.data.qna.QnaBoardDTO">
-    insert into qna_board values( qna_board_seq.nextval, #{writer}, #{title}, #{content}, #{imgName}, #{imgPath}, #{originalName}, #{showRecord}, sysdate, 0, 0, 0 )
+    insert into qna_board values( qna_board_seq.nextval, #{writer}, #{title}, #{content}, #{imgName, jdbcType=VARCHAR}, #{imgPath, jdbcType=VARCHAR}, #{originalName, jdbcType=VARCHAR}, #{showRecord}, sysdate, 0, 0, 0 )
   </insert>
+  <!-- , jdbcType=VARCHAR  ==> imgName 같은 부분에 null 값이 들어갈 수 있다면, 이것을 넣어주어야 한다. -->
 
   <!-- 조회수 + 1 -->
   <update id="viewsUp" parameterType="int">

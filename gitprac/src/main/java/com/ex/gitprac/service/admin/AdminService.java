@@ -70,17 +70,17 @@ public class AdminService {
     }
 
     // 정보 공유 게시판 조회
-    public List<InfoBoardDTO> infoCateBoardList( String category, int start, int end ){
+    public List<InfoBoardDTO> infoBoardList( int start, int end ){
         List<InfoBoardDTO> list = new ArrayList<InfoBoardDTO>();
 
-        list = infoBoardMapper.infoCateBoardList( category, start, end );
+        list = infoBoardMapper.infoBoardList( start, end );
 
         return list;
     }
 
     // 상당 게시판 게시글 갯수
-    public int infoCateBoardCount( String category ){
-        return infoBoardMapper.infoCateBoardCount(category);
+    public int infoBoardCount(){
+        return infoBoardMapper.infoBoardCount();
     }
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ public class AdminService {
     }
 
     // 질의응답 글 내용 (수정 전)
-    public AskDTO askContentForUpdate( int askNo ){
+    public AskDTO askContentForBtns( int askNo ){
         return askMapper.askContent(askNo);
     }
 
@@ -159,6 +159,16 @@ public class AdminService {
     public int askDelete( int askNo ){
         askReplyMapper.allReplyDelete(askNo);
         return askMapper.askDelete(askNo);
+    }
+
+    // isAnswered 컬럼값에 의한 게시글 갯수 조회
+    public int askCountByIsAnswered( int isAnswered ){
+        return askMapper.askCountByIsAnswered( isAnswered );
+    }
+
+    // isAnswered 컬럼값에 의한 게시글 조회
+    public List<AskDTO> askListByIsAnswered( int isAnswered, int start, int end ){
+        return askMapper.askListByIsAnswered( isAnswered, start, end );
     }
 
     // 답변 리스트 조회

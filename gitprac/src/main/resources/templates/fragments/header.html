@@ -4,11 +4,8 @@
         <div id="header">
             <div id="header-top">
                 <a th:href="@{/user/logout}">로그아웃</a>
-                <span th:if="${session.users.role} == 0">
-                    <a th:href="@{/mem/myPage}">마이페이지</a>
-                </span>
-                <span th:if="${session.users.role} == 1">
-                    <A th:href="@{/mem/vetPage}">수의사 페이지</A>
+                <span th:if="${session.users.role == 0 || session.users.role == 1}">
+                    <a th:href="@{/myPage/main}">마이페이지</a>
                 </span>
                 <span th:if="${session.users.role} == 2">
                     <a th:href="@{/admin/userManage}">관리자 페이지</a>
@@ -16,13 +13,8 @@
             </div>
 
             <div id="header-middle">
-                <span th:if="${session.users.role} == 0">
+                <span th:if="${session.users.role == 0 || session.users.role == 1}">
                     <a th:href="@{/diary/main}">
-                        <h1>하루犬과</h1>
-                    </a>
-                </span>
-                <span th:if="${session.users.role} == 1">
-                    <a th:href="@{/mem/vetPage}">
                         <h1>하루犬과</h1>
                     </a>
                 </span>
@@ -40,7 +32,7 @@
                         <li><a th:href="@{/rec}">일지</a></li>
                         <li><a th:href="@{/qna/list}">상담 게시판</a></li>
                         <li><a th:href="@{/info/list}">정보 게시판</a></li>
-                        <!-- <li><a th:href="@{/info/list(category='전체글')}">정보 게시판</a></li> -->
+                        <li><a th:href="@{/center/notice}">고객센터</a></li>
                     </ul>
                 </div>
                 <div th:if="${session.users.role == 2}">
@@ -49,7 +41,6 @@
                         <li><a th:href="@{/admin/ask}">질의응답</a></li>
                         <li><a th:href="@{/admin/userManage}">회원관리</a></li>
                         <li><a th:href="@{/admin/postManage}">게시글관리</a></li>
-                        <!-- <li><a th:href="@{/admin/postManage(category='전체글')}">게시글관리</a></li> -->
                     </ul>
                 </div>
             </div>
