@@ -9,11 +9,11 @@
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
     <div class="body">
         <div class="body-top" align="center">
-            <h2>글 작성</h2>
+            <h2>공지사항 작성</h2>
             <hr width="400" align="center">
         </div>
         <div class="body-content">
-            <form th:action="@{/qna/write}" method="post" enctype="multipart/form-data">
+            <form th:action="@{/admin/noticeWrite}" method="post" enctype="multipart/form-data">
                 <div class="writeForm-wrapper" align="center">
                     <div class="title-wrapper">
                         <label for="title">글 제목</label> : 
@@ -26,11 +26,6 @@
                     <div class="image-wrapper">
                         <label for="image">첨부파일</label> &nbsp;
                         <input type="file" id="image" name="image">
-                    </div>
-                    <div class="record-wrapper">
-                        <span>일지 공유 여부 선택</span>    &nbsp;&nbsp;
-                        Yes <input type="radio" name="showRecord" value="1">    &nbsp;&nbsp;
-                        No <input type="radio" name="showRecord" value="0" checked> 
                     </div>
                     <div class="content-wrapper">
                         <label for="content">글 내용</label>    <br>
