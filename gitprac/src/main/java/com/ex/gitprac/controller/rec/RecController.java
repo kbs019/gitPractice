@@ -1,6 +1,8 @@
 package com.ex.gitprac.controller.rec;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -101,28 +103,13 @@ public String saveRec(
             String imgName = UUID.randomUUID().toString().replace("-", "") + orgImgName;
 
             // 저장 폴더 경로
-            // String uploadDir = "D:" + File.separator +
-            //                     "oner" + File.separator +
-            //                     "VisualStudio" + File.separator +
-            //                     "githurb" + File.separator +
-            //                     "gitPractice" + File.separator +
-            //                     "gitprac" + File.separator +
-            //                     "src" + File.separator +
-            //                     "main" + File.separator +
-            //                     "resources" + File.separator +
-            //                     "static" + File.separator +
-            //                     "recUpload";
             String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\recUpload\\";
 
-            // 폴더 없으면 생성
-            // File uploadPath = new File(uploadDir);
-            // if (!uploadPath.exists()) {
-            //     uploadPath.mkdirs();
-            // }
-
             // 실제 저장
-            File fileToSave = new File(uploadPath + imgName);
-            mf.transferTo(fileToSave);
+            // File fileToSave = new File(uploadPath + imgName);
+            // mf.transferTo(fileToSave);
+            Path savePath = Paths.get(uploadPath, imgName);
+            mf.transferTo(savePath.toFile());
 
             // DTO에 정보 세팅
             rto.setOrgImgName(orgImgName);

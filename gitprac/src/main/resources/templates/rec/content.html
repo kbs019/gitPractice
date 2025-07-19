@@ -29,8 +29,8 @@
 
       <br>
 
-      <div>
-        <img th:src="@{|${rto.imgPath + rto.imgName}|}">
+      <div th:if="${rto.imgPath != null and rto.imgName != null}">
+        <img th:src="@{${rto.imgPath + rto.imgName}}" alt="첨부 이미지" style="max-width: 400px;">
       </div>
 
 
