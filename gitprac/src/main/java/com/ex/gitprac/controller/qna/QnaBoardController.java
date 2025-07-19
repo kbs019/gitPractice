@@ -96,10 +96,10 @@ public class QnaBoardController {
         qto.setImgName(newName);
         qto.setImgPath(imgWebPath);
 
-        // 경로와 파일명을 사용하여 File 객체 생성
-        File f = new File(uploadPath + newName);
-
+        
         try{
+            // 경로와 파일명을 사용하여 File 객체 생성
+            File f = new File(uploadPath + newName);
             // 파일 업로드 진행
             mf.transferTo(f);
         }catch(Exception e){
@@ -141,23 +141,30 @@ public class QnaBoardController {
         String newName = UUID.randomUUID().toString().replace("-", "") + mf.getOriginalFilename();
         String filePath = new File("").getAbsolutePath() + "\\src\\main\\resources\\static\\qnaUpload\\";
         String originalFileName = mf.getOriginalFilename();
-        String orgName = qto.getOriginalName();
+        String imgWebPath = "/qnaUpload/";
 
-        if(originalFileName != null){
-            File f = new File(qto.getImgPath()+"/"+qto.getImgName());
-            f.delete();
+        if( mf != null && !mf.isEmpty() ){
+        // image 라는 file 타입의 input 태그에 들어온 값이 있다면
+            try{
+                File f = new File(filePath + qto.getImgName());
+                if( f.exists() ){
+                    f.delete();
+                }
+
+                File nf = new File(filePath + newName);
+                mf.transferTo(nf);
+            }catch( Exception e ){
+                e.printStackTrace();
+            }
 
             qto.setImgName(newName);
-            qto.setImgPath(filePath);
+            qto.setImgPath(imgWebPath);
             qto.setOriginalName(originalFileName);
-        } else {    // 입력받은 새로운 파일이 없다면,
-            qto.setImgName(qto.getImgName());
-            qto.setImgPath(qto.getImgPath());
-            qto.setOriginalName(orgName);
         }
 
         int result = qnaBoardService.postUpdate(qto);
         model.addAttribute("result", result);
+        model.addAttribute("qto", qto);
 
         return "qna/updatePro";
     }
@@ -173,8 +180,10 @@ public class QnaBoardController {
         File f = new File(uploadPath + uploadName);
         f.delete();
 
-        qnaBoardService.postDelete(postNo);
-        return "redirect:/qna/list";
+        int result = qnaBoardService.postDelete(postNo);
+
+        model.addAttribute("result", result);
+        return "/qna/deletePro";
     }
 
     // showRecord 팝업창 화면 구성

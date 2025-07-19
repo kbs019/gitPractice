@@ -58,9 +58,9 @@ public class QnaBoardService {
     }
 
     // 글 삭제 (delete() 에서 사용)
-    public void postDelete( int postNo ){
+    public int postDelete( int postNo ){
         qnaReplyMapper.allReplyDelete(postNo);          // 여기 게시글 삭제할 때, 모든 답변 삭제 기능 추가
-        qnaBoardMapper.postDelete(postNo);
+        return qnaBoardMapper.postDelete(postNo);
     }
 
     // 일지 조회 (showRecord 팝업창에서 사용)

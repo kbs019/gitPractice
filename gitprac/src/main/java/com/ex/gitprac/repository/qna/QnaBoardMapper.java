@@ -29,7 +29,7 @@ public interface QnaBoardMapper {
     public int postUpdate(QnaBoardDTO qto);
 
     // 글 삭제
-    public void postDelete(int postNo);
+    public int postDelete(int postNo);
 
     // 답변 작성에 의해 isAnswered 컬럼의 값 변경
     public void isAnsweredChange(int postNo);
