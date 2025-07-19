@@ -13,12 +13,12 @@
         <span th:if="${session.users} != null">
             <span th:if="${session.users.role} == 0">
                 <script>
-                    window.location='/qna/list';
+                    window.location='/diary/main';
                 </script>
             </span>
             <span th:if="${session.users.role} == 1">
                 <script>
-                    window.location='/user/main2';
+                    window.location='/qna/list';
                 </script>메인2</span>
             <span th:if="${session.users.role} == 2">
                 <script>

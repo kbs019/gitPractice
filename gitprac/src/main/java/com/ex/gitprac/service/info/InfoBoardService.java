@@ -59,4 +59,8 @@ public class InfoBoardService {
     public int infoPostUpdate ( InfoBoardDTO idto) {
         return infoBoardMapper.infoPostUpdate(idto);
     }
+    // 글 삭제
+    public void infoPostDelete( int postNo ) {
+        infoBoardMapper.infoPostDelete(postNo);
+    }
 }
