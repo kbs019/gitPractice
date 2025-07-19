@@ -104,7 +104,7 @@ public class InfoController {
 
     @GetMapping("update")
     public String infoUpdateForm(   @RequestParam(name = "category") String category, 
-                                    @RequestParam(name = "pageNum") int pageNum, 
+                                    @ModelAttribute("pageNum") int pageNum,
                                     @RequestParam(name = "postNo") int postNo,
                                     Model model) {
 
@@ -120,7 +120,17 @@ public class InfoController {
         
         int result = infoBoardService.infoPostUpdate(idto);
         model.addAttribute("result", result);
+        model.addAttribute("idto", idto);
 
         return "info/infoUpdatePro";
+    }
+
+    @GetMapping("delete")
+    public String delete(   @ModelAttribute("pageNum") int pageNum, 
+                            @RequestParam("postNo") int postNo, 
+                            @RequestParam("category") String category,
+                            Model model) {
+        infoBoardService.infoPostDelete(postNo);
+        return "redirect:/info/list";
     }
 }

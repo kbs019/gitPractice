@@ -16,7 +16,7 @@
             <div width="600" align="right">
                 <span th:if="${ session.users.nick == idto.writer }">
                     <input type="button" value="수정" th:onclick="|window.location='@{/info/update(postNo=${idto.postNo}, pageNum=${pageNum}, category=${category})}'|"/>
-                    <input type="button" value="삭제" th:onclick="|window.location='@{/info/delete(postNo=${idto.postNo}, pageNum=${pageNum})}'|"/>
+                    <input type="button" value="삭제" th:onclick="|window.location='@{/info/delete(postNo=${idto.postNo}, pageNum=${pageNum}, category=${category})}'|"/>
                     <input type="button" value="글목록" th:onclick="|window.location='@{/info/list(pageNum=${pageNum}, category=${idto.category})}'|"/>
                 </span>
             </div>
