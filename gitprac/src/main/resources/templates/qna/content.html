@@ -74,6 +74,7 @@
     <script th:inline="javascript">
         function showRecord(){
             let writer = /*[['${qto.writer}']]*/ 'anonymous';
+            
             window.open(
                 '/qna/showRecord?nick=' + writer,
                 'popupRecord',
