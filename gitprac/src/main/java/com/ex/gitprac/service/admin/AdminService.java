@@ -1,5 +1,6 @@
 package com.ex.gitprac.service.admin;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +52,25 @@ public class AdminService {
     // 검색 결과에 따른 회원 수
     public int searchUserCount( String keyword ){
         return userMapper.searchUserCount( keyword );
+    }
+    // ajax 로 인한 role 값 변경 
+    public int changeUserRole( int role, String id ){
+        return userMapper.changeUserRole( role, id );
+    }
+    // ajax 로 인한 status 값 변경
+    public int changeUserStatus( int status, String id ){
+        return userMapper.changeUserStatus( status, id );
+    }
+    // 유저 정지 처리
+    public boolean banUser( String id, int period ){
+        LocalDate until;
+        if( period == -1 ){
+            until = LocalDate.of(9999, 12, 31);
+        } else {
+            until = LocalDate.now().plusDays(period);
+        }
+        
+        return userMapper.banUser(id, until);
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------

@@ -18,4 +18,7 @@ public class UserDTO {
     private String carrier;         // 통신사
     private int status;             // 상태
     private int role;               // 등급
+    private LocalDate bannedUntil;  // 제재 마지막 날짜
 }
+
+/* alter table users add bannedUntil date; */

@@ -34,8 +34,29 @@
         select * from ( select b.*, rownum r from ( select * from users where lower(nick) like '%' || lower(trim(#{keyword})) || '%' order by reg desc ) b ) where r >= #{start} and r <= #{end}
         ]]>
     </select>
+
     <!-- 전체 회원 수 -->
     <select id="searchUserCount" resultType="int">
         select count(*) from users where lower(nick) like '%' || lower(trim(#{keyword})) || '%'
     </select>
+
+    <!-- ajax 로 인한 role 값 변경 -->
+    <update id="changeUserRole">
+        update users set role=#{role} where id=#{id}
+    </update>
+
+    <!-- ajax 로 인한 status 값 변경 -->
+    <update id="changeUserStatus">
+        update users set status=#{status} where id=#{id}
+    </update>
+
+    <!-- id 값에 대한 유저 조회 -->
+    <select id="findById" resultType="com.ex.gitprac.data.user.UserDTO">
+        select * from users where id=#{id}
+    </select>
+
+    <!-- id 값에 대한 유저 bannedUntil 컬럼갑 변경 -->
+    <update id="banUser">
+        update users set status=1, bannedUntil=#{until} where id=#{id}
+    </update>
 </mapper>

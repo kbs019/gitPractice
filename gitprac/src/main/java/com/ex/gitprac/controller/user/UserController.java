@@ -64,4 +64,23 @@ public class UserController {
         return "user/insertPro";
     }
     
+    @PostMapping("loginCheckByBannedUntil")
+    public String loginCheckByBannedUntil( @RequestParam("id") String id, @RequestParam("pw") String pw, HttpSession session, Model model ){
+        UserDTO user = userService.loginCheckByBannedUntil(id, pw);
+
+        if( user == null ){
+            model.addAttribute("result", 0);    // 로그인 실패
+        } else if ( user.getStatus() == 1 ){
+            model.addAttribute("result", -1);
+            model.addAttribute("message", user.getBannedUntil() + "까지 로그인이 제한되어있습니다.");
+        } else if( user.getStatus() == 2 ){
+            model.addAttribute("result", 2);
+            model.addAttribute("message", "탈퇴되어있는 계정입니다.");
+        } else {
+            session.setAttribute("users", user);
+            model.addAttribute("result", 1);
+        }
+
+        return "user/loginPro2";
+    }
 }
