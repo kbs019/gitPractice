@@ -37,6 +37,8 @@ dependencies {
 
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc17'
+
+    implementation 'com.sun.mail:jakarta.mail:2.0.1' // user 아이디/비밀번호 찾기 메서드에서 필요한 mail 외부 라이브러리(API)
 }
 
 tasks.named('test') {
