@@ -4,7 +4,7 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ex.gitprac.repository.info.InfoReplyMapper">	
 
-
+    <!-- 댓글 쓰기 -->
     <insert id="insertReply" parameterType="com.ex.gitprac.data.info.InfoReplyDTO">
         <selectKey keyProperty="replyNo" resultType="int" order="BEFORE">
             SELECT seq_info_reply.NEXTVAL FROM dual
@@ -13,6 +13,7 @@
                         VALUES (#{replyNo}, #{postNo}, #{writer}, #{content}, sysdate, #{ref})
     </insert>
 
+    <!-- // 댓글들 출력(리스트) -->
     <select id="getReply" resultType="com.ex.gitprac.data.info.InfoReplyDTO">
         SELECT * FROM info_reply WHERE postNo = #{postNo} ORDER BY CASE WHEN ref = 0 THEN replyNo ELSE ref END, CASE WHEN ref = 0 THEN 0 ELSE replyNo END
     </select>
@@ -22,7 +23,8 @@
         UPDATE info_reply SET content = #{content} WHERE replyNo = #{replyNo}
     </update>
 
-    <delete id="deleteReply" parameterType="com.ex.gitprac.data.info.InfoReplyDTO">
+    <!-- 댓글 삭제 -->
+    <delete id="deleteReply" parameterType="int">
         delete from info_reply where replyNo = #{replyNo}
     </delete>
 </mapper>
