@@ -1,11 +1,9 @@
 package com.ex.gitprac.service.myPage;
 
-import java.time.LocalDate;
-
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
-import com.ex.gitprac.data.diary.PetDTO;
+import com.ex.gitprac.data.pet.PetDTO;
 import com.ex.gitprac.data.user.UserDTO;
 import com.ex.gitprac.repository.myPage.MyPageMapper;
 
@@ -21,31 +19,35 @@ public class MyPageService {
         return myPageMapper.getUser(id); 
     };
 
-    public void updateUser(@Param("pw") String pw, @Param("nick") String nick, @Param("email") String email, @Param("phone") String phone, @Param("carrier") String carrier, @Param("id") String id){ 
-        myPageMapper.updateUser(pw, nick, email, phone, carrier, id);
+    public int updateUser(UserDTO udto){ 
+        return myPageMapper.updateUser(udto);
     };
+
+    // public int changeWriter(@Param("dto")UserDTO udto, @Param("pastWriter")String pastWriter){
+    //     return myPageMapper.changeWriter(udto, pastWriter);
+    // }
     
-    public void deleteUser(String id){
-        myPageMapper.deleteUser(id);
+    public int deleteUser(String id){
+        return myPageMapper.deleteUser(id);
     };
     
     public PetDTO getPet(int petNo){ 
         return myPageMapper.getPet(petNo); 
     };
     
-    public void insertPet(@Param("id") String id, @Param("petName") String petName, @Param("petBreed") String petBreed, @Param("petAge") int petAge, @Param("petSize") int petSize, @Param("petWeight") int petWeight, @Param("petBirth") LocalDate petBirth){
-        myPageMapper.insertPet(id, petName, petBreed, petAge, petSize, petWeight, petBirth);
+    public int insertPet(PetDTO pdto){
+        return myPageMapper.insertPet(pdto);
     };
     
-    public void updatePet(@Param("petName")String petName, @Param("petBreed") String petBreed, @Param("petAge") int petAge, @Param("petSize") int petSize, @Param("petWeight") int petWeight, @Param("petBirth") LocalDate petBirth, @Param("petNo") int petNo){
-        myPageMapper.updatePet(petName, petBreed, petAge, petSize, petWeight, petBirth, petNo);
+    public int updatePet(PetDTO pdto){
+        return myPageMapper.updatePet(pdto);
     };
     
-    public void deletePet(int petNo){
-        myPageMapper.deletePet(petNo);
+    public int deletePet(int petNo){
+        return myPageMapper.deletePet(petNo);
     };
     
-    public void deletePetRec(int petNo){
-        myPageMapper.deletePetRec(petNo);
+    public int deletePetRec(int petNo){
+        return myPageMapper.deletePetRec(petNo);
     };
 }

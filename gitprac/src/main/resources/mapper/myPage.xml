@@ -9,15 +9,31 @@ SELECT * FROM USERS WHERE id = #{id}
 <update id="updateUser">
 UPDATE USERS SET pw=#{pw} nick=#{nick} email=#{email} phone=#{phone} carrier=#{carrier} WHERE id=#{id}
 </update>
+<update id="changeWriterFromQNA">
+UPDATE QNA_BOARD SET writer = #{writer} WHERE writer = #{pastWriter}
+</update>
+<update id="changeWriterFromQNARe">
+UPDATE QNA_REPLY SET writer = #{writer} WHERE writer = #{pastWriter}
+</update>
+<update id="changeWriterFromAsk">
+UPDATE ASK SET writer = #{writer} WHERE writer = #{pastWriter}
+</update>
+<update id="changeWriterFromInfo">
+UPDATE INFO_BOARD SET writer = #{writer} WHERE writer = #{pastWriter}
+</update>
+<!-- <update id="changeWriterFromInfoRe">
+UPDATE INFO_REPLY SET writer = #{writer} WHERE writer = #{pastWriter}
+</update> -->
+
 <update id="deleteUser">
 UPDATE USERS SET status = 2 where id=#{id}
 </update>
 
 <select id="getPet" resultType="com.ex.gitprac.data.pet.PetDTO">
-SELECT * FROM PET WEHRE id = #{id}
+SELECT * FROM PET WHERE petNo = #{petNo}
 </select>
 <insert id="insertPet">
-INSERT INTO PET VALUES(petNo = PET_SEQ.NEXTVAL, id = #{id}, petName=#{petName}, petBreed=#{petBreed}, petAge=#{petAge}, petSize=#{petSize}, petWeight=#{petWeight}, petBirth=#{petBirth})
+INSERT INTO PET VALUES(PET_SEQ.NEXTVAL, #{id}, #{petName}, #{petBreed}, #{petAge}, #{petSize}, #{petWeight}, #{petBirth})
 </insert>
 <update id="updatePet">
 UPDATE PET SET petName=#{petName}, petBreed=#{petBreed}, petAge=#{petAge}, petSize=#{petSize}, petWeight=#{petWeight}, petBirth=#{petBirth} WHERE petNo=#{petNo}
