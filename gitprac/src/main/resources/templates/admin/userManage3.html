@@ -44,6 +44,13 @@
                                 <option value="1" th:selected="${uto.status == 1}">활동 정지</option>
                                 <option value="2" th:selected="${uto.status == 2}">탈퇴</option>
                             </select>
+
+                            <select class="ban-period" style="display:none;">
+                                <option value="7">7일</option>
+                                <option value="14">14일</option>
+                                <option value="30">한달</option>
+                                <option value="-1">영구</option>
+                            </select>
                         </td>
                     </tr>
                 </table>
@@ -90,6 +97,7 @@
             });
         });
 
+        // 이것은 role 값 변경
         $(document).ready(function(){
             $('.changeUserRole').change(function(){
                 let selectedRole = $(this).val();
@@ -114,26 +122,53 @@
             });
         });
 
+        // 이것은 status 값 변경 && 제재 기간 설정
         $(document).ready(function(){
             $('.changeUserStatus').change(function(){
                 let selectedStatus = $(this).val();
                 let userid = $(this).data('userid');
+                let $periodSelect = $(this).siblings('.ban-period');         // $periodSelect 처럼 앞에 $ 가 오는 것은 jQuery 객체라는 것을 알려주는 장치
 
-                $.ajax({
-                    url : '/admin/changeUserStatus',
-                    type : 'post',
-                    data : {
-                        status : selectedStatus,
-                        id : userid
-                    },
-                    success : function( result ){
-                        alert(result);
-                    },
-                    error : function( xhr, status, error ){
-                        alert('오류 발생');
-                        console.log("오류 발생" + error);
-                    }
-                });
+                if( selectedStatus == 1 ){
+                    $periodSelect.show();
+                    $periodSelect.off('change').on('change', function(){
+                        let period = $(this).val();
+                        $.ajax({
+                            url : '/admin/banUser',
+                            type : 'post',
+                            data : {
+                                id : userid,
+                                period : period
+                            },
+                            success : function( message ){
+                                alert(message);
+                            },
+                            error : function( xhr, status, error ){
+                                alert('정치 처리 실패');
+                                console.log(error + " 발생");
+                            }
+                        });
+                    });
+                } else {
+                    $periodSelect.hide();
+
+                    
+                    $.ajax({
+                        url : '/admin/changeUserStatus',
+                        type : 'post',
+                        data : {
+                            status : selectedStatus,
+                            id : userid
+                        },
+                        success : function( result ){
+                            alert(result);
+                        },
+                        error : function( xhr, status, error ){
+                            alert('오류 발생');
+                            console.log("오류 발생" + error);
+                        }
+                    });
+                }
             });
         });
     </script>

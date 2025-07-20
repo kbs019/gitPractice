@@ -1,5 +1,6 @@
 package com.ex.gitprac.repository.user;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -25,4 +26,12 @@ public interface  UserMapper {
     public List<UserDTO> searchUser( @Param("keyword") String keyword, @Param("start") int start, @Param("end") int end );
     // 검색 결과에 대한 회원수
     public int searchUserCount( String keyword );
+    // ajax 로 인한 role 값 변경
+    public int changeUserRole(@Param("role") int role, @Param("id") String id);
+    // ajax 로 인한 status 값 변경
+    public int changeUserStatus(@Param("status") int status, @Param("id") String id);
+    // id 에 대한 유저 검색
+    public UserDTO findById( String id );
+    // 회원 정지 기간 설정
+    public boolean banUser( @Param("id") String id, @Param("until") LocalDate until );
 }
