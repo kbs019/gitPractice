@@ -1,6 +1,8 @@
 package com.ex.gitprac.controller.rec;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -21,7 +23,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.RequiredArgsConstructor;
 
 import com.ex.gitprac.data.rec.RecDTO;
+import com.ex.gitprac.data.user.UserDTO;
 import com.ex.gitprac.service.rec.RecService;
+
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/rec")
@@ -33,21 +39,36 @@ public class RecController {
     /**
      * 🗂 일지 목록 조회 (필터 포함 + 전체 초기화)
      */
-    @GetMapping("")
+   @GetMapping("")
     public String recListPage(
         @RequestParam(name = "petNo", required = false) Integer petNo,
         @RequestParam(name = "startDate", required = false) String startDate,
         @RequestParam(name = "endDate", required = false) String endDate,
         @RequestParam(name = "categoryGroup", required = false) String categoryGroup,
         @RequestParam(name = "reset", required = false) String reset,
+        HttpSession session,
+        HttpServletResponse response,
         Model model
-    ) {
+    ) throws IOException {
+        // 로그인한 사용자 ID (작성자)
+        UserDTO users = (UserDTO) session.getAttribute("users");
+
+        // 로그인 안 되어 있을 경우 alert 후 로그인 페이지로 이동
+        if (users == null) {
+            response.setContentType("text/html; charset=UTF-8");
+            PrintWriter out = response.getWriter();
+            out.println("<script>alert('로그인 후 이용 가능합니다.'); window.location.replace('/user/login');</script>");
+            out.flush();
+            return null;
+        }
+
+        String writer = users.getId();
         int offset = 0;
         int limit = 15;
         List<RecDTO> recList;
 
         if ("true".equals(reset)) {
-            recList = recService.getRecListWithPaging(offset, limit);
+            recList = recService.getRecListWithPaging(writer, offset, limit);
             startDate = "";
             endDate = "";
             categoryGroup = "";
@@ -60,7 +81,7 @@ public class RecController {
                 endDate = "2100-12-31";
             }
 
-            recList = recService.getRecListFilteredWithPaging(petNo, startDate, endDate, categoryGroup, offset, limit);
+            recList = recService.getRecListFilteredWithPaging(writer, petNo, startDate, endDate, categoryGroup, offset, limit);
         }
 
         // model에 데이터 전달
@@ -71,7 +92,6 @@ public class RecController {
 
         return "rec/list";
     }
-
 
 
     /**
@@ -86,52 +106,50 @@ public class RecController {
      * ✅ 일지 등록 처리 + 이미지 저장
      */
     @PostMapping("/upload")
-public String saveRec(
-    @RequestParam("image") MultipartFile mf,
-    RecDTO rto,
-    Model model,
-    RedirectAttributes redirectAttributes
-) {
-    // 업로드된 이미지가 있을 경우만 처리
-    if (!mf.isEmpty()) {
-        try {
-            // 원본 파일명
-            String orgImgName = mf.getOriginalFilename();
+    public String saveRec(@RequestParam("image") MultipartFile mf,
+                        RecDTO rto,
+                        HttpSession session,
+                        Model model,
+                        RedirectAttributes redirectAttributes) {
 
-            // 고유 파일명 (UUID + 확장자)
-            // String ext = orgImgName.substring(orgImgName.lastIndexOf("."));
-            String imgName = UUID.randomUUID().toString().replace("-", "") + orgImgName;
+        // 로그인한 사용자 정보 가져오기
+        UserDTO users = (UserDTO) session.getAttribute("users");
+        rto.setWriter(users.getId()); // 작성자 정보 세팅
 
-            // 저장 폴더 경로
-            String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\recUpload\\";
+        // 업로드된 이미지가 있을 경우만 처리
+        if (!mf.isEmpty()) {
+            try {
+                // 원본 파일명
+                String orgImgName = mf.getOriginalFilename();
 
-            // 실제 저장
-            // File fileToSave = new File(uploadPath + imgName);
-            // mf.transferTo(fileToSave);
-            Path savePath = Paths.get(uploadPath, imgName);
-            mf.transferTo(savePath.toFile());
+                // 고유 파일명 (UUID + 원본명)
+                String imgName = UUID.randomUUID().toString().replace("-", "") + orgImgName;
 
-            // DTO에 정보 세팅
-            rto.setOrgImgName(orgImgName);
-            rto.setImgName(imgName);
-            rto.setImgPath("/recUpload/");
+                // 저장 경로 설정
+                String uploadPath = new File("").getAbsolutePath() + "\\src\\main\\resources\\static\\recUpload\\";
+                Path savePath = Paths.get(uploadPath, imgName);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            redirectAttributes.addFlashAttribute("msg", "이미지 업로드 실패");
-            return "redirect:/rec/upload";
+                // 실제 저장
+                mf.transferTo(savePath.toFile());
+
+                // DTO에 이미지 정보 세팅
+                rto.setOrgImgName(orgImgName);
+                rto.setImgName(imgName);
+                rto.setImgPath("/recUpload/");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                redirectAttributes.addFlashAttribute("msg", "이미지 업로드 실패");
+                return "redirect:/rec/upload";
+            }
         }
-            // DB 저장
+
+        // DB 저장
         recService.save(rto);
         redirectAttributes.addFlashAttribute("msg", "일지 등록 완료!");
         return "redirect:/rec";
     }
-    // DB 저장
-    recService.save(rto);
-    redirectAttributes.addFlashAttribute("msg", "일지 등록 완료!");
-    return "redirect:/rec";
 
-}
 
 
 
@@ -167,7 +185,11 @@ public String saveRec(
 
     @GetMapping("/more")
     @ResponseBody
-    public List<RecDTO> loadMoreRecs(@RequestParam int offset, @RequestParam int limit) {
-        return recService.getRecListWithPaging(offset, limit);
+    public List<RecDTO> loadMoreRecs(@RequestParam int offset,
+                                    @RequestParam int limit,
+                                    HttpSession session) {
+        UserDTO users = (UserDTO) session.getAttribute("users");
+        String writer = users.getId();
+        return recService.getRecListWithPaging(writer, offset, limit);
     }
 }
