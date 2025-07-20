@@ -5,8 +5,12 @@
     <title>MyPage</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/rec.css">
+    <link rel="stylesheet" href="/css/header.css">
 </head>
 <body>    
+    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
     <center><h1>마이페이지</h1></center>
 
     <!-- 내 정보 영역 -->
@@ -58,137 +62,212 @@
 
     <hr>
 
-    내가 쓴 글 영역
     <div id="postSection">
         <h2>내가 쓴 글</h2>
-        <button onclick="loadPosts()">글 보기</button>
-        <div id="myPosts"></div>
+
+        <!-- 탭 버튼 -->
+        <div class="tab-buttons">
+            <button onclick="showTab('ask')">질의응답</button>
+            <button onclick="showTab('diary')">다이어리</button>
+            <button onclick="showTab('info')">정보게시판</button>
+            <button onclick="showTab('qna')">상담게시판</button>
+        </div>
+
+        <!-- 탭 콘텐츠 -->
+        <div class="tab-content" id="askTab" style="display:none;"></div>
+        <div class="tab-content" id="diaryTab" style="display:none;"></div>
+        <div class="tab-content" id="infoTab" style="display:none;"></div>
+        <div class="tab-content" id="qnaTab" style="display:none;"></div>
     </div>
 
 <script>
-$(document).ready(function() {
-    loadMyInfo();
-    loadPets();
-});
-
-function loadMyInfo() {
-    $.post('/myPage/getUser', function(data) {
-        $('#myInfoView').html(`
-            <p>닉네임: ${data.nick}</p>
-            <p>이메일: ${data.email}</p>
-            <p>전화번호: ${data.phone}</p>
-            <p>통신사: ${data.carrier}</p>
-        `);
-    });
-}
-
-function showUpdateForm() {
-    $('#myInfoEdit').show();
-    $(event.target).hide();
-}
-
-function updateMyInfo() {
-    $.ajax({
-        url: '/myPage/updateUser',
-        method: 'POST',
-        data: {
-            pw: $('#pw').val(),
-            nick: $('#nick').val(),
-            email: $('#email').val(),
-            phone: $('#phone').val(),
-            carrier: $('#carrier').val()
-        },
-        success: function(res) {
-            alert('수정 완료');
-            loadMyInfo();
-        }
-    });
-}
-
-function deleteUser() {
-    if (!confirm('정말 탈퇴하시겠습니까?')) return;
-    $.post('/myPage/deleteUser', function(res) {
-        alert('탈퇴 처리되었습니다');
-        location.href = '/';
-    });
-}
-
-function loadPets() {
-    $.post('/myPage/getPet', function(list) {
-        let html = '';
-        list.forEach(pet => {
-            html += `
-                <div class="pet-card">
-                    <p>이름: ${pet.petName}</p>
-                    <p>견종: ${pet.petBreed}</p>
-                    <p>나이: ${pet.petAge}</p>
-                    <button onclick="editPet(${pet.petNo})">수정</button>
-                    <button onclick="deletePet(${pet.petNo})">삭제</button>
-                </div>
-            `;
-        });
-        $('#petList').html(html);
-    });
-}
-
-function showPetInsertForm() {
-    $('#petForm').show();
-    $('#petForm input').val('');
-    $('#petNo').val('');
-}
-
-function editPet(petNo) {
-    $.post(`/myPage/getPet?petNo=${petNo}`, function(pet) {
-        $('#petForm').show();
-        $('#petNo').val(pet.petNo);
-        $('#petName').val(pet.petName);
-        $('#petBreed').val(pet.petBreed);
-        $('#petAge').val(pet.petAge);
-        $('#petSize').val(pet.petSize);
-        $('#petWeight').val(pet.petWeight);
-        $('#petBirth').val(pet.petBirth);
-    });
-}
-
-function submitPet() {
-    const pet = {
-        petNo: $('#petNo').val(),
-        petName: $('#petName').val(),
-        petBreed: $('#petBreed').val(),
-        petAge: $('#petAge').val(),
-        petSize: $('#petSize').val(),
-        petWeight: $('#petWeight').val(),
-        petBirth: $('#petBirth').val()
-    };
-    const url = pet.petNo ? '/myPage/updatePet' : '/myPage/addDog';
-    $.ajax({
-        url,
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(pet),
-        success: function() {
-            alert('처리 완료');
-            loadPets();
-        }
-    });
-}
-
-function deletePet(petNo) {
-    $.post('/myPage/deletePet', { petNo }, function() {
-        alert('삭제 완료');
+    $(document).ready(function() {
+        loadMyInfo();
         loadPets();
     });
-}
 
-function loadPosts() {
-    $.post('/myPage/myPosts', function(posts) {
-        let html = '';
-        posts.forEach(p => {
-            html += `<p>${p.title} (${p.boardType})</p>`;
+    function loadMyInfo() {
+        $.post('/myPage/getUser', function(data) {
+            $('#myInfoView').html(`
+                <p>닉네임: ${data.nick}</p>
+                <p>이메일: ${data.email}</p>
+                <p>전화번호: ${data.phone}</p>
+                <p>통신사: ${data.carrier}</p>
+            `);
         });
-        $('#myPosts').html(html);
+    }
+
+    function showUpdateForm() {
+        $('#myInfoEdit').show();
+        $(event.target).hide();
+    }
+
+    function updateMyInfo() {
+        $.ajax({
+            url: '/myPage/updateUser',
+            method: 'POST',
+            data: {
+                pw: $('#pw').val(),
+                nick: $('#nick').val(),
+                email: $('#email').val(),
+                phone: $('#phone').val(),
+                carrier: $('#carrier').val()
+            },
+            success: function(res) {
+                alert('수정 완료');
+                loadMyInfo();
+            }
+        });
+    }
+
+    function deleteUser() {
+        if (!confirm('정말 탈퇴하시겠습니까?')) return;
+        $.post('/myPage/deleteUser', function(res) {
+            alert('탈퇴 처리되었습니다');
+            location.href = '/';
+        });
+    }
+
+    function loadPets() {
+        $.post('/myPage/getUser', function(user) {
+            const id = user.id;
+            $.post('/myPage/listPet', { id: id }, function(list) {
+                let html = '';
+                if (Array.isArray(list)) {
+                    list.forEach(pet => {
+                        html += `
+                            <div class="pet-card">
+                                <p>이름: ${pet.petName}</p>
+                                <p>견종: ${pet.petBreed}</p>
+                                <p>나이: ${pet.petAge}</p>
+                                <button onclick="editPet(${pet.petNo})">수정</button>
+                                <button onclick="deletePet(${pet.petNo})">삭제</button>
+                            </div>
+                        `;
+                    });
+                    $('#petList').html(html);
+                } else {
+                    console.error("loadPets(): 받은 데이터가 배열이 아님", list);
+                }
+            });
+        });
+    }
+
+    function showPetInsertForm() {
+        $('#petForm').show();
+        $('#petForm input').val('');
+        $('#petNo').val('');
+    }
+
+    function editPet(petNo) {
+        $.post('/myPage/getPet', { petNo: petNo }, function(pet) {
+            $('#petForm').show();
+            $('#petNo').val(pet.petNo);
+            $('#petName').val(pet.petName);
+            $('#petBreed').val(pet.petBreed);
+            $('#petAge').val(pet.petAge);
+            $('#petSize').val(pet.petSize);
+            $('#petWeight').val(pet.petWeight);
+            $('#petBirth').val(pet.petBirth);
+        });
+    }
+
+    function submitPet() {
+        const pet = {
+            petNo: $('#petNo').val(),
+            id: $('#id').val(),
+            petName: $('#petName').val(),
+            petBreed: $('#petBreed').val(),
+            petAge: $('#petAge').val(),
+            petSize: $('#petSize').val(),
+            petWeight: $('#petWeight').val(),
+            petBirth: $('#petBirth').val()
+        };
+        const url = pet.petNo ? '/myPage/updatePet' : '/myPage/insertPet';
+        $.ajax({
+            url: url,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(pet),
+            success: function() {
+                alert('처리 완료');
+                loadPets();
+            }
+        });
+    }
+
+    function deletePet(petNo) {
+        $.post('/myPage/deletePet', { petNo }, function() {
+            alert('삭제 완료');
+            loadPets();
+        });
+    }
+
+    function showTab(tabName) {
+        $('.tab-content').hide(); // 모든 탭 숨김
+        $(`#${tabName}Tab`).show(); // 해당 탭만 표시
+
+        // 해당 탭에 데이터 로드
+        const loadFunc = {
+            ask: loadAskPosts,
+            diary: loadDiaryPosts,
+            info: loadInfoPosts,
+            qna: loadQnaPosts
+        };
+         if (loadFunc[tabName]) {
+            loadFunc ; // 1페이지 로딩
+        }
+    }
+
+    // 공통 렌더링 함수
+    function renderPostList(list, total, page, tabId, loadFuncName) {
+    let html = '<ul>';
+
+    // 게시판별 URL prefix 지정
+    const urlPrefix = {
+        askTab: '/board/ask/view',
+        diaryTab: '/board/diary/view',
+        infoTab: '/board/info/view',
+        qnaTab: '/board/qna/view'
+    };
+
+    list.forEach(post => {
+        html += `<li><a href="${urlPrefix[tabId]}?no=${post.no}">${post.title}</a> (${post.regDate})</li>`;
     });
-}
+        html += '</ul>';
+
+        // 페이징 처리
+        const totalPage = Math.ceil(total / 10);
+        html += '<div class="pagination">';
+        for (let i = 1; i <= totalPage; i++) {
+            html += `<button onclick="${loadFuncName}(${i})" ${i === page ? 'disabled' : ''}>${i}</button>`;
+        }
+        html += '</div>';
+
+        $(`#${tabId}`).html(html);
+    }
+
+    // 탭별 Ajax 호출
+    function loadAskPosts(page) {
+        $.get('/myPage/listAsk', { page }, function(res) {
+            renderPostList(res.list, res.total, page, 'askTab', 'loadAskPosts');
+        });
+    }
+    function loadDiaryPosts(page) {
+        $.get('/myPage/listDiary', { page }, function(res) {
+            renderPostList(res.list, res.total, page, 'diaryTab', 'loadDiaryPosts');
+        });
+    }
+    function loadInfoPosts(page) {
+        $.get('/myPage/listInfo', { page }, function(res) {
+            renderPostList(res.list, res.total, page, 'infoTab', 'loadInfoPosts');
+        });
+    }
+    function loadQnaPosts(page) {
+        $.get('/myPage/listQna', { page }, function(res) {
+            renderPostList(res.list, res.total, page, 'qnaTab', 'loadQnaPosts');
+        });
+    }
 </script>
 </body>
 </html>

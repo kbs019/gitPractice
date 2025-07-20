@@ -10,22 +10,22 @@ SELECT pw FROM USERS WHERE id=#{id}
 SELECT * FROM USERS WHERE id=#{id}
 </select>
 <update id="updateUser">
-UPDATE USERS SET pw=#{pw} nick=#{nick} email=#{email} phone=#{phone} carrier=#{carrier} WHERE id=#{id}
+UPDATE USERS SET pw=#{pw}, nick=#{nick}, email=#{email}, phone=#{phone}, carrier=#{carrier} WHERE id=#{id}
 </update>
 <update id="changeWriterFromQNA">
-UPDATE QNA_BOARD SET writer=#{writer} WHERE writer=#{pastWriter}
+UPDATE QNA_BOARD SET writer=#{newWriter} WHERE writer=#{pastWriter}
 </update>
 <update id="changeWriterFromQNARe">
-UPDATE QNA_REPLY SET writer=#{writer} WHERE writer=#{pastWriter}
+UPDATE QNA_REPLY SET writer=#{newWriter} WHERE writer=#{pastWriter}
 </update>
 <update id="changeWriterFromAsk">
-UPDATE ASK SET writer= #{writer} WHERE writer=#{pastWriter}
+UPDATE ASK SET writer= #{newWriter} WHERE writer=#{pastWriter}
 </update>
 <update id="changeWriterFromInfo">
-UPDATE INFO_BOARD SET writer=#{writer} WHERE writer=#{pastWriter}
+UPDATE INFO_BOARD SET writer=#{newWriter} WHERE writer=#{pastWriter}
 </update>
 <update id="changeWriterFromDiary">
-UPDATE DIARY SET wirter=#{writer} WHERE writer=#{pastWriter}
+UPDATE DIARY SET writer=#{newWriter} WHERE writer=#{pastWriter}
 </update>
 <!-- <update id="changeWriterFromInfoRe">
 UPDATE INFO_REPLY SET writer = #{writer} WHERE writer = #{pastWriter}
@@ -37,6 +37,9 @@ UPDATE USERS SET status = 2 where id=#{id}
 
 <select id="getPet" resultType="com.ex.gitprac.data.pet.PetDTO">
 SELECT * FROM PET WHERE petNo = #{petNo}
+</select>
+<select id="listPet" resultType="com.ex.gitprac.data.pet.PetDTO">
+SELECT * FROM PET WHERE id=#{id}
 </select>
 <insert id="insertPet">
 INSERT INTO PET VALUES(PET_SEQ.NEXTVAL, #{id}, #{petName}, #{petBreed}, #{petAge}, #{petSize}, #{petWeight}, #{petBirth})
@@ -50,4 +53,67 @@ DELETE FROM PET WHERE petNo=#{petNo}
 <delete id="deletePetRec">
 DELETE FROM REC WHERE petNo=#{petNo}
 </delete>
+<!-- Ask -->
+<select id="countAsk" resultType="int">
+  SELECT COUNT(*) FROM ASK WHERE writer = #{id}
+</select>
+<select id="listAsk" resultType="com.ex.gitprac.data.ask.AskDTO">
+<![CDATA[
+  SELECT * FROM (
+    SELECT A.*, ROWNUM rnum FROM (
+      SELECT * FROM ASK WHERE writer = #{id} ORDER BY regDate DESC
+    ) A
+    WHERE ROWNUM <= #{end}
+  )
+  WHERE rnum >= #{start}
+]]>
+</select>
+
+<!-- Diary -->
+<select id="countDiary" resultType="int">
+  SELECT COUNT(*) FROM DIARY WHERE writer = #{id}
+</select>
+<select id="listDiary" resultType="com.ex.gitprac.data.diary.DiaryDTO">
+<![CDATA[
+  SELECT * FROM (
+    SELECT A.*, ROWNUM rnum FROM (
+      SELECT * FROM DIARY WHERE writer = #{id} ORDER BY regDate DESC
+    ) A
+    WHERE ROWNUM <= #{end}
+  )
+  WHERE rnum >= #{start}
+]]>
+</select>
+
+<!-- Info -->
+<select id="countInfo" resultType="int">
+  SELECT COUNT(*) FROM INFO_BOARD WHERE writer = #{id}
+</select>
+<select id="listInfo" resultType="com.ex.gitprac.data.info.InfoBoardDTO">
+<![CDATA[
+  SELECT * FROM (
+    SELECT A.*, ROWNUM rnum FROM (
+      SELECT * FROM INFO_BOARD WHERE writer = #{id} ORDER BY regDate DESC
+    ) A
+    WHERE ROWNUM <= #{end}
+  )
+  WHERE rnum >= #{start}
+]]>
+</select>
+
+<!-- Qna -->
+<select id="countQna" resultType="int">
+  SELECT COUNT(*) FROM QNA_BOARD WHERE writer = #{id}
+</select>
+<select id="listQna" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
+<![CDATA[
+  SELECT * FROM (
+    SELECT A.*, ROWNUM rnum FROM (
+      SELECT * FROM QNA_BOARD WHERE writer = #{id} ORDER BY regDate DESC
+    ) A
+    WHERE ROWNUM <= #{end}
+  )
+  WHERE rnum >= #{start}
+]]>
+</select>
 </mapper>
