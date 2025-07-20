@@ -129,7 +129,10 @@
 
   <update id="updateRec" parameterType="com.ex.gitprac.data.rec.RecDTO">
     UPDATE rec
-    SET title = #{title}, content = #{content}
+    SET 
+      title = #{title},
+      content = #{content},
+      category = #{category}
     WHERE recNo = #{recNo}
   </update>
 

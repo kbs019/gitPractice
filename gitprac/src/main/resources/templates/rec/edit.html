@@ -13,8 +13,16 @@
     <label>제목</label>
     <input type="text" th:field="*{title}" required />
 
-    <label>카테고리</label>
-    <input type="text" th:field="*{category}" required />
+    <label for="category">카테고리</label>
+    <select th:field="*{category}" id="category" required>
+      <option value="밥">밥</option>
+      <option value="간식">간식</option>
+      <option value="배변">배변</option>
+      <option value="배뇨">배뇨</option>
+      <option value="약">약</option>
+      <option value="병원">병원</option>
+      <option value="활동">활동</option>
+    </select>
 
     <label>내용</label>
     <textarea th:field="*{content}" rows="10"></textarea>

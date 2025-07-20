@@ -172,10 +172,12 @@ public class RecController {
     }
 
     @PostMapping("/edit")
-    public String editRecSubmit(@ModelAttribute RecDTO recDTO) {
-        recService.updateRec(recDTO);
-        return "redirect:/rec/content/" + recDTO.getRecNo();
+    public String editRecSubmit(@ModelAttribute RecDTO rec, RedirectAttributes redirectAttributes) {
+        recService.updateRec(rec);
+        redirectAttributes.addAttribute("recNo", rec.getRecNo());
+        return "redirect:/rec/content/{recNo}";
     }
+
 
     @GetMapping("/delete/{recNo}")
     public String deleteRec(@PathVariable("recNo") Integer recNo) {
