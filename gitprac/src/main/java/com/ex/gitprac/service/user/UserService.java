@@ -5,6 +5,10 @@ import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 
 import com.ex.gitprac.data.user.UserDTO;
+import com.ex.gitprac.repository.ask.AskMapper;
+import com.ex.gitprac.repository.info.InfoBoardMapper;
+import com.ex.gitprac.repository.qna.QnaBoardMapper;
+import com.ex.gitprac.repository.qna.QnaReplyMapper;
 import com.ex.gitprac.repository.user.UserMapper;
 import com.ex.gitprac.util.MailUtil;
 
@@ -14,6 +18,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
     private final UserMapper userMapper;
+    private final QnaBoardMapper qnaBoardMapper;
+    private final QnaReplyMapper qnaReplyMapper;
+    private final InfoBoardMapper infoBoardMapper;
+    // private final InfoReplyMapper infoReplyMapper;
+    private final AskMapper askMapper;
 
     // 회원가입
     public int userInsert( UserDTO userDTO)  {
@@ -47,6 +56,15 @@ public class UserService {
                 userMapper.changeUserStatus(0, id);         // status 값을 0 으로 변경
                 user.setStatus(0);                          // 현재 뽑아낸 유저 정보의 status 값을 0 으로 변경
                 user.setBannedUntil(null);              // 현재 뽑아낸 유저 정보의 bannedUntil 값을 null 로 변경
+
+                // 해당 유저의 닉네임 조회
+                String nick = user.getNick();
+
+                // 해당 유저가 작성한 글의 status 값을 0 으로 되돌리기
+                qnaBoardMapper.restoreStatusByNick(nick);
+                qnaReplyMapper.restoreStatusByNick(nick);
+                infoBoardMapper.restoreStatusByNick(nick);
+                askMapper.restoreStatusByNick(nick);
             }
         }
 
