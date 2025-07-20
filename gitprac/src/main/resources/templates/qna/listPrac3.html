@@ -30,7 +30,9 @@
     </div>
     <div id="list-wrapper">
         <div th:if="${count == 0}">
-            <span><h3>게시판에 작성된 글이 없습니다.</h3></span>
+            <div class="post-content">
+                <h2>게시글이 존재하지 않습니다.</h2>
+            </div>
         </div>
         <div th:if="${count != 0}">
             <div align="center" width="800">
