@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ex.gitprac.data.user.UserDTO;
 import com.ex.gitprac.service.user.UserService;
@@ -63,7 +64,7 @@ public class UserController {
         model.addAttribute("result", result);
         return "user/insertPro";
     }
-    
+
     @PostMapping("loginCheckByBannedUntil")
     public String loginCheckByBannedUntil( @RequestParam("id") String id, @RequestParam("pw") String pw, HttpSession session, Model model ){
         UserDTO user = userService.loginCheckByBannedUntil(id, pw);
@@ -82,5 +83,27 @@ public class UserController {
         }
 
         return "user/loginPro2";
+    }
+
+    @PostMapping("findId")
+    @ResponseBody
+    public String FindId(@RequestParam("email") String email) {
+        UserDTO user = userService.findIdByEmail(email);
+        if( user != null ) {
+            return user.getId();
+        } else {
+            return "notfound";
+        }
+    }
+
+    @PostMapping("FindPw")
+    @ResponseBody
+    public String ajaxFindPw(@RequestParam("id") String id, @RequestParam("email") String email) {
+        String tempPw = userService.findPwAndSendTempPw(id, email);
+        if (tempPw != null) {
+            return "success";
+        } else {
+            return "fail";
+        }
     }
 }

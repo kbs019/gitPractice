@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-
 import com.ex.gitprac.data.user.UserDTO;
 
 @Repository
@@ -34,4 +33,10 @@ public interface  UserMapper {
     public UserDTO findById( String id );
     // 회원 정지 기간 설정
     public boolean banUser( @Param("id") String id, @Param("until") LocalDate until );
+    // 아이디 찾기(이메일 입력)
+    public UserDTO findIdByEmail( String email);
+    // 비밀번호 찾기(아이디 이메일 입력)
+    public UserDTO findPwByIdEmail( @Param("id") String id, @Param("email") String email );
+    // 비밀번호 업데이트
+    public int updatePw( @Param("id") String id, @Param("email") String email, @Param("pw") String pw );
 }
