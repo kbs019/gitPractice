@@ -17,7 +17,7 @@
 
     <!-- 글작성 -->
     <insert id="askInsert">
-        insert into ask values( ask_seq.nextval, #{title}, #{writer}, #{content}, sysdate, #{category}, 0, #{imgName, jdbcType=VARCHAR}, #{imgPath, jdbcType=VARCHAR}, #{originalName, jdbcType=VARCHAR}, 0 )
+        insert into ask values( ask_seq.nextval, #{title}, #{writer}, #{content}, sysdate, #{category}, 0, #{imgName, jdbcType=VARCHAR}, #{imgPath, jdbcType=VARCHAR}, #{originalName, jdbcType=VARCHAR}, 0, 0 )
     </insert>
 
     <!-- 글내용 -->

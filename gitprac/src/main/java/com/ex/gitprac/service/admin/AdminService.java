@@ -65,6 +65,16 @@ public class AdminService {
 
         if( status == 0 ){
             result = userMapper.clearBanDate(id);
+
+            UserDTO user = userMapper.findById(id);
+            if( user != null ){
+                String nick = user.getNick();
+
+                qnaBoardMapper.restoreStatusByNick(nick);
+                qnaReplyMapper.restoreStatusByNick(nick);
+                infoBoardMapper.restoreStatusByNick(nick);
+                askMapper.restoreStatusByNick(nick);
+            }
         }
 
         return result;

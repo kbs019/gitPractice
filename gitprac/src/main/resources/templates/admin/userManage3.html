@@ -21,13 +21,13 @@
             <div class="users-wrapper">
                 <table>
                     <tr>
-                        <td>아이디</td>
-                        <td>이름</td>
-                        <td>닉네임</td>
-                        <td>가입일자</td>
-                        <td>권한</td>
-                        <td>활동 상태</td>
-                        <td>제재 기간</td>
+                        <th>아이디</th>
+                        <th>이름</th>
+                        <th>닉네임</th>
+                        <th>가입일자</th>
+                        <th>권한</th>
+                        <th>활동 상태</th>
+                        <th>제재 기간</th>
                     </tr>
                     <tr th:each="uto : ${list}">
                         <td th:text="${uto.id}"></td>
@@ -41,7 +41,7 @@
                                 <option value="2" th:selected="${uto.role == 2}">관리자</option>
                             </select>
                         </td>
-                        <td width="150">
+                        <td width="200" align="center">
                             <select class="changeUserStatus" th:attr="data-userid=${uto.id}">
                                 <option value="0" th:selected="${uto.status == 0}">활동중</option>
                                 <option value="1" th:selected="${uto.status == 1}">활동 정지</option>
@@ -49,6 +49,8 @@
                             </select>
 
                             <select class="ban-period" style="display:none;">
+                                <option value="" selected disabled hidden>기간 선택</option>
+                                <option value="1">1일</option>
                                 <option value="7">7일</option>
                                 <option value="14">14일</option>
                                 <option value="30">한달</option>
@@ -141,6 +143,11 @@
                 $periodSelect.show();
                 $periodSelect.off('change').on('change', function(){
                     let period = $(this).val();
+
+                    if( period === 'cancel' || !period ){
+                        return;
+                    }
+
                     $.ajax({
                         url : '/admin/banUser',
                         type : 'post',

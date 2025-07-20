@@ -17,6 +17,7 @@ public class AskDTO {
     private String imgPath;
     private String originalName;
     private int isAnswered;
+    private int status;
 }
 /* 
 create table ask(

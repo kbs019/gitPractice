@@ -55,7 +55,7 @@
     </div>
 
     <div class="reply-block">
-        <div class="reply-insert-form" th:if="${session.users.role == 0}">      <!-- 수의사만 댓글 입력폼이 보이도록 설정 -->
+        <div class="reply-insert-form" th:if="${session.users.role == 1}">      <!-- 수의사만 댓글 입력폼이 보이도록 설정 -->
             <form id="replyInsertForm">
                 <input type="hidden" id="postNo" th:value="${qto.postNo}">
                 <input type="hidden" id="writer" th:value="${session.users.nick}">

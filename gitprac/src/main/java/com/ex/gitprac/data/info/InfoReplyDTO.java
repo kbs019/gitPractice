@@ -12,6 +12,7 @@ public class InfoReplyDTO {
     private String  content;
     private LocalDateTime reg;
     private int     ref;
+    private int status;
 }
 
 /* 
