@@ -54,4 +54,8 @@
   <delete id="infoPostDelete" parameterType="com.ex.gitprac.data.info.InfoBoardDTO">
     delete from info_board where postNo=#{postNo}
   </delete>
+  
+  <update id="viewsUp">
+    update info_board set views = views + 1 where postNo = #{postNo}
+  </update>
 </mapper>

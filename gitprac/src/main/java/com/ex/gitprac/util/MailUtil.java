@@ -34,7 +34,7 @@ public class MailUtil {
             message.setSubject("하루 견과 임시 비밀번호 발급 안내");
             message.setText("임시 비밀번호: " + tempPw + "\n로그인 후 비밀번호를 변경해주세요.");
 
-            Transport.send(message); // ✅ 요기!
+            Transport.send(message);
         } catch (Exception e) {
             e.printStackTrace();
         }
