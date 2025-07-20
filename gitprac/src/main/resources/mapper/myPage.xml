@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ex.gitprac.repository.myPage.MyPageMapper">
+<select id="getUser" resultType="com.ex.gitprac.data.user.UserDTO">
+SELECT * FROM USERS WHERE id = #{id}
+</select>
+<update id="updateUser">
+UPDATE USERS SET pw=#{pw} nick=#{nick} email=#{email} phone=#{phone} carrier=#{carrier} WHERE id=#{id}
+</update>
+<update id="changeWriterFromQNA">
+UPDATE QNA_BOARD SET writer = #{writer} WHERE writer = #{pastWriter}
+</update>
+<update id="changeWriterFromQNARe">
+UPDATE QNA_REPLY SET writer = #{writer} WHERE writer = #{pastWriter}
+</update>
+<update id="changeWriterFromAsk">
+UPDATE ASK SET writer = #{writer} WHERE writer = #{pastWriter}
+</update>
+<update id="changeWriterFromInfo">
+UPDATE INFO_BOARD SET writer = #{writer} WHERE writer = #{pastWriter}
+</update>
+<!-- <update id="changeWriterFromInfoRe">
+UPDATE INFO_REPLY SET writer = #{writer} WHERE writer = #{pastWriter}
+</update> -->
+
+<update id="deleteUser">
+UPDATE USERS SET status = 2 where id=#{id}
+</update>
+
+<select id="getPet" resultType="com.ex.gitprac.data.pet.PetDTO">
+SELECT * FROM PET WHERE petNo = #{petNo}
+</select>
+<insert id="insertPet">
+INSERT INTO PET VALUES(PET_SEQ.NEXTVAL, #{id}, #{petName}, #{petBreed}, #{petAge}, #{petSize}, #{petWeight}, #{petBirth})
+</insert>
+<update id="updatePet">
+UPDATE PET SET petName=#{petName}, petBreed=#{petBreed}, petAge=#{petAge}, petSize=#{petSize}, petWeight=#{petWeight}, petBirth=#{petBirth} WHERE petNo=#{petNo}
+</update>
+<delete id="deletePet">
+DELETE FROM PET WHERE petNo = #{petNo}
+</delete>
+<delete id="deletePetRec">
+DELETE FROM REC WHERE petNo = #{petNo}
+</delete>
+</mapper>

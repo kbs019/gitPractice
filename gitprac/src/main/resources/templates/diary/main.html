@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lagn="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>나의 다이어리</title>
@@ -60,7 +60,7 @@
         <input type="hidden" name="diaryNo" id="diaryNo">
         <input type="hidden" name="imgName" id="imgName">
         <input type="hidden" name="imgPath" id="imgPath">
-        <input type="file" id="uploadFile" name="uploadFile" required><br>
+        <input type="file" id="uploadFile" name="uploadFile"><br>
         <img id="previewImage" style="max-width: 200px; display: none;"><br>
         <textarea name="content" id="content" placeholder="내용 입력" maxlength="200" style="width:300px; height:100px;"></textarea><br>
         <button type="button" id="submitBtn">등록</button>
@@ -89,11 +89,21 @@
                 th:data-imgpath="${d.imgPath}">
             수정
         </button>
-        
     </div>
 </div>
 
 <!-- 페이징 처리 -->
+<div class="paging" align="center" th:if="${count > 0}">
+    <span th:if="${startPage} > ${pageCount}">
+        <a th:href="@{|/diary/main?pageNum=${startPage - pageBlock}|}">[이전]</a>
+    </span>
+    <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <a th:href="@{|/diary/main?pageNum=${i}|}" th:text="'['+${i}+']'"></a>
+    </span>
+    <span th:if="${endPage} < ${pageCount}">
+        <a th:href="@{|/diary/main?pageNum=${startPage + pageBlock}|}">[다음]</a>
+    </span>
+</div>
 
 
 <script>

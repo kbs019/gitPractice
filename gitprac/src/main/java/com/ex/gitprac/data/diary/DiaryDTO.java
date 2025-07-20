@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class DiaryDTO {
 
-    private int diaryNo;
+    private Integer diaryNo;
     private String writer;
     private String content;
     private LocalDate reg;

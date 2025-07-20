@@ -27,6 +27,9 @@ public class DiaryService {
         List<DiaryDTO> list = diaryMapper.listDiary(writer, start, end);
         return list;
     }
+    public DiaryDTO getDiary(int diaryNo){
+        return diaryMapper.getDiary(diaryNo);
+    }
     public List<DiaryDTO> listDiaryByDate(String writer, String startDate, String endDate, int start, int end) {
         return diaryMapper.listDiaryByDate(writer, startDate, endDate, start, end);
     }

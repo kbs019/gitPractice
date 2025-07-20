@@ -1,4 +1,4 @@
-package com.ex.gitprac.data.diary;
+package com.ex.gitprac.data.pet;
 
 import java.time.LocalDate;
 
@@ -8,7 +8,7 @@ import lombok.Data;
 public class PetDTO {
 
     private int petNo;
-    private String writer;
+    private String id;
     private String petName;
     private String petBreed;
     private int petAge;
@@ -19,21 +19,21 @@ public class PetDTO {
 /* 
 CREATE TABLE PET(
 
-    PET_NO NUMBER PRIMARY KEY,
-    WRITER VARCHAR2(50),
-    PET_NAME VARCHAR2(50),
-    PET_BREED VARCHAR2(50),
-    PET_AGE NUMBER,
-    PET_SIZE NUMBER,
-    PET_WEIGHT NUMBER,
-    PET_BIRTH DATE
+    petNo NUMBER PRIMARY KEY,
+    writer VARCHAR2(50),
+    petName VARCHAR2(50),
+    petBreed VARCHAR2(50),
+    petAge NUMBER,
+    petSize NUMBER,
+    petWeight NUMBER,
+    petBirth DATE
 );
 
-CREATE SEQUENCE PET_SEQ NO CACHE;
+CREATE SEQUENCE PET_SEQ NOCACHE;
 
 SELECT * FROM PET;
 
-INSERT INTO PET VALUES(PET_SEQ_NEXTVAL, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO PET VALUES(PET_SEQ.NEXTVAL, ?, ?, ?, ?, ?, ?, ?);
 
 DROP TABLE PET;
 
