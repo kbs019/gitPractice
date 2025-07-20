@@ -27,6 +27,7 @@
                         <td>가입일자</td>
                         <td>권한</td>
                         <td>활동 상태</td>
+                        <td>제재 기간</td>
                     </tr>
                     <tr th:each="uto : ${list}">
                         <td th:text="${uto.id}"></td>
@@ -40,7 +41,7 @@
                                 <option value="2" th:selected="${uto.role == 2}">관리자</option>
                             </select>
                         </td>
-                        <td>
+                        <td width="150">
                             <select class="changeUserStatus" th:attr="data-userid=${uto.id}">
                                 <option value="0" th:selected="${uto.status == 0}">활동중</option>
                                 <option value="1" th:selected="${uto.status == 1}">활동 정지</option>
@@ -53,6 +54,14 @@
                                 <option value="30">한달</option>
                                 <option value="-1">영구</option>
                             </select>
+                        </td>
+                        <td align="center" class="banned-until">
+                            <span th:if="${uto.bannedUntil != null}">
+                                ~ <span th:text="${uto.bannedUntil}"></span>
+                            </span>
+                            <span th:if="${uto.bannedUntil == null}">
+                                --
+                            </span>
                         </td>
                     </tr>
                 </table>
@@ -141,6 +150,22 @@
                         },
                         success : function( message ){
                             alert(message);
+
+                            // 제재 기간 갱신
+                            let $row = $periodSelect.closest('tr');
+                            let $banUntilCell = $row.find('.banned-until');
+
+                            if (period == -1) {
+                                $banUntilCell.text('~ 9999-12-31');
+                            } else {
+                                // 오늘 날짜 + 기간 계산
+                                let now = new Date();
+                                now.setDate(now.getDate() + parseInt(period));
+                                let yyyy = now.getFullYear();
+                                let mm = ('0' + (now.getMonth() + 1)).slice(-2);
+                                let dd = ('0' + now.getDate()).slice(-2);
+                                $banUntilCell.text(`~ ${yyyy}-${mm}-${dd}`);
+                            }
                         },
                         error : function( xhr, status, error ){
                             alert('정치 처리 실패');
@@ -160,6 +185,11 @@
                     },
                     success : function( result ){
                         alert(result);
+
+                        // 현재 행을 찾고, 제재기간 셀을 찾아 "--"로 변경
+                        let $row = $periodSelect.closest('tr');
+                        let $banUntilCell = $row.find('.banned-until');
+                        $banUntilCell.text('--');
                     },
                     error : function( xhr, status, error ){
                         alert('오류 발생');
