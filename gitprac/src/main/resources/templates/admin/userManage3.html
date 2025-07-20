@@ -56,13 +56,13 @@
                 </table>
                 <div class="paging" align="center" th:if="${count > 0}">
                     <span th:if="${startPage} > ${pageCount}">
-                        <a th:href="@{|/admin/userManage2?pageNum=${startPage - pageBlock}|}">[이전]</a>
+                        <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
                     </span>
                     <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-                        <a th:href="@{|/admin/userManage2?pageNum=${i}|}" th:text="'|'+${i}+'|'"></a>
+                        <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
                     </span>
                     <span th:if="${endPage} < ${pageCount}">
-                        <a th:href="@{|/admin/userManage2?pageNum=${startPage + pageBlock}|}">[다음]</a>
+                        <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
                     </span>
                 </div>
             </div>
@@ -165,6 +165,28 @@
                     }
                 });
             }
+        });
+
+        $(document).on('click', '.ajax-page-link', function(e){
+            e.preventDefault();
+            
+            let page = $(this).data('page');
+            let keyword = $('#keyword').val().trim();  // 검색어와 연동하고 싶다면
+
+            $.ajax({
+                url: '/admin/searchUser', // or /admin/userManage if AJAX 지원하도록 만들면 됨
+                type: 'post',
+                data: {
+                    pageNum: page,
+                    keyword: keyword
+                },
+                success: function(result){
+                    $('#users-info').html(result);
+                },
+                error: function(xhr, status, error){
+                    console.log('오류:', error);
+                }
+            });
         });
     </script>
 </body>
