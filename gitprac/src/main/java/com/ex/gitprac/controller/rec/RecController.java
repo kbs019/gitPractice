@@ -39,7 +39,7 @@ public class RecController {
     /**
      * 🗂 일지 목록 조회 (필터 포함 + 전체 초기화)
      */
-   @GetMapping("")
+    @GetMapping("")
     public String recListPage(
         @RequestParam(name = "petNo", required = false) Integer petNo,
         @RequestParam(name = "startDate", required = false) String startDate,

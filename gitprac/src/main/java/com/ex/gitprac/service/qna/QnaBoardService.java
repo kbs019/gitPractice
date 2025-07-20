@@ -66,9 +66,11 @@ public class QnaBoardService {
 
     // writer 에 해당하는 유저의 id 값 조회
     public String selectIdByWriter( String writer ){ 
-        String id = qnaBoardMapper.selectIdByWriter(writer);
-
-        return id;
+        return qnaBoardMapper.selectIdByWriter(writer);
+    }
+    // id 에 해당하는 일지 조회
+    public List<RecDTO> selectListById( String id ){
+        return qnaBoardMapper.selectListById(id);
     }
 
     // 답변 작성 + isAnswered 컬럼의 값 변경

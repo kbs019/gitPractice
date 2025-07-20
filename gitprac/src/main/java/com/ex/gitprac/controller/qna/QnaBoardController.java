@@ -193,9 +193,9 @@ public class QnaBoardController {
     public String showRecord( @RequestParam("nick") String nick, Model model ){
         String id = qnaBoardService.selectIdByWriter(nick);
 
-        // List<RecDTO> list = recService.findFilteredByWriter( id,  );
+        List<RecDTO> list = qnaBoardService.selectListById(id);
 
-        // model.addAttribute("rto", rto);
+        model.addAttribute("list", list);
         return "/qna/record";
     }
 
