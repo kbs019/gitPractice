@@ -191,6 +191,8 @@ public class AdminService {
         return askMapper.askListByIsAnswered( isAnswered, start, end );
     }
 
+    // 답변 미완료 글만 볼 때, 
+
     // 답변 리스트 조회
     public List<AskReplyDTO> replyList( int askNo ){
         return askReplyMapper.replyList(askNo);

@@ -28,6 +28,9 @@
         <div class="content-info-wrapper">
             <div class="content-writer-wrapper">
                 작성자 | <span th:text="${qto.writer}"></span>
+                <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${qto.writer}">
+                    📋
+                </span>
             </div>
             <div class="content-views-wrapper">
                 조회수 | <span th:text="${qto.views}"></span>
@@ -150,6 +153,19 @@
                         console.log('오류 : ' + error);
                         alert('오류 발생!');
                     }
+                });
+            });
+        });
+
+        // 작성자명을 클릭하여 복사하는 API 사용
+        $(document).ready(function(){
+            $(document).on('click', '.copy-icon', function(e){
+                let writer = $(this).data('writer');
+    
+                navigator.clipboard.writeText(writer).then(function(){
+                    alert(`"${writer}" 복사됨`);
+                }).catch(function(err){
+                    console.log("복사 실패 : ", err);
                 });
             });
         });

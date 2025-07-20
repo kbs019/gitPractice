@@ -61,7 +61,7 @@ public class QnaBoardController {
         model.addAttribute("list", list);
         model.addAttribute("pageNum", pageNum);
 
-        return "/qna/listPrac2";
+        return "/qna/listPrac3";
     }
 
     // 글작성 버튼을 눌렀을 때, 작동

@@ -98,78 +98,73 @@
         });
 
         // 이것은 role 값 변경
-        $(document).ready(function(){
-            $('.changeUserRole').change(function(){
-                let selectedRole = $(this).val();
-                let userid = $(this).data('userid');
+        $(document).on('change', '.changeUserRole', function(){
+            let selectedRole = $(this).val();
+            let userid = $(this).data('userid');
 
-                $.ajax({
-                    url : '/admin/changeUserRole',
-                    type : 'post',
-                    data : {
-                        role : selectedRole,
-                        id : userid
-                    },
-                    success : function( result ){
-                        alert(result);
-                        console.log(result);
-                    },
-                    error : function( xhr, status, error ){
-                        alert('오류 발생');
-                        console.log(error + ' --  발생');
-                    }
-                });
+            $.ajax({
+                url : '/admin/changeUserRole',
+                type : 'post',
+                data : {
+                    role : selectedRole,
+                    id : userid
+                },
+                success : function( result ){
+                    alert(result);
+                    console.log(result);
+                },
+                error : function( xhr, status, error ){
+                    alert('오류 발생');
+                    console.log(error + ' --  발생');
+                }
             });
         });
 
         // 이것은 status 값 변경 && 제재 기간 설정
-        $(document).ready(function(){
-            $('.changeUserStatus').change(function(){
-                let selectedStatus = $(this).val();
-                let userid = $(this).data('userid');
-                let $periodSelect = $(this).siblings('.ban-period');         // $periodSelect 처럼 앞에 $ 가 오는 것은 jQuery 객체라는 것을 알려주는 장치
+        $(document).on('change', '.changeUserStatus', function(){
+            let selectedStatus = $(this).val();
+            let userid = $(this).data('userid');
+            let $periodSelect = $(this).siblings('.ban-period');         // $periodSelect 처럼 앞에 $ 가 오는 것은 jQuery 객체라는 것을 알려주는 장치
 
-                if( selectedStatus == 1 ){
-                    $periodSelect.show();
-                    $periodSelect.off('change').on('change', function(){
-                        let period = $(this).val();
-                        $.ajax({
-                            url : '/admin/banUser',
-                            type : 'post',
-                            data : {
-                                id : userid,
-                                period : period
-                            },
-                            success : function( message ){
-                                alert(message);
-                            },
-                            error : function( xhr, status, error ){
-                                alert('정치 처리 실패');
-                                console.log(error + " 발생");
-                            }
-                        });
-                    });
-                } else {
-                    $periodSelect.hide();
-
-                    
+            if( selectedStatus == 1 ){
+                $periodSelect.show();
+                $periodSelect.off('change').on('change', function(){
+                    let period = $(this).val();
                     $.ajax({
-                        url : '/admin/changeUserStatus',
+                        url : '/admin/banUser',
                         type : 'post',
                         data : {
-                            status : selectedStatus,
-                            id : userid
+                            id : userid,
+                            period : period
                         },
-                        success : function( result ){
-                            alert(result);
+                        success : function( message ){
+                            alert(message);
                         },
                         error : function( xhr, status, error ){
-                            alert('오류 발생');
-                            console.log("오류 발생" + error);
+                            alert('정치 처리 실패');
+                            console.log(error + " 발생");
                         }
                     });
-                }
-            });
+                });
+            } else {
+                $periodSelect.hide();
+                
+                $.ajax({
+                    url : '/admin/changeUserStatus',
+                    type : 'post',
+                    data : {
+                        status : selectedStatus,
+                        id : userid
+                    },
+                    success : function( result ){
+                        alert(result);
+                    },
+                    error : function( xhr, status, error ){
+                        alert('오류 발생');
+                        console.log("오류 발생" + error);
+                    }
+                });
+            }
         });
     </script>
 </body>
