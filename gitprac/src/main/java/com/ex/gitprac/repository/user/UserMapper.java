@@ -29,6 +29,8 @@ public interface  UserMapper {
     public int changeUserRole(@Param("role") int role, @Param("id") String id);
     // ajax 로 인한 status 값 변경
     public int changeUserStatus(@Param("status") int status, @Param("id") String id);
+    // ajax 로 인한 bannedUntil 을 null 로 변경
+    public int clearBanDate(String id);
     // id 에 대한 유저 검색
     public UserDTO findById( String id );
     // 회원 정지 기간 설정

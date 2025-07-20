@@ -79,4 +79,9 @@
     <update id="banUser">
         update users set status=1, bannedUntil=#{until} where id=#{id}
     </update>
+
+    <!-- 회원관리에서 status = 0 을 선택하면 bannedUntil 을 null 로 변경 -->
+    <update id="clearBanDate">
+        update users set bannedUntil=null where id=#{id}
+    </update>
 </mapper>

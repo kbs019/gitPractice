@@ -61,7 +61,13 @@ public class AdminService {
     }
     // ajax 로 인한 status 값 변경
     public int changeUserStatus( int status, String id ){
-        return userMapper.changeUserStatus( status, id );
+        int result =  userMapper.changeUserStatus( status, id );
+
+        if( status == 0 ){
+            result = userMapper.clearBanDate(id);
+        }
+
+        return result;
     }
     // 유저 정지 처리
     public boolean banUser( String id, int period ){
