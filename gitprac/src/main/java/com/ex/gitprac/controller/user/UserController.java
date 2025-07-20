@@ -96,14 +96,14 @@ public class UserController {
         }
     }
 
-    @PostMapping("FindPw")
-    @ResponseBody
-    public String ajaxFindPw(@RequestParam("id") String id, @RequestParam("email") String email) {
-        String tempPw = userService.findPwAndSendTempPw(id, email);
-        if (tempPw != null) {
-            return "success";
-        } else {
-            return "fail";
-        }
-    }
+    // @PostMapping("FindPw")
+    // @ResponseBody
+    // public String ajaxFindPw(@RequestParam("id") String id, @RequestParam("email") String email) {
+    //     String tempPw = userService.findPwAndSendTempPw(id, email);
+    //     if (tempPw != null) {
+    //         return "success";
+    //     } else {
+    //         return "fail";
+    //     }
+    // }
 }

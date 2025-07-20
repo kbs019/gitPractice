@@ -34,7 +34,12 @@
             <div align="center" width="800">
                 <div class="post-info" th:each="qto : ${list}">
                     <div class="post-title-wrapper">
-                        <a th:href="@{|/qna/content?postNo=${qto.postNo}&pageNum=${pageNum}|}" th:text="${qto.title}"></a>
+                        <span th:if="${qto.status == 0}">
+                            <a th:href="@{|/qna/content?postNo=${qto.postNo}&pageNum=${pageNum}|}" th:text="${qto.title}"></a>
+                        </span>
+                        <span th:if="${qto.status != 0}">
+                            <span>관리자에 의해 제재된 글입니다.</span>
+                        </span>
                     </div>
                     <span class="writer-name-wrapper">
                         <span class="post-writer-wrapper" th:text="${qto.writer}"></span>
@@ -60,13 +65,13 @@
         </div>
         <div class="paging" align="center" th:if="${count > 0}">
             <span th:if="${startPage} > ${pageCount}">
-                <a th:href="@{|/qna/list?pageNum=${startPage - pageBlock}|}">[이전]</a>
+                <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
             </span>
             <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-                <a th:href="@{|/qna/list?pageNum=${i}|}" th:text="'['+${i}+']'"></a>
+                <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
             </span>
             <span th:if="${endPage} < ${pageCount}">
-                <a th:href="@{|/qna/list?pageNum=${startPage + pageBlock}|}">[다음]</a>
+                <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
             </span>
         </div>
     </div>
@@ -86,7 +91,14 @@
                 searchPostList();
             });
 
-            function searchPostList(){
+            // 페이징 클릭 이벤트
+            $(document).on('click', '.ajax-page-link', function(e){
+                e.preventDefault();
+                let page = $(this).data('page');
+                searchPostList(page);  // 검색 결과에서 해당 페이지로 이동
+            });
+
+            function searchPostList(page = 1){
                 let category = $('#category').val();
                 let keyword = $('#keyword').val().trim();
                 let isAnswered = $('#isAnsweredStatusCheck').is(':checked') ? 1 : 0;
@@ -100,6 +112,7 @@
                     url : '/qna/searchList2',
                     type : 'post',
                     data : {
+                        pageNum : page,
                         category : category,
                         keyword : keyword,
                         isAnswered : isAnswered
@@ -127,6 +140,7 @@
                 });
             });
         });
+
     </script>
 </body>
 </html>
