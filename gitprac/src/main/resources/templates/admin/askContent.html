@@ -16,9 +16,8 @@
             <div width="800" align="right">
                 <span th:if="${ session.users.nick == ato.writer }">
                     <input type="button" value="수정" th:onclick="|window.location='@{/admin/askUpdate(askNo=${ato.askNo}, pageNum=${pageNum})}'|">  &nbsp;&nbsp;
-                    <input type="button" value="삭제" th:onclick="|window.location='@{/admin/askDelete(askNo=${ato.askNo}, pageNum=${pageNum})}'|">
                 </span>
-                <span th:if="${ session.users.role == 2 }">
+                <span th:if="${ session.users.role == 2 || session.users.nick == ato.writer }">
                     <input type="button" value="삭제" th:onclick="|window.location='@{/admin/askDelete(askNo=${ato.askNo}, pageNum=${pageNum})}'|">
                 </span>
             </div>

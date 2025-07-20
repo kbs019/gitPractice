@@ -43,7 +43,7 @@ public class UserController {
     @GetMapping("logout")
     public String logout( HttpSession session ) {
         session.invalidate();
-        return "user/loginForm";
+        return "redirect:/user/login";          // 로그아웃 시, URI 에 user/login 나오도록 처리
     }
     
     public String getMethodName(@RequestParam String param) {
