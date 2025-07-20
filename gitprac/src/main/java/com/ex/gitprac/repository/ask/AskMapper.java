@@ -43,4 +43,10 @@ public interface AskMapper {
 
     // isAnswered 컬럼값에 따른 게시글 조회
     public List<AskDTO> askListByIsAnswered( @Param("isAnswered") int isAnswered, @Param("start") int start, @Param("end") int end );
+
+    // 제재당한 인원의 닉네임이 작성한 게시글의 status 를 1 로 변경
+    public void updateStatusByNick( String nick );
+
+    // 제재 기간이 끝나 다시 status 값이 0 으로 돌아감
+    public void restoreStatusByNick( String nick );
 }

@@ -1,9 +1,16 @@
 <div class="reply-list">
     <span th:each="rto : ${list}" class="reply-item">
         <div class="reply-content">
-            <div th:text="${rto.content}"></div>
-            <span th:text="${rto.writer}"></span>
-            <span th:text="${#temporals.format(rto.reg, 'yy/MM/dd HH:mm')}"></span>
+            <div class="reply-title">
+                <span th:text="${rto.content}"></span>
+            </div>
+            <div class="reply-info">
+                <span th:text="${rto.writer}"></span>
+                <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${rto.writer}">
+                    📋
+                </span>
+                <span th:text="${#temporals.format(rto.reg, 'yy/MM/dd HH:mm')}"></span>
+            </div>
         </div>
         <input type="hidden" class="replyNo" th:value="${rto.replyNo}">
         <span th:if="${session.users.nick == rto.writer or session.users.role == 2}">

@@ -52,7 +52,12 @@
                         <td>
                             <a th:href="@{|/admin/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
                         </td>
-                        <td th:text="${ato.writer}" align="center"></td>
+                        <td align="center">
+                            <span th:text="${ato.writer}"></span>
+                            <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${ato.writer}">
+                            📋
+                            </span>
+                        </td>
                         <td th:text="${#temporals.format(ato.reg, 'yy.MM.dd HH:mm')}" align="center"></td>
                         <td align="center">
                             <span th:if="${ato.isAnswered == 0}">
@@ -108,6 +113,19 @@
                     }
                 });
             }
+        });
+
+        // 작성자명을 클릭하여 복사하는 API 사용
+        $(document).ready(function(){
+            $(document).on('click', '.copy-icon', function(e){
+                let writer = $(this).data('writer');
+    
+                navigator.clipboard.writeText(writer).then(function(){
+                    alert(`"${writer}" 복사됨`);
+                }).catch(function(err){
+                    console.log("복사 실패 : ", err);
+                });
+            });
         });
     </script>
 </body>

@@ -1,6 +1,6 @@
 <h1>로그인</h1>
 <div class="login-container">
-    <form th:action="@{/user/login}" method="post">
+    <form th:action="@{/user/loginCheckByBannedUntil}" method="post">
         <label for="id">아이디</label> :
         <input type="text" id="id" name="id" required /><br>
         <label for="password">비밀번호</label> : 
@@ -12,4 +12,50 @@
         <!-- <a th:href="@{/user/insert}">회원가입</a> -->
         <button type="button" onclick="window.location='/user/insert'">회원가입</button>
     </div>
+    <!-- 아이디 찾기 영역 -->
+<div>
+    <input type="email" id="findEmail" placeholder="가입한 이메일">
+    <button type="button" onclick="ajaxFindId()">아이디 찾기</button>
+    <div id="idResult"></div>
+</div>
+
+<!-- 비밀번호 찾기 영역 -->
+    <div>
+        <input type="text" id="pwId" placeholder="아이디">
+        <input type="email" id="pwEmail" placeholder="이메일">
+        <button type="button" onclick="ajaxFindPw()">비밀번호 찾기</button>
+        <div id="pwResult"></div>
+    </div>
+
+<script>
+    function ajaxFindId() {
+        const email = document.getElementById("findEmail").value;
+        fetch("/user/findId", {
+            method: "POST",
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            body: "email=" + encodeURIComponent(email)
+        })
+        .then(res => res.text())
+        .then(data => {
+            document.getElementById("idResult").innerHTML = 
+                data === "notfound" ? "아이디를 찾을 수 없습니다." : "아이디: " + data;
+        });
+    }
+
+    function ajaxFindPw() {
+        const id = document.getElementById("pwId").value;
+        const email = document.getElementById("pwEmail").value;
+        fetch("/user/findPw", {
+            method: "POST",
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            body: "id=" + encodeURIComponent(id) + "&email=" + encodeURIComponent(email)
+        })
+        .then(res => res.text())
+        .then(data => {
+            document.getElementById("pwResult").innerHTML = 
+                data === "success" ? "임시 비밀번호가 이메일로 전송되었습니다." : "일치하는 정보가 없습니다.";
+        });
+    }
+</script>
+
 </div>

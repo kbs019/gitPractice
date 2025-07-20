@@ -1,33 +1,39 @@
 package com.ex.gitprac.repository.rec;
 
 import com.ex.gitprac.data.rec.RecDTO;
-import java.util.List;
-import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
-import org.apache.ibatis.annotations.Param;
 
-@Repository
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import java.util.List;
+
 @Mapper
 public interface RecMapper {
 
-    public void insertRec(RecDTO rec);
+    List<RecDTO> findAll();
 
-    public List<RecDTO> findAll();
-
-    public List<RecDTO> findFiltered(
+    List<RecDTO> findFiltered(
         @Param("petNo") Integer petNo,
         @Param("startDate") String startDate,
         @Param("endDate") String endDate,
         @Param("categoryGroup") String categoryGroup
     );
 
-    public RecDTO findByNo(@Param("recNo") int recNo);
+    RecDTO findByNo(int recNo);
+
+    void insertRec(RecDTO rto);
 
     int updateRec(RecDTO recDTO);
+
     int deleteRec(int recNo);
-    RecDTO getRecByNo(int recNo);
 
-    List<RecDTO> findRecListWithPaging(@Param("offset") int offset, @Param("limit") int limit);
+    // ✅ 새로 추가된 메서드들 (완성본에서 반드시 포함)
+    List<RecDTO> findAllByWriter(@Param("writer") String writer);
 
-    
+    List<RecDTO> findFilteredByWriter(
+        @Param("writer") String writer,
+        @Param("petNo") Integer petNo,
+        @Param("startDate") String startDate,
+        @Param("endDate") String endDate,
+        @Param("categoryGroup") String categoryGroup
+    );
 }

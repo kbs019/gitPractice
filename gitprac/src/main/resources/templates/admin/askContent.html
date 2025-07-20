@@ -16,9 +16,8 @@
             <div width="800" align="right">
                 <span th:if="${ session.users.nick == ato.writer }">
                     <input type="button" value="수정" th:onclick="|window.location='@{/admin/askUpdate(askNo=${ato.askNo}, pageNum=${pageNum})}'|">  &nbsp;&nbsp;
-                    <input type="button" value="삭제" th:onclick="|window.location='@{/admin/askDelete(askNo=${ato.askNo}, pageNum=${pageNum})}'|">
                 </span>
-                <span th:if="${ session.users.role == 2 }">
+                <span th:if="${ session.users.role == 2 || session.users.nick == ato.writer }">
                     <input type="button" value="삭제" th:onclick="|window.location='@{/admin/askDelete(askNo=${ato.askNo}, pageNum=${pageNum})}'|">
                 </span>
             </div>
@@ -32,6 +31,9 @@
             <div class = "writer-views-wrapper">
                 <div class="content-writer-wrapper">
                     작성자 | <span th:text="${ato.writer}"></span>
+                    <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${ato.writer}">
+                    📋
+                    </span>
                 </div>
                 <div class="content-views-wrapper">
                     조회수 | <span th:text="${ato.views}"></span>
@@ -149,6 +151,19 @@
                         console.log('오류 : ' + error);
                         alert('오류 발생!');
                     }
+                });
+            });
+        });
+
+        // 작성자명을 클릭하여 복사하는 API 사용
+        $(document).ready(function(){
+            $(document).on('click', '.copy-icon', function(e){
+                let writer = $(this).data('writer');
+    
+                navigator.clipboard.writeText(writer).then(function(){
+                    alert(`"${writer}" 복사됨`);
+                }).catch(function(err){
+                    console.log("복사 실패 : ", err);
                 });
             });
         });

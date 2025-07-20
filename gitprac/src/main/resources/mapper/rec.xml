@@ -2,6 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.ex.gitprac.repository.rec.RecMapper">
 
   <insert id="insertRec" parameterType="com.ex.gitprac.data.rec.RecDTO">
@@ -19,8 +20,6 @@
     )
   </insert>
 
-
-  <!-- ✅ 여기 줄바꿈 문제 수정함 -->
   <select id="findAll" resultType="com.ex.gitprac.data.rec.RecDTO">
     SELECT
       recNo,
@@ -76,20 +75,64 @@
     ORDER BY reg DESC
   </select>
 
+  <!-- ✅ 1. 작성자 기준 전체 조회 -->
+  <select id="findAllByWriter" parameterType="string" resultType="com.ex.gitprac.data.rec.RecDTO">
+    SELECT *
+    FROM rec
+    WHERE writer = #{writer}
+    ORDER BY reg DESC
+  </select>
+
+  <!-- ✅ 2. 작성자 기준 + 필터 조회 -->
+  <select id="findFilteredByWriter" parameterType="map" resultType="com.ex.gitprac.data.rec.RecDTO">
+    SELECT *
+    FROM rec
+    <where>
+      writer = #{writer}
+      
+      <if test="petNo != null">
+        AND petNo = #{petNo}
+      </if>
+
+      <if test="startDate != null and startDate != '1900-01-01'
+          and endDate != null and endDate != '2100-12-31'">
+        <![CDATA[
+        AND reg >= TO_DATE(#{startDate}, 'YYYY-MM-DD')
+        AND reg < TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+        ]]>
+      </if>
+
+      <if test="categoryGroup != null and categoryGroup != ''">
+        AND category IN
+        <choose>
+          <when test="categoryGroup == '밥/간식'">
+            ('밥', '간식')
+          </when>
+          <when test="categoryGroup == '배변/배뇨'">
+            ('배변', '배뇨')
+          </when>
+          <when test="categoryGroup == '병원/약'">
+            ('병원', '약')
+          </when>
+          <when test="categoryGroup == '활동'">
+            ('활동')
+          </when>
+        </choose>
+      </if>
+    </where>
+    ORDER BY reg DESC
+  </select>
+
   <select id="findByNo" resultType="com.ex.gitprac.data.rec.RecDTO">
     SELECT * FROM rec WHERE recNo = #{recNo}
   </select>
 
-  <!-- 글작성 -->
-  <!-- <insert id="recordInsert">
-    insert into rec values( rec_seq.nextval, #{} );
-  </insert> -->
-
   <update id="updateRec" parameterType="com.ex.gitprac.data.rec.RecDTO">
     UPDATE rec
-    SET title = #{title},
-        content = #{content},
-        category = #{category}
+    SET 
+      title = #{title},
+      content = #{content},
+      category = #{category}
     WHERE recNo = #{recNo}
   </update>
 
@@ -105,6 +148,4 @@
     OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
   </select>
 
-
 </mapper>
-

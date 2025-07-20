@@ -1,5 +1,6 @@
 package com.ex.gitprac.service.admin;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import com.ex.gitprac.repository.ask.AskReplyMapper;
 import com.ex.gitprac.repository.info.InfoBoardMapper;
 import com.ex.gitprac.repository.notice.NoticeMapper;
 import com.ex.gitprac.repository.qna.QnaBoardMapper;
+import com.ex.gitprac.repository.qna.QnaReplyMapper;
 import com.ex.gitprac.repository.user.UserMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class AdminService {
     private final UserMapper userMapper;
     private final QnaBoardMapper qnaBoardMapper;
+    private final QnaReplyMapper qnaReplyMapper;
     private final InfoBoardMapper infoBoardMapper;
     private final NoticeMapper noticeMapper;
     private final AskMapper askMapper;
@@ -51,6 +54,48 @@ public class AdminService {
     // 검색 결과에 따른 회원 수
     public int searchUserCount( String keyword ){
         return userMapper.searchUserCount( keyword );
+    }
+    // ajax 로 인한 role 값 변경 
+    public int changeUserRole( int role, String id ){
+        return userMapper.changeUserRole( role, id );
+    }
+    // ajax 로 인한 status 값 변경
+    public int changeUserStatus( int status, String id ){
+        return userMapper.changeUserStatus( status, id );
+    }
+    // 유저 정지 처리
+    public boolean banUser( String id, int period ){
+        // 회원 제재
+        LocalDate until;
+        if( period == -1 ){     // period 값이 -1 이면, 영구 정지
+            until = LocalDate.of(9999, 12, 31);     // 9999년 12월 31일까지 정지
+        } else {
+            until = LocalDate.now().plusDays(period);                       // 해당 입력된 기간을 더하여 정지
+        }
+        boolean result = userMapper.banUser(id, until);
+        
+        // 아이디로 유저 정보 찾기
+        UserDTO user = userMapper.findById(id);
+
+        // 유저 정보에서 nick 값 찾기
+        String nick = user.getNick();
+
+        // 상담게시판에서 작성자명이 같은 경우(where writer = nick), status = 1 로 update --- void
+        qnaBoardMapper.updateStatusByNick(nick);
+
+        // 상담게시판에서 답변부분
+        qnaReplyMapper.updateStatusByNick(nick);
+
+        // 정보게시판에서 작성자명이 같은 경우(where writer = nick), status = 1 로 update   --- void
+        infoBoardMapper.updateStatusByNick(nick);
+
+        // 정보게시판에서 댓글부분
+
+        // 질의응답게시판에서 작성자명이 같은 경우(where writer = nick), status = 1 로 update   --- void
+        askMapper.updateStatusByNick(nick);
+
+
+        return result;
     }
 
     // --------------------------------------------------------------------------------------------------------------------------------
@@ -161,14 +206,30 @@ public class AdminService {
         return askMapper.askDelete(askNo);
     }
 
-    // isAnswered 컬럼값에 의한 게시글 갯수 조회
+    // isAnswered 컬럼값에 따른 게시글 갯수 조회
     public int askCountByIsAnswered( int isAnswered ){
-        return askMapper.askCountByIsAnswered( isAnswered );
+        int count = 0;
+
+        if( isAnswered == 1 ){
+            count = askMapper.askCountByIsAnswered( isAnswered );
+        } else if(isAnswered == 0) {
+            count = askMapper.askCount();
+        }
+
+        return count;
     }
 
-    // isAnswered 컬럼값에 의한 게시글 조회
+    // isAnswered 컬럼값에 따른 게시글 조회
     public List<AskDTO> askListByIsAnswered( int isAnswered, int start, int end ){
-        return askMapper.askListByIsAnswered( isAnswered, start, end );
+        List<AskDTO> list = null;
+
+        if( isAnswered == 1 ){
+            list = askMapper.askListByIsAnswered( isAnswered, start, end );
+        } else if ( isAnswered == 0 ){
+            list = askMapper.askList(start, end);
+        }
+
+        return list;
     }
 
     // 답변 리스트 조회

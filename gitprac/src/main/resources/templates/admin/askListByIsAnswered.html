@@ -27,7 +27,12 @@
             <td>
                 <a th:href="@{|/admin/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
             </td>
-            <td th:text="${ato.writer}" align="center"></td>
+            <td align="center">
+                <span th:text="${ato.writer}"></span>
+                <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${ato.writer}">
+                📋
+                </span>
+            </td>
             <td th:text="${#temporals.format(ato.reg, 'yy.MM.dd HH:mm')}" align="center"></td>
             <td align="center">
                 <span th:if="${ato.isAnswered == 0}">

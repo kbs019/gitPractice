@@ -14,18 +14,25 @@
                 <span><a th:href="@{/qna/list}">더보기</a></span>
             </span>
             <div id="qna-list-wrapper">
-                <table>
+                <table width="800">
                     <tr>
-                        <td>제목</td>
-                        <td>작성자</td>
-                        <td>작성일자</td>
-                        <td>제재 여부</td>
+                        <th width="350">제목</th>
+                        <th width="150">작성자</th>
+                        <th width="150">작성일자</th>
+                        <th width="150">제재 여부</th>
                     </tr>
-                    <tr th:each="qto : ${qnaList}">
+                    <tr th:each="qto : ${qnaList}" align="center">
                         <td>
                             <a th:href="@{|/qna/content?postNo=${qto.postNo}&pageNum=${pageNum}|}" th:text="${qto.title}"></a>
                         </td>
-                        <td th:text="${qto.writer}"></td>
+                        <td>
+                            <span class="writer-name-wrapper">
+                                <span class="post-writer-wrapper" th:text="${qto.writer}"></span>
+                                <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${qto.writer}">
+                                    📋
+                                </span>
+                            </span>
+                        </td>
                         <td th:text="${#temporals.format(qto.reg, 'yy.MM.dd HH:mm')}"></td>
                         <td>
                             <span th:if="${qto.status == 0}">
@@ -46,18 +53,25 @@
                 <!-- <h4><a th:href="@{/info/list(category='전체글')}">더보기</a></h4> -->
             </span>
             <div id="info-list-wrapper">
-                <table>
+                <table width="800">
                     <tr>
-                        <td>제목</td>
-                        <td>작성자</td>
-                        <td>작성일자</td>
-                        <td>제재 여부</td>
+                        <th width="350">제목</th>
+                        <th width="150">작성자</th>
+                        <th width="150">작성일자</th>
+                        <th width="150">제재 여부</th>
                     </tr>
-                    <tr th:each="ito : ${infoList}">
+                    <tr th:each="ito : ${infoList}" align="center">
                         <td>
                             <a th:href="@{/info/content(postNo=${ito.postNo}, pageNum=${pageNum})}" th:text="${ito.title}"></a>
                         </td>
-                        <td th:text="${ito.writer}"></td>
+                        <td>
+                            <span class="writer-name-wrapper">
+                                <span class="post-writer-wrapper" th:text="${ito.writer}"></span>
+                                <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${ito.writer}">
+                                    📋
+                                </span>
+                            </span>
+                        </td>
                         <td th:text="${#temporals.format(ito.reg, 'yy.MM.dd HH:mm')}"></td>
                         <td>
                             <span th:if="${ito.status == 0}">
@@ -72,5 +86,22 @@
             </div>
         </div>
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- ajax 시작 -->
+    <script>
+        // 작성자명을 클릭하여 복사하는 API 사용
+        $(document).ready(function(){
+            $(document).on('click', '.copy-icon', function(e){
+                let writer = $(this).data('writer');
+    
+                navigator.clipboard.writeText(writer).then(function(){
+                    alert(`"${writer}" 복사됨`);
+                }).catch(function(err){
+                    console.log("복사 실패 : ", err);
+                });
+            });
+        });
+    </script>
 </body>
 </html>

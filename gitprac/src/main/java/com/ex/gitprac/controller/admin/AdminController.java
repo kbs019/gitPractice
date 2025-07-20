@@ -1,6 +1,7 @@
 package com.ex.gitprac.controller.admin;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -64,7 +65,7 @@ public class AdminController {
         model.addAttribute("list", list);
         model.addAttribute("pageNum", pageNum);
 
-        return "/admin/userManage2";
+        return "/admin/userManage3";        // 여기 2 -> 3  으로 변경
     }
 
     // 검색된 값에 대한 list 조회
@@ -101,6 +102,40 @@ public class AdminController {
         model.addAttribute("pageNum", pageNum);
 
         return "/admin/searchUser";
+    }
+
+    // ajax 로 role 변경
+    @PostMapping("changeUserRole")
+    @ResponseBody
+    public String changeUserRole( @RequestParam("role") int role, @RequestParam("id") String id ){
+        String message = "권한 변경에 실패하였습니다.";
+
+        int result = adminService.changeUserRole(role, id);
+
+        if( result == 1 ){
+            message = "권한을 변경하였습니다.";
+        }
+
+        return message;
+    }
+
+    // ajax 로 status 변경
+    @PostMapping("changeUserStatus")
+    @ResponseBody
+    public String changeUserStatus( @RequestParam("status") int status, @RequestParam("id") String id ){
+        int result = adminService.changeUserStatus(status, id);
+
+        return result == 1 ? "변경을 성공했습니다." : "변경에 실패했습니다.";
+    }
+
+    // ajax 로 정지 기간 설정
+    @PostMapping("banUser")
+    @ResponseBody
+    public String banUser( @RequestParam("id") String id, @RequestParam("period") int period ){
+
+        boolean result = adminService.banUser(id, period);
+
+        return result == true ? "정지 처리 되었습니다." : "정지 처리에 실패했습니다.";
     }
 
     // ==================================== 게시글 관리 ======================================
