@@ -32,7 +32,7 @@
 
     <!-- 글수정 -->
     <update id="askUpdate">
-        update ask set title=#{title}, writer=#{writer}, content=#{content}, category=#{category}, imgName=#{imgName}, imgPath=#{imgPath}, originalName=#{originalName} where askNo=#{askNo}
+        update ask set title=#{title}, writer=#{writer}, content=#{content}, category=#{category}, imgName=#{imgName, jdbcType=VARCHAR}, imgPath=#{imgPath, jdbcType=VARCHAR}, originalName=#{originalName, jdbcType=VARCHAR} where askNo=#{askNo}
     </update>
 
     <!-- 글삭제 -->

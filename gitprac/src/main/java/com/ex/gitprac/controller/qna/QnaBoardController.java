@@ -17,8 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ex.gitprac.data.qna.QnaBoardDTO;
 import com.ex.gitprac.data.qna.QnaReplyDTO;
-
+import com.ex.gitprac.data.rec.RecDTO;
 import com.ex.gitprac.service.qna.QnaBoardService;
+import com.ex.gitprac.service.rec.RecService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class QnaBoardController {
 
     private final QnaBoardService qnaBoardService;
+    private final RecService recService;
 
     // 상담 게시판의 메인 페이지인 list
     @GetMapping("list")
@@ -189,8 +191,11 @@ public class QnaBoardController {
     // showRecord 팝업창 화면 구성
     @GetMapping("showRecord")
     public String showRecord( @RequestParam("nick") String nick, Model model ){
-        // RecBoardDTO rto = qnaBoardService.recordSelect(nick);
-        // model.addAttribute("rto", rto);
+        String id = qnaBoardService.selectIdByWriter(nick);
+
+        List<RecDTO> list = recService.findFilteredByWriter( id,  );
+
+        model.addAttribute("rto", rto);
         return "/qna/record";
     }
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ex.gitprac.data.qna.QnaBoardDTO;
 import com.ex.gitprac.data.qna.QnaReplyDTO;
+import com.ex.gitprac.data.rec.RecDTO;
 import com.ex.gitprac.repository.qna.QnaBoardMapper;
 import com.ex.gitprac.repository.qna.QnaReplyMapper;
 
@@ -63,8 +64,12 @@ public class QnaBoardService {
         return qnaBoardMapper.postDelete(postNo);
     }
 
-    // 일지 조회 (showRecord 팝업창에서 사용)
-    // public RecBoardDTO showRecord( String writer ){ RecBoardDTO rto = qnaBoardMapper.showRecord(writer); return rto; }
+    // writer 에 해당하는 유저의 id 값 조회
+    public String selectIdByWriter( String writer ){ 
+        String id = qnaBoardMapper.selectIdByWriter(writer);
+
+        return id;
+    }
 
     // 답변 작성 + isAnswered 컬럼의 값 변경
     public int replyInsert( int postNo, String writer, String content ){
