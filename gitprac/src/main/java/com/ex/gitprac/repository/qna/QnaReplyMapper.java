@@ -28,4 +28,10 @@ public interface QnaReplyMapper {
 
     // 게시글 삭제로 인한 해당 게시글의 모든 답변 삭제
     public void allReplyDelete(int postNo);
+
+    // 제재당한 인원의 닉네임이 작성한 게시글의 status 를 1 로 변경
+    public void updateStatusByNick(String nick);
+
+    // 제재 기간이 끝나 다시 status 값이 0 으로 돌아감
+    public void restoreStatusByNick(String nick);
 }
