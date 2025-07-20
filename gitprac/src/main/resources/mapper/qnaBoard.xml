@@ -32,7 +32,7 @@
 
   <!-- 글 수정 -->
   <update id="postUpdate" parameterType="com.ex.gitprac.data.qna.QnaBoardDTO">
-    update qna_board set title=#{title}, writer=#{writer}, content=#{content}, imgName=#{imgName}, imgPath=#{imgPath}, originalName=#{originalName}, showRecord=#{showRecord} where postNo=#{postNo}
+    update qna_board set title=#{title}, writer=#{writer}, content=#{content}, imgName=#{imgName, jdbcType=VARCHAR}, imgPath=#{imgPath, jdbcType=VARCHAR}, originalName=#{originalName, jdbcType=VARCHAR}, showRecord=#{showRecord} where postNo=#{postNo}
   </update>
 
   <!-- 글 삭제 -->

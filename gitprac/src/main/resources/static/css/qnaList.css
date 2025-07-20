@@ -1,0 +1,127 @@
+body {
+    font-family: 'Noto Serif KR', serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    color: #222;
+}
+
+#list-wrapper {
+    width: 80%;
+    max-width: 800px;
+    margin: 30px auto;
+}
+
+.isAnswered-check,
+.search-wrapper,
+.writeBtn {
+    display: inline-block;
+    margin: 10px 5px;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.isAnswered-check input[type="checkbox"] {
+    transform: scale(1.2);
+    margin-right: 5px;
+}
+
+.search-wrapper select,
+.search-wrapper input,
+.search-wrapper button {
+    padding: 6px 10px;
+    font-size: 14px;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    background-color: #fff;
+    margin-right: 5px;
+}
+
+.writeBtn a {
+    padding: 7px 14px;
+    font-size: 14px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #222;
+    background-color: #fff;
+}
+
+.writeBtn a:hover {
+    background-color: #f2f2f2;
+}
+
+.post-info {
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+    text-align: left;
+}
+
+.post-title-wrapper a {
+    font-size: 18px;
+    font-weight: bold;
+    color: #222;
+    text-decoration: none;
+}
+
+.post-title-wrapper a:hover {
+    text-decoration: underline;
+}
+
+.post-title-wrapper span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #888;
+}
+
+.writer-name-wrapper,
+.post-views-wrapper,
+.post-isAnswered-status {
+    display: inline-block;
+    margin-right: 15px;
+    font-size: 14px;
+    color: #666;
+}
+
+.copy-icon {
+    margin-left: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.post-isAnswered-status {
+    float: right;
+    font-weight: bold;
+}
+
+.post-isAnswered-status span {
+    padding: 2px 8px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.post-isAnswered-status span:contains("미답변") {
+    color: #888;
+}
+
+.post-isAnswered-status span:contains("답변 완료") {
+    color: #222;
+    font-weight: bold;
+}
+
+.paging {
+    margin-top: 30px;
+}
+
+.paging a {
+    margin: 0 4px;
+    text-decoration: none;
+    font-size: 14px;
+    color: #444;
+}
+
+.paging a.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
