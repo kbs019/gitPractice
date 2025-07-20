@@ -71,19 +71,24 @@ public class InfoBoardService {
         infoBoardMapper.viewsUp(postNo);
     }
 
+    // 댓글 쓰기
     public int insertReply(InfoReplyDTO irdto) {
         return infoReplyMapper.insertReply(irdto);
     }
 
+    // 댓글 리스트
     public List<InfoReplyDTO> getReply(int postNo) {
         return infoReplyMapper.getReply(postNo);
     }
 
+    // 댓글 수정
     public int updateReply(InfoReplyDTO irdto) {
         return infoReplyMapper.updateReply(irdto);
     }
 
+    // 댓글 삭제
     public int deleteReply(int replyNo) {
         return infoReplyMapper.deleteReply(replyNo);
     }
+
 }
