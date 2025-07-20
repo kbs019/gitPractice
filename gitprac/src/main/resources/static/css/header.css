@@ -1,0 +1,74 @@
+/* ✅ 기본 설정 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap');
+
+body {
+  font-family: 'Noto Serif KR', serif;
+  background-color: #fdfdfd;
+  color: #111;
+  font-weight: 400;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* ✅ 헤더 전체 구조 */
+header.main-header {
+  text-align: center;
+  padding: 1.5rem 0 1rem;
+  border-bottom: 2px solid #111;
+}
+
+/* ✅ 상단 유틸 링크 (로그아웃, 마이페이지 등) */
+.header-top {
+  text-align: right;
+  margin: 0 2rem;
+  font-size: 0.95rem;
+}
+
+.header-top a {
+  margin-left: 1rem;
+  color: #444;
+  text-decoration: none;
+}
+
+.header-top a:hover {
+  text-decoration: underline;
+}
+
+/* ✅ 사이트 타이틀 */
+.main-header .title a {
+  color: #111;
+  text-decoration: none;
+  pointer-events: auto; /* 클릭은 가능하게 */
+}
+
+.main-header .title a:visited {
+  color: #111;
+}
+
+.main-header .title a:hover {
+  color: #111;
+  border: none;
+}
+
+/* ✅ 내비게이션 메뉴 */
+.main-nav {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.main-nav a {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #111;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 0.2rem;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.main-nav a:hover,
+.main-nav a.selected {
+  border-color: #111;
+}

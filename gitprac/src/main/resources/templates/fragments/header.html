@@ -1,56 +1,41 @@
 <div th:fragment="headerFragment">
     <span th:if="${session.users != null}">
-    <header>
-        <div id="header">
-            <div id="header-top">
-                <a th:href="@{/user/logout}">로그아웃</a>
-                <span th:if="${session.users.role == 0 || session.users.role == 1}">
-                    <a th:href="@{/myPage/main}">마이페이지</a>
-                </span>
-                <span th:if="${session.users.role} == 2">
-                    <a th:href="@{/admin/userManage}">관리자 페이지</a>
-                </span>
-            </div>
-
-            <div id="header-middle">
-                <span th:if="${session.users.role == 0 || session.users.role == 1}">
-                    <a th:href="@{/diary/main}">
-                        <h1>하루犬과</h1>
-                    </a>
-                </span>
-                <span th:if="${session.users.role} == 2">
-                    <a th:href="@{/admin/userManage}">
-                        <h1>하루犬과</h1>
-                    </a>
-                </span>
-            </div>
-
-            <div id="header-bottom">
-                <div th:if="${session.users.role == 0 || session.users.role == 1}">
-                    <ul>
-                        <li><a th:href="@{/diary/main}">다이어리</a></li>
-                        <li><a th:href="@{/rec}">일지</a></li>
-                        <li><a th:href="@{/qna/list}">상담 게시판</a></li>
-                        <li><a th:href="@{/info/list}">정보 게시판</a></li>
-                        <li><a th:href="@{/center/notice}">고객센터</a></li>
-                    </ul>
-                </div>
-                <div th:if="${session.users.role == 2}">
-                    <ul>
-                        <li><a th:href="@{/admin/notice}">공지사항</a></li>
-                        <li><a th:href="@{/admin/ask}">질의응답</a></li>
-                        <li><a th:href="@{/admin/userManage}">회원관리</a></li>
-                        <li><a th:href="@{/admin/postManage}">게시글관리</a></li>
-                    </ul>
-                </div>
-            </div>
+    <header class="main-header">
+        <div class="header-top">
+            <a th:href="@{/user/logout}">로그아웃</a>
+            <span th:if="${session.users.role == 0 || session.users.role == 1}">
+                <a th:href="@{/myPage/main}">마이페이지</a>
+            </span>
+            <span th:if="${session.users.role == 2}">
+                <a th:href="@{/admin/userManage}">관리자 페이지</a>
+            </span>
         </div>
+
+        <div class="title">
+            <a th:href="@{/diary/main}">하루犬과</a>
+        </div>
+
+        <nav class="main-nav">
+            <div th:if="${session.users.role == 0 || session.users.role == 1}">
+                <a th:href="@{/diary/main}">다이어리</a>
+                <a th:href="@{/rec}">일지</a>
+                <a th:href="@{/qna/list}">상담 게시판</a>
+                <a th:href="@{/info/list}">정보 게시판</a>
+                <a th:href="@{/center/notice}">고객센터</a>
+            </div>
+            <div th:if="${session.users.role == 2}">
+                <a th:href="@{/admin/notice}">공지사항</a>
+                <a th:href="@{/admin/ask}">질의응답</a>
+                <a th:href="@{/admin/userManage}">회원관리</a>
+                <a th:href="@{/admin/postManage}">게시글관리</a>
+            </div>
+        </nav>
     </header>
     </span>
     <span th:if="${session.users == null}">
         <script>
             alert("로그인이 해제되었습니다.");
             window.location="/user/login";
-        </script>>
+        </script>
     </span>
 </div>

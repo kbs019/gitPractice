@@ -3,64 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <title>하루犬과 - 일지 목록</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/rec.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- 🐾 헤더 -->
 <div th:replace="~{fragments/header.html :: headerFragment}"></div>
 
+<!-- 🐾 헤더 -->
+<!-- <header class="main-header">
+  <div class="title">하루犬과</div>
+  <nav class="main-nav">
+    <a class="selected">일지</a>
+    <a href="#">수의사</a>
+    <a href="#">사용자</a>
+  </nav>
+</header> -->
+
 <main class="rec-container">
-  <!-- 🔎 필터 영역 -->
+
+  <!-- 🔎 날짜 & 카테고리 필터 -->
   <section class="rec-filter">
-    <div>
-      <select id="petSelect" disabled>
-        <option>🐶 반려견 선택 (추후 구현)</option>
-      </select>
-      <span>의 일지</span>
+    <form method="get" action="/rec" class="filter-bar">
+  <div class="filter-left">
+    <input type="date" id="startDate" name="startDate" th:value="${startDate}">
+    ~
+    <input type="date" id="endDate" name="endDate" th:value="${endDate}">
+    
+    <input type="hidden" name="categoryGroup" id="hiddenCategoryGroup" th:value="${categoryGroup}">
+    
+    <button type="submit" class="small">조회</button>
+    <button type="submit" name="reset" value="true" class="small">전체 초기화</button>
+  </div>
+  
+  <div class="filter-right">
+    <div class="filter-right">
+      <a href="/rec/upload" class="btn-write">일지 작성</a>
     </div>
+  </div>
+</form>
 
-    <!-- 날짜 조회 form -->
-    <form method="get" action="/rec">
-      <div>
-        <input type="date" id="startDate" name="startDate" th:value="${startDate}">
-        ~
-        <input type="date" id="endDate" name="endDate" th:value="${endDate}">
-        
-        <input type="hidden" name="categoryGroup" id="hiddenCategoryGroup" th:value="${categoryGroup}">
-
-        <button type="submit">조회</button>
-        <button type="submit" name="reset" value="true">전체 초기화</button>
-        
-        <a href="/rec/upload">
-          <button type="button">글 작성</button>
-        </a>
-      </div>
-    </form>
-
-    <!-- 카테고리 그룹 form -->
-    <form id="categoryForm" method="get" action="/rec">
+    <form method="get" action="/rec" class="category-form">
       <input type="hidden" name="startDate" id="hiddenStartDate" th:value="${param.startDate}">
       <input type="hidden" name="endDate" id="hiddenEndDate" th:value="${param.endDate}">
-
       <div class="category-tabs">
         <button type="submit" name="categoryGroup" value="밥/간식"
-                onclick="copyDates()" 
+                onclick="copyDates()"
                 th:classappend="${param.categoryGroup == '밥/간식'} ? 'selected' : ''">
           밥/간식
         </button>
         <button type="submit" name="categoryGroup" value="활동"
-                onclick="copyDates()" 
+                onclick="copyDates()"
                 th:classappend="${param.categoryGroup == '활동'} ? 'selected' : ''">
           활동
         </button>
         <button type="submit" name="categoryGroup" value="배변/배뇨"
-                onclick="copyDates()" 
+                onclick="copyDates()"
                 th:classappend="${param.categoryGroup == '배변/배뇨'} ? 'selected' : ''">
           배변/배뇨
         </button>
         <button type="submit" name="categoryGroup" value="병원/약"
-                onclick="copyDates()" 
+                onclick="copyDates()"
                 th:classappend="${param.categoryGroup == '병원/약'} ? 'selected' : ''">
           병원/약
         </button>
@@ -68,41 +73,36 @@
     </form>
   </section>
 
-  <!-- 📋 일지 목록 출력 -->
+  <!-- 📋 일지 목록 -->
   <section class="rec-list">
-    <table class="rec-table">
-      <thead>
-        <tr>
-          <th>번호</th>
-          <th>카테고리</th>
-          <th>제목</th>
-          <th>작성일</th>
-          <th>관리</th>
-        </tr>
-      </thead>
-      <tbody id="recListContainer">
-        <tr th:each="rec : ${recList}">
-          <td th:text="${rec.recNo}">1</td>
-          <td th:text="${rec.category}">카테고리</td>
-          <td>
+    <div class="rec-entries" id="recListContainer">
+      <div th:if="${recList != null}">
+        <div class="rec-entry" th:each="rec : ${recList}">
+          <div class="rec-top">
+            <div class="rec-meta">
+              <span class="rec-date" th:text="${rec.reg}">날짜</span>
+              <span class="rec-category" th:text="${rec.category}">카테고리</span>
+            </div>
+            <div class="rec-actions">
+              <a th:href="@{'/rec/edit/' + ${rec.recNo}}">수정</a>
+              <a th:href="@{'/rec/delete/' + ${rec.recNo}}" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+            </div>
+          </div>
+          <div class="rec-title">
             <a th:href="@{'/rec/content/' + ${rec.recNo}}" th:text="${rec.title}">제목</a>
-          </td>
-          <td th:text="${rec.reg}">2025-07-18</td>
-          <td>
-            <a th:href="@{'/rec/edit/' + ${rec.recNo}}" class="btn btn-sm btn-warning">수정</a>
-            <a th:href="@{'/rec/delete/' + ${rec.recNo}}" class="btn btn-sm btn-danger"
-               onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
-          </td>
-        </tr>
-        <tr th:if="${#lists.isEmpty(recList)}">
-          <td colspan="5">등록된 일지가 없습니다.</td>
-        </tr>
-      </tbody>
-    </table>
+          </div>
+          <hr>
+        </div>
+      </div>
+      <div th:if="${#lists.isEmpty(recList)}">
+        <p style="text-align:center;">등록된 일지가 없습니다.</p>
+      </div>
 
-    <!-- 👇 더보기 버튼 -->
-    <div style="text-align:center; margin-top:1rem;">
-      <button id="loadMoreBtn">더보기</button>
+    </div>
+
+    <!-- ➕ 더보기 -->
+    <div class="load-more">
+      <button id="loadMoreBtn">+ 더보기</button>
     </div>
   </section>
 </main>
@@ -115,7 +115,7 @@
 </script>
 
 <script>
-  let offset = 15;
+  let offset = 15; 
   const limit = 15;
 
   document.getElementById("loadMoreBtn").addEventListener("click", function () {
@@ -129,20 +129,20 @@
 
         const container = document.getElementById("recListContainer");
         data.forEach(rec => {
-          const row = document.createElement("tr");
-
-          row.innerHTML = `
-            <td>${rec.recNo}</td>
-            <td>${rec.category}</td>
-            <td><a href="/rec/content/${rec.recNo}">${rec.title}</a></td>
-            <td>${rec.reg}</td>
-            <td>
-              <a href="/rec/edit/${rec.recNo}" class="btn btn-sm btn-warning">수정</a>
-              <a href="/rec/delete/${rec.recNo}" class="btn btn-sm btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
-            </td>
+          const div = document.createElement("div");
+          div.className = "rec-entry";
+          div.innerHTML = `
+            <div class="rec-date">${rec.reg}</div>
+            <div class="rec-time">${rec.time}</div>
+            <div class="rec-title"><a href="/rec/content/${rec.recNo}">${rec.title}</a></div>
+            <div class="rec-desc">${rec.content}</div>
+            <div class="rec-actions">
+              <a href="/rec/edit/${rec.recNo}">수정</a>
+              <a href="/rec/delete/${rec.recNo}" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+            </div>
+            <hr>
           `;
-
-          container.appendChild(row);
+          container.appendChild(div);
         });
 
         offset += limit;
