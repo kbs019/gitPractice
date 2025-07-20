@@ -63,7 +63,7 @@
   <!-- 제재 기간이 끝나 다시 status 값이 0 으로 돌아감 -->
   <update id="restoreStatusByNick">
     update info_board set status = 0 where writer=#{nick}
-  
+  </update>
   <update id="viewsUp">
     update info_board set views = views + 1 where postNo = #{postNo}
   </update>
