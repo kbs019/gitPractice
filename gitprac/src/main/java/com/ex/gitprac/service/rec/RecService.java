@@ -40,23 +40,29 @@ public class RecService {
         return recMapper.deleteRec(recNo);
     }
 
-    public List<RecDTO> getRecListWithPaging(int offset, int limit) {
-    List<RecDTO> all = recMapper.findAll();
+    // 작성자 기반 전체 조회 + 페이징
+    public List<RecDTO> getRecListWithPaging(String writer, int offset, int limit) {
+        List<RecDTO> all = recMapper.findAllByWriter(writer); // ← 작성자 기준으로 전체 조회
 
-    if (offset >= all.size()) {
-        return new ArrayList<>();
+        if (offset >= all.size()) {
+            return new ArrayList<>();
+        }
+
+        int end = Math.min(offset + limit, all.size());
+        return all.subList(offset, end);
     }
 
-    int end = Math.min(offset + limit, all.size());
-    return all.subList(offset, end);
-}
+    // 작성자 기반 필터링 + 페이징
+    public List<RecDTO> getRecListFilteredWithPaging(String writer, Integer petNo, String startDate, String endDate,
+                                                    String categoryGroup, int offset, int limit) {
+        List<RecDTO> filteredList = recMapper.findFilteredByWriter(writer, petNo, startDate, endDate, categoryGroup); // ← 수정
 
-    public List<RecDTO> getRecListFilteredWithPaging(Integer petNo, String startDate, String endDate, String categoryGroup, int offset, int limit){
-        List<RecDTO> filteredList = recMapper.findFiltered(petNo, startDate, endDate, categoryGroup);
         if (offset >= filteredList.size()) {
             return new ArrayList<>();
         }
+
         int end = Math.min(offset + limit, filteredList.size());
         return filteredList.subList(offset, end);
     }
+
 }
