@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/qnaContent.css">
+    <link rel="stylesheet" href="/css/qnaReplyList.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
@@ -53,7 +57,7 @@
     </div>
 
     <div class="reply-block">
-        <div class="reply-insert-form" th:if="${session.users.role == 0}">      <!-- 수의사만 댓글 입력폼이 보이도록 설정 -->
+        <div class="reply-insert-form" th:if="${session.users.role == 1}">      <!-- 수의사만 댓글 입력폼이 보이도록 설정 -->
             <form id="replyInsertForm">
                 <input type="hidden" id="postNo" th:value="${qto.postNo}">
                 <input type="hidden" id="writer" th:value="${session.users.nick}">
@@ -70,6 +74,7 @@
     <script th:inline="javascript">
         function showRecord(){
             let writer = /*[['${qto.writer}']]*/ 'anonymous';
+            
             window.open(
                 '/qna/showRecord?nick=' + writer,
                 'popupRecord',

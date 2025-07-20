@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/header.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 <title>Document</title>
 </head>
 <body>
@@ -39,9 +41,10 @@
             <tr height="30">
                 <th width="50">글번호</th>
                 <th width="100">작성자</th>
-                <th width="60">카테고리</th>
+                <th width="80">카테고리</th>
                 <th width="350">제목</th>
-                <th width="350">작성날짜</th>
+                <th width="50">조회수</th>
+                <th width="200">작성날짜</th>
             </tr>           
             <tr height="30" align="center" th:each="dto : ${list}">
                 <td width="50" th:text="${dto.postNo}"></td>
@@ -50,6 +53,7 @@
                 <td width="350">
                     <a th:href="@{|/info/content?postNo=${dto.postNo}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
                 </td>
+                <td th:text="${dto.views}"></td>
                 <td th:text="${#temporals.format(dto.reg, 'yy.MM.dd HH:mm')}" align="center"></td>
             </tr>
         </table>

@@ -12,7 +12,16 @@
         </div>
 
         <div class="title">
-            <a th:href="@{/diary/main}">하루犬과</a>
+            <span th:if="${session.users.role == 0 || session.users.role == 1}">
+                <a th:href="@{/diary/main}">
+                    하루犬과
+                </a>
+            </span>
+            <span th:if="${session.users.role} == 2">
+                <a th:href="@{/admin/userManage}">
+                    하루犬과
+                </a>
+            </span>
         </div>
 
         <nav class="main-nav">

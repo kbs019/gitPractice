@@ -32,7 +32,7 @@
 
     <!-- 글수정 -->
     <update id="noticeUpdate">
-        update notice set title=#{title}, writer=#{writer}, content=#{content}, imgName=#{imgName}, imgPath=#{imgPath}, originalName=#{originalName} where noticeNo=#{noticeNo}
+        update notice set title=#{title}, writer=#{writer}, content=#{content}, imgName=#{imgName, jdbcType=VARCHAR}, imgPath=#{imgPath, jdbcType=VARCHAR}, originalName=#{originalName, jdbcType=VARCHAR} where noticeNo=#{noticeNo}
     </update>
 
     <!-- 글삭제 -->

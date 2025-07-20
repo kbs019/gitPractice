@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/header.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> <!-- jQuery 추가 -->
 </head>
 <body>
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+
+    <!-- 게시글 내용 -->
     <div class="content-top">
         <div class="content-top-title">
             <center>글 내용</center>
@@ -22,9 +27,10 @@
             </div>
         </div>
     </div>
+
     <div class="content-body">
         <div class="content-category-wrapper">
-            <h3>카테고리 : <span th:text=${idto.category}></span></h3>
+            <h3>카테고리 : <span th:text="${idto.category}"></span></h3>
         </div>
         <div class="content-title-wrapper">
             <h3>글 제목 : <span th:text="${idto.title}"></span></h3>
@@ -44,5 +50,126 @@
             <div th:utext="${idto.content}"></div>
         </div>
     </div>
-</body>
-</html>
+
+    <!-- 댓글 영역 -->
+    <div class="reply-wrapper" style="width: 600px; margin: 30px auto;">
+        <h3>댓글</h3>
+        <div>
+            <textarea id="replyContent" style="width: 100%; height: 60px;" placeholder="댓글을 입력하세요."></textarea>
+            <button type="button" onclick="addReply(0)">댓글 등록</button>
+        </div>
+        <div id="replyList" style="margin-top: 20px;"></div>
+    </div>
+
+    <script th:inline="javascript">
+    const postNo = [[${idto.postNo}]];
+    const currentUser = [[${session.users.nick}]];
+
+    function addReply(refNo) {
+        const textareaId = refNo === 0 ? "replyContent" : `reContent-${refNo}`;
+        const content = document.getElementById(textareaId).value;
+
+        if (!content.trim()) {
+            alert("내용을 입력해주세요.");
+            return;
+        }
+
+        $.ajax({
+            url: "/info/reply/add",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                postNo: postNo,
+                content: content,
+                ref: refNo
+            }),
+            success: function (res) {
+                if (res === "unauthorized") {
+                    alert("로그인이 필요합니다.");
+                } else {
+                    loadReply();
+                    if (refNo !== 0) {
+                        document.getElementById(`reBox-${refNo}`).style.display = "none";
+                    }
+                    document.getElementById(textareaId).value = "";
+                }
+            }
+        });
+    }
+
+    function showReplyBox(replyNo) {
+        document.getElementById(`reBox-${replyNo}`).style.display = "block";
+    }
+
+    function deleteReply(replyNo) {
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+
+        $.ajax({
+            url: "/info/reply/delete?replyNo=" + replyNo,
+            method: "DELETE",
+            success: function () {
+                loadReply();
+            }
+        });
+    }
+
+
+    function showEditBox(replyNo, content) {
+        const replyDiv = document.getElementById(`replyDiv-${replyNo}`);
+        replyDiv.innerHTML = `
+            <textarea id="editContent-${replyNo}" style="width: 100%; height: 50px;">${content}</textarea>
+            <button onclick="editReply(${replyNo})">저장</button>
+            <button onclick="loadReply()">취소</button>
+        `;
+    }
+
+    function editReply(replyNo) {
+        const content = document.getElementById(`editContent-${replyNo}`).value;
+
+        $.ajax({
+            url: "/info/reply/update",
+            method: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify({ replyNo: replyNo, content: content }),
+            success: function () {
+                loadReply();
+            }
+        });
+    }
+
+    function loadReply() {
+        $.ajax({
+            url: "/info/reply/list?postNo=" + postNo,
+            method: "GET",
+            success: function (data) {
+                let html = "";
+                data.forEach(reply => {
+                    const isReply = reply.ref !== 0;
+                    const isWriter = currentUser === reply.writer;
+
+                    html += `
+                        <div style="margin-left:${isReply ? '30px' : '0'}; padding: 5px; border-bottom: 1px solid #ccc;">
+                            <div id="replyDiv-${reply.replyNo}">
+                                <b>${reply.writer}</b>: ${reply.content}
+                                <span style="font-size: 0.9em; color: gray;">(${reply.reg})</span>
+                                ${isWriter ? `
+                                    <button onclick="showEditBox(${reply.replyNo}, '${reply.content}')">수정</button>
+                                    <button onclick="deleteReply(${reply.replyNo})">삭제</button>` : ""}
+                                <button onclick="showReplyBox(${reply.replyNo})">답글</button>
+                            </div>
+                            <div id="reBox-${reply.replyNo}" style="display:none; margin-top:5px;">
+                                <textarea id="reContent-${reply.replyNo}" style="width: 100%; height: 50px;" placeholder="대댓글 입력"></textarea>
+                                <button type="button" onclick="addReply(${reply.replyNo})">등록</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                document.getElementById("replyList").innerHTML = html;
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        loadReply();
+    });
+</script>

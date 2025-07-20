@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ex.gitprac.repository.info.InfoReplyMapper">	
+
+    <!-- 댓글 쓰기 -->
+    <insert id="insertReply" parameterType="com.ex.gitprac.data.info.InfoReplyDTO">
+        <selectKey keyProperty="replyNo" resultType="int" order="BEFORE">
+            SELECT seq_info_reply.NEXTVAL FROM dual
+        </selectKey>
+        INSERT INTO info_reply (replyNo, postNo, writer, content, reg, ref)
+                        VALUES (#{replyNo}, #{postNo}, #{writer}, #{content}, sysdate, #{ref})
+    </insert>
+
+    <!-- // 댓글들 출력(리스트) -->
+    <select id="getReply" resultType="com.ex.gitprac.data.info.InfoReplyDTO">
+        SELECT * FROM info_reply WHERE postNo = #{postNo} ORDER BY CASE WHEN ref = 0 THEN replyNo ELSE ref END, CASE WHEN ref = 0 THEN 0 ELSE replyNo END
+    </select>
+
+    <!-- 댓글 수정 -->
+    <update id="updateReply" parameterType="com.ex.gitprac.data.info.InfoReplyDTO">
+        UPDATE info_reply SET content = #{content} WHERE replyNo = #{replyNo}
+    </update>
+
+    <!-- 댓글 삭제 -->
+    <delete id="deleteReply" parameterType="int">
+        delete from info_reply where replyNo = #{replyNo}
+    </delete>
+</mapper>

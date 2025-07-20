@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.ex.gitprac.data.qna.QnaBoardDTO;
+import com.ex.gitprac.data.rec.RecDTO;
 
 @Mapper
 public interface QnaBoardMapper {
@@ -92,4 +93,7 @@ public interface QnaBoardMapper {
 
     // 제재 기간이 끝나 다시 status 값이 0 으로 돌아감
     public void restoreStatusByNick( String nick );
+
+    // 일지 확인 메서드 (writer 값에 대한)
+    public String selectIdByWriter(String writer);
 }

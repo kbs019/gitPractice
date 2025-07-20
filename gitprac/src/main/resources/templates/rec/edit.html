@@ -3,8 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>일지 수정</title>
+<link rel="stylesheet" href="/css/edit.css">
+<link rel="stylesheet" href="/css/header.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
+
+<div th:replace="~{fragments/header.html :: headerFragment}"></div>
   <h1>일지 수정</h1>
 
   <form th:action="@{/rec/edit}" th:object="${rec}" method="post">

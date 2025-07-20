@@ -1,0 +1,75 @@
+/* 댓글 리스트 스타일 */
+.reply-list {
+    width: 80%;
+    max-width: 800px;
+    margin: 30px auto;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.reply-item {
+    padding: 15px;
+    border-bottom: 1px solid #f2f2f2;
+    margin-bottom: 10px;
+}
+
+.reply-content {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.reply-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 8px;
+}
+
+.reply-info {
+    font-size: 14px;
+    color: #777;
+    margin-top: 8px;
+}
+
+.reply-info span {
+    margin-right: 15px;
+}
+
+/* 복사 아이콘 */
+.copy-icon {
+    cursor: pointer;
+    font-size: 16px;
+    color: #444;
+}
+
+.copy-icon:hover {
+    color: #222;
+}
+
+/* 삭제 버튼 */
+.replyDelete {
+    font-size: 14px;
+    background-color: #fff;
+    border: 1px solid #888;
+    border-radius: 4px;
+    padding: 5px 12px;
+    cursor: pointer;
+    color: #444;
+    margin-left: 5px;
+}
+
+.replyDelete:hover {
+    background-color: #f2f2f2;
+}
+
+/* 삭제 버튼 활성화 조건: 댓글 작성자 또는 관리자 */
+.reply-item .replyDelete {
+    display: inline-block;
+}
+
+/* 댓글 작성자와 관리자의 닉네임 및 시간 스타일 */
+.reply-info span:last-child {
+    color: #888;
+    font-size: 12px;
+}

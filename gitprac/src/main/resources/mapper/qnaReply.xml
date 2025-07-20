@@ -5,7 +5,7 @@
 <mapper namespace="com.ex.gitprac.repository.qna.QnaReplyMapper">	
   <!-- 답변 작성 -->
   <insert id="replyInsert">
-    insert into qna_reply values(#{postNo}, qna_reply_seq.nextval, #{writer}, #{content}, sysdate)
+    insert into qna_reply values(#{postNo}, qna_reply_seq.nextval, #{writer}, #{content}, sysdate, 0)
   </insert>
 
   <!-- 답변 조회 -->

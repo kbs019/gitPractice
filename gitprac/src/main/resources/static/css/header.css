@@ -35,6 +35,12 @@ header.main-header {
 }
 
 /* ✅ 사이트 타이틀 */
+.main-header .title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
 .main-header .title a {
   color: #111;
   text-decoration: none;
@@ -59,13 +65,14 @@ header.main-header {
 }
 
 .main-nav a {
+  margin: 0 1rem;
   font-size: 1.2rem;
-  font-weight: 500;
   color: #111;
   text-decoration: none;
+  font-weight: bold;
   border-bottom: 2px solid transparent;
-  padding-bottom: 0.2rem;
-  transition: border-color 0.2s ease-in-out;
+  padding-bottom: 0.3rem;
+  cursor: pointer;
 }
 
 .main-nav a:hover,

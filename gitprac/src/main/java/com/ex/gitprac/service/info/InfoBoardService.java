@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.ex.gitprac.data.info.InfoBoardDTO;
+import com.ex.gitprac.data.info.InfoReplyDTO;
 import com.ex.gitprac.repository.info.InfoBoardMapper;
+import com.ex.gitprac.repository.info.InfoReplyMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class InfoBoardService {
     
     private final InfoBoardMapper infoBoardMapper;
-
+    private final InfoReplyMapper infoReplyMapper;
     // 글 개수
     public int count() {
         return infoBoardMapper.infoBoardCount();
@@ -63,4 +65,30 @@ public class InfoBoardService {
     public void infoPostDelete( int postNo ) {
         infoBoardMapper.infoPostDelete(postNo);
     }
+
+    // 조회수 증가
+    public void viewsUp( int postNo) {
+        infoBoardMapper.viewsUp(postNo);
+    }
+
+    // 댓글 쓰기
+    public int insertReply(InfoReplyDTO irdto) {
+        return infoReplyMapper.insertReply(irdto);
+    }
+
+    // 댓글 리스트
+    public List<InfoReplyDTO> getReply(int postNo) {
+        return infoReplyMapper.getReply(postNo);
+    }
+
+    // 댓글 수정
+    public int updateReply(InfoReplyDTO irdto) {
+        return infoReplyMapper.updateReply(irdto);
+    }
+
+    // 댓글 삭제
+    public int deleteReply(int replyNo) {
+        return infoReplyMapper.deleteReply(replyNo);
+    }
+
 }

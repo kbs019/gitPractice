@@ -11,6 +11,7 @@ public class QnaReplyDTO {
     private String writer;
     private String content;
     private LocalDateTime reg;
+    private int status;
 }
 /*
 create table qna_reply(

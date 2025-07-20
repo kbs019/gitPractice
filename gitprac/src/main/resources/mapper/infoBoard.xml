@@ -36,10 +36,8 @@
     <selectKey keyProperty="postNo" resultType="int" order="BEFORE">
       SELECT seq_info_board.NEXTVAL FROM dual
     </selectKey>
-      insert into info_board 
-      (postNo, category, title, writer, content, reg, views, status, ref)
-      values 
-      (#{postNo}, #{category}, #{title}, #{writer}, #{content}, sysdate, 0, 0 , 0)
+      insert into info_board (postNo, category, title, writer, content, reg, views, status, ref)
+                    values (#{postNo}, #{category}, #{title}, #{writer}, #{content}, sysdate, 0, 0 , 0)
   </insert>
 
   <!-- 게시글 조회 -->
@@ -47,10 +45,12 @@
     select * from info_board where postNo=#{postNo}
   </select>
 
+  <!-- 게시글 수정 -->
   <update id="infoPostUpdate" parameterType="com.ex.gitprac.data.info.InfoBoardDTO">
     update info_board set category=#{category}, title=#{title}, content=#{content} where postNo=#{postNo}
   </update>
 
+  <!-- 게시글 삭제 -->
   <delete id="infoPostDelete" parameterType="com.ex.gitprac.data.info.InfoBoardDTO">
     delete from info_board where postNo=#{postNo}
   </delete>
@@ -63,5 +63,10 @@
   <!-- 제재 기간이 끝나 다시 status 값이 0 으로 돌아감 -->
   <update id="restoreStatusByNick">
     update info_board set status = 0 where writer=#{nick}
+  </update>
+
+  <!-- 조회수 + 1 -->
+  <update id="viewsUp">
+    update info_board set views = views + 1 where postNo = #{postNo}
   </update>
 </mapper>

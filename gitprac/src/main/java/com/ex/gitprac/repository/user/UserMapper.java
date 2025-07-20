@@ -29,14 +29,10 @@ public interface  UserMapper {
     public int changeUserRole(@Param("role") int role, @Param("id") String id);
     // ajax 로 인한 status 값 변경
     public int changeUserStatus(@Param("status") int status, @Param("id") String id);
+    // ajax 로 인한 bannedUntil 을 null 로 변경
+    public int clearBanDate(String id);
     // id 에 대한 유저 검색
     public UserDTO findById( String id );
     // 회원 정지 기간 설정
     public boolean banUser( @Param("id") String id, @Param("until") LocalDate until );
-    // 아이디 찾기(이메일 입력)
-    public UserDTO findIdByEmail( String email);
-    // 비밀번호 찾기(아이디 이메일 입력)
-    public UserDTO findPwByIdEmail( @Param("id") String id, @Param("email") String email );
-    // 비밀번호 업데이트
-    public int updatePw( @Param("id") String id, @Param("email") String email, @Param("pw") String pw );
 }

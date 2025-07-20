@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/header.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
@@ -48,7 +50,7 @@
                             <button type="submit">수정하기</button>
                         </span> &nbsp;&nbsp;&nbsp;&nbsp;
                         <span class="cancel-button">
-                            <button onclick="window.location='history.go(-1);'">취소</button>
+                            <button type="button" onclick="history.go(-1);">취소</button>
                         </span>
                     </div>
                 </div>

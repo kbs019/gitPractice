@@ -17,7 +17,7 @@
 
     <!-- 글작성 -->
     <insert id="askInsert">
-        insert into ask values( ask_seq.nextval, #{title}, #{writer}, #{content}, sysdate, #{category}, 0, #{imgName, jdbcType=VARCHAR}, #{imgPath, jdbcType=VARCHAR}, #{originalName, jdbcType=VARCHAR}, 0 )
+        insert into ask values( ask_seq.nextval, #{title}, #{writer}, #{content}, sysdate, #{category}, 0, #{imgName, jdbcType=VARCHAR}, #{imgPath, jdbcType=VARCHAR}, #{originalName, jdbcType=VARCHAR}, 0, 0 )
     </insert>
 
     <!-- 글내용 -->
@@ -32,7 +32,7 @@
 
     <!-- 글수정 -->
     <update id="askUpdate">
-        update ask set title=#{title}, writer=#{writer}, content=#{content}, category=#{category}, imgName=#{imgName}, imgPath=#{imgPath}, originalName=#{originalName} where askNo=#{askNo}
+        update ask set title=#{title}, writer=#{writer}, content=#{content}, category=#{category}, imgName=#{imgName, jdbcType=VARCHAR}, imgPath=#{imgPath, jdbcType=VARCHAR}, originalName=#{originalName, jdbcType=VARCHAR} where askNo=#{askNo}
     </update>
 
     <!-- 글삭제 -->
