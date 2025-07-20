@@ -5,13 +5,19 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ex.gitprac.data.info.InfoBoardDTO;
+import com.ex.gitprac.data.info.InfoReplyDTO;
+import com.ex.gitprac.data.user.UserDTO;
 import com.ex.gitprac.service.info.InfoBoardService;
 
 import jakarta.servlet.http.HttpSession;
@@ -96,6 +102,7 @@ public class InfoController {
     public String content(  @RequestParam("postNo") int postNo, 
                             @ModelAttribute("pageNum") int pageNum, 
                             Model model) {
+        infoBoardService.viewsUp(postNo);
         InfoBoardDTO idto = infoBoardService.InfopostContent(postNo);
         model.addAttribute("idto", idto);
 
@@ -132,5 +139,39 @@ public class InfoController {
                             Model model) {
         infoBoardService.infoPostDelete(postNo);
         return "redirect:/info/list";
+    }
+
+    @PostMapping("reply/add")
+    @ResponseBody
+    public String addReply(@RequestBody InfoReplyDTO dto, HttpSession session) {
+        UserDTO user = (UserDTO) session.getAttribute("users");
+        if (user == null) return "unauthorized";
+
+        dto.setWriter(user.getNick());
+        if (dto.getRef() == 0) dto.setRef(0);
+
+        int result = infoBoardService.insertReply(dto);
+        return result == 1 ? "success" : "fail";
+    }
+
+    @GetMapping("reply/list")
+    @ResponseBody
+    public List<InfoReplyDTO> getReplyList(@RequestParam("postNo") int postNo) {
+        return infoBoardService.getReply(postNo);
+    }
+
+    @PutMapping("/reply/update")
+    @ResponseBody
+    public String updateReply(@RequestBody InfoReplyDTO replyDTO) {
+        System.out.println(">>> 댓글 수정 요청: " + replyDTO);
+        int result = infoBoardService.updateReply(replyDTO);
+        return (result == 1) ? "success" : "fail";
+    }
+
+    @DeleteMapping("/reply/delete")
+    @ResponseBody
+    public String deleteRely(@RequestParam("replyNo") int replyNo) {
+        int result = infoBoardService.deleteReply(replyNo);
+        return result == 1 ? "success" : "fail"; 
     }
 }
