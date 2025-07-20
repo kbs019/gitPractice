@@ -1,0 +1,213 @@
+/* ✅ 전체 글꼴, 배경, 레이아웃 */
+body {
+  font-family: 'Noto Serif KR', serif;
+  background-color: #fdfdfd;
+  color: #111;
+  font-weight: 400;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* ✅ 헤더 - 로고 & 메뉴 */
+.main-header {
+  text-align: center;
+  padding: 1rem 0;
+  border-bottom: 2px solid #333;
+}
+
+.main-header .title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.main-nav {
+  margin-top: 0.5rem;
+}
+
+.main-nav a {
+  margin: 0 1rem;
+  font-size: 1.2rem;
+  color: #111;
+  text-decoration: none;
+  font-weight: bold;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 0.3rem;
+  cursor: pointer;
+}
+
+.main-nav a.selected,
+.main-nav a:hover {
+  border-bottom: 2px solid #111;
+}
+
+/* ✅ 메인 컨테이너 */
+.rec-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+/* 왼쪽 영역 */
+.filter-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* 오른쪽 영역 */
+.filter-right {
+  margin-left: auto;
+}
+
+/* 날짜 input */
+.filter-left input[type="date"] {
+  padding: 0.2rem 0.4rem;
+  font-size: 0.95rem;
+}
+
+/* 조회 / 전체 초기화 버튼 */
+button.small {
+  font-size: 0.85rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+button.small:hover {
+  background-color: #f0f0f0;
+}
+
+.btn-write {
+  display: inline-block;
+  font-size: 1rem;
+  padding: 0.4rem 1rem;
+  background-color: white;
+  color: #111;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  border: 2px solid #111;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-write:hover {
+  background-color: #111;
+  color: white;
+}
+
+
+/* ✅ 카테고리 탭 스타일 */
+.category-tabs {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.category-tabs button {
+  flex: 1;
+  border: 2px solid #333;
+  background-color: #fff;
+  color: #111;
+  font-size: 1rem;
+  padding: 0.5rem;
+  font-family: inherit;
+  border-radius: 5px;
+  transition: all 0.2s;
+}
+
+.category-tabs button.selected,
+.category-tabs button:hover {
+  background-color: #111;
+  color: white;
+}
+
+/* ✅ 일지 목록 스타일 */
+.rec-list {
+  margin-top: 2rem;
+}
+
+.rec-entries {
+  margin-bottom: 2rem;
+}
+
+.rec-entry {
+  padding: 1rem 0;
+  border-bottom: 2px solid #ccc;
+}
+
+/* 상단: 날짜/카테고리(왼쪽) + 버튼들(오른쪽) */
+.rec-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 작성일 + 카테고리 */
+.rec-meta {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.rec-meta .rec-category {
+  margin-left: 0.5rem;
+  font-weight: bold;
+}
+
+/* 수정/삭제 버튼 */
+.rec-actions a {
+  margin-left: 0.5rem;
+  font-size: 0.9rem;
+  border: 1px solid #444;
+  padding: 0.2rem 0.6rem;
+  text-decoration: none;
+  color: #111;
+  border-radius: 4px;
+}
+
+.rec-actions a:hover {
+  background-color: #eee;
+}
+
+/* 제목: 하단 단독 좌측 정렬 */
+.rec-title {
+  margin-top: 0.6rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.rec-title a {
+  color: #111;
+  text-decoration: none;
+}
+
+/* ✅ 더보기 버튼 */
+.load-more {
+  text-align: center;
+}
+
+#loadMoreBtn {
+  font-family: inherit;
+  font-size: 1.1rem;
+  border: 2px dashed #333;
+  padding: 0.6rem 1.5rem;
+  background-color: #fff;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+#loadMoreBtn:hover {
+  background-color: #f4f4f4;
+}
