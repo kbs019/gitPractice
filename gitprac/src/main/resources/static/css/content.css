@@ -1,0 +1,91 @@
+/* ✅ 기본 설정 */
+body {
+  font-family: 'Noto Serif KR', serif;
+  background-color: #fdfdfd;
+  color: #111;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0 auto;
+  padding: 2rem;
+  max-width: 800px;
+}
+
+/* ✅ 제목 */
+h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  border-bottom: 2px solid #111;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ✅ 정보 박스 (카테고리, 날짜) */
+div > p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  color: #444;
+}
+
+/* ✅ 버튼 그룹 */
+.btn-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin: 1.5rem 0;
+}
+
+.btn {
+  text-decoration: none;
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-warning {
+  background-color: #f0ad4e;
+  color: white;
+}
+
+.btn-warning:hover {
+  background-color: #ec971f;
+}
+
+.btn-danger {
+  background-color: #d9534f;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c9302c;
+}
+
+/* ✅ 본문 내용 */
+.rec-content {
+  font-size: 1.05rem;
+  margin-top: 1.5rem;
+  white-space: pre-wrap;
+}
+
+/* ✅ 첨부 이미지 */
+img {
+  display: block;
+  margin-top: 1.5rem;
+  max-width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* ✅ 목록으로 돌아가기 */
+a[href="/rec"] {
+  display: inline-block;
+  margin-top: 2rem;
+  color: #111;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+a[href="/rec"]:hover {
+  text-decoration: underline;
+}

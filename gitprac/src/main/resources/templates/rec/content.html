@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link rel="stylesheet" href="/css/rec.css">  <!-- 임시입니다 -->
+  <link rel="stylesheet" href="/css/content.css">  <!-- 임시입니다 -->
+  <link rel="stylesheet" href="/css/header.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
   <div th:replace="~{fragments/header.html :: headerFragment}"></div>
@@ -23,7 +25,7 @@
 
       <hr>
 
-      <div th:text="${rto.content}">
+      <div class="rec-content" th:text="${rto.content}">
         본문 내용
       </div>
 
