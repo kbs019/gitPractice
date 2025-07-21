@@ -64,6 +64,10 @@
         </div>
     </div>
 
+    <div class="content-bottom-btns">
+        <input type="button" value="글목록" th:onclick="|window.location='@{/admin/ask(pageNum=${pageNum})}'|">
+    </div>
+
     <div class="reply-block">
         <div class="reply-insert-form" th:if="${session.users.role == 2}">      <!-- 수의사만 댓글 입력폼이 보이도록 설정 -->
             <form id="replyInsertForm">

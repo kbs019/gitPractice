@@ -45,5 +45,9 @@
             <div th:text="${nto.content}"></div>
         </div>
     </div>
+
+    <div class="content-bottom-btns">
+        <input type="button" value="글목록" th:onclick="|window.location='@{/admin/notice(pageNum=${pageNum})}'|">
+    </div>
 </body>
 </html>
