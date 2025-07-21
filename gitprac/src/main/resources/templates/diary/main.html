@@ -55,8 +55,8 @@
 <body>
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
 <h2 style="text-align:center;">나의 다이어리</h2>
-
 <!-- 여기에 달력버튼 + 달력에 의한 조회 해야함 -->
+
 <!-- 글쓰기 버튼 -->
 <div style="text-align:center;">
     <button id="writeBtn">글 쓰기</button>
@@ -84,6 +84,7 @@
 </div>
 
 <!-- 바둑판 게시글 출력 -->
+<div id="listNormal">
 <div class="diary-grid" th:if="${count != 0}">
     <div class="diary-card" th:each="d : ${list}">
         <img th:if="${d.imgPath != null}" th:src="@{${d.imgPath} + ${d.imgName}}" alt="사진">
@@ -98,6 +99,10 @@
             수정
         </button>
     </div>
+</div>
+</div>
+<div id="listByDate">
+    
 </div>
 
 <!-- 페이징 처리 -->

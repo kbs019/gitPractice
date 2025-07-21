@@ -15,6 +15,9 @@ SELECT COUNT(*) FROM DIARY WHERE writer = #{writer}
   SELECT * FROM (SELECT B.*, ROWNUM R FROM (SELECT * FROM DIARY WHERE writer = #{writer} ORDER BY diaryNo DESC) B) WHERE R >= #{start} AND R <= #{end}
 ]]>
 </select>
+<select id="countDiaryByDate" resultType="int">
+SELECT COUNT(*) FROM DIARY WHERE writer = #{writer} AND REG BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
+</select>
 <select id="listDiaryByDate" resultType="com.ex.gitprac.data.diary.DiaryDTO">
 <![CDATA[
     SELECT * FROM (SELECT B.*, ROWNUM R FROM (SELECT * FROM DIARY WHERE writer = #{writer} AND REG BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD') ORDER BY diaryNo DESC) B ) WHERE R >= #{start} AND R <= #{end}
