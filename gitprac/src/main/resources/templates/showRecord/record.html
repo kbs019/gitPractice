@@ -12,7 +12,7 @@
 
   <!-- 🔎 날짜 & 카테고리 필터 -->
   <section class="rec-filter">
-    <form method="get" action="/rec" class="filter-bar">
+    <form method="get" action="/qna/showRecord" class="filter-bar">
   <div class="filter-left">
     <input type="date" id="startDate" name="startDate" th:value="${startDate}">
     ~
@@ -23,17 +23,11 @@
     <button type="submit" class="small">조회</button>
     <button type="submit" name="reset" value="true" class="small">전체 초기화</button>
   </div>
-  
-  <div class="filter-right">
-    <div class="filter-right">
-      <a href="/rec/upload" class="btn-write">일지 작성</a>
-    </div>
-  </div>
-</form>
 
-    <form method="get" action="/rec" class="category-form">
+    <form method="get" action="/qna/showRecord" class="category-form">
       <input type="hidden" name="startDate" id="hiddenStartDate" th:value="${param.startDate}">
       <input type="hidden" name="endDate" id="hiddenEndDate" th:value="${param.endDate}">
+      <input type="hidden" name="nick" id="hiddenNick" th:value="${param.nick}">
       <div class="category-tabs">
         <button type="submit" name="categoryGroup" value="밥/간식"
                 onclick="copyDates()"
@@ -69,13 +63,9 @@
               <span class="rec-date" th:text="${rec.reg}">날짜</span>
               <span class="rec-category" th:text="${rec.category}">카테고리</span>
             </div>
-            <div class="rec-actions">
-              <a th:href="@{'/rec/edit/' + ${rec.recNo}}">수정</a>
-              <a th:href="@{'/rec/delete/' + ${rec.recNo}}" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
-            </div>
           </div>
           <div class="rec-title">
-            <a th:href="@{'/rec/content/' + ${rec.recNo}}" th:text="${rec.title}">제목</a>
+            <a th:href="@{'/qna/content/' + ${rec.recNo}}" th:text="${rec.title}">제목</a>
           </div>
           <hr>
         </div>
@@ -97,6 +87,7 @@
   function copyDates() {
     document.getElementById("hiddenStartDate").value = document.getElementById("startDate").value;
     document.getElementById("hiddenEndDate").value = document.getElementById("endDate").value;
+    document.getElementById("hiddenNick").value = document.getElementById("nick").value;
   }
 </script>
 
@@ -105,7 +96,7 @@
   const limit = 15;
 
   document.getElementById("loadMoreBtn").addEventListener("click", function () {
-    fetch(`/rec/more?offset=${offset}&limit=${limit}`)
+    fetch(`/qna/showRecord/more?offset=${offset}&limit=${limit}`)
       .then(res => res.json())
       .then(data => {
         if (data.length === 0) {
@@ -120,12 +111,8 @@
           div.innerHTML = `
             <div class="rec-date">${rec.reg}</div>
             <div class="rec-time">${rec.time}</div>
-            <div class="rec-title"><a href="/rec/content/${rec.recNo}">${rec.title}</a></div>
+            <div class="rec-title"><a href="/qna/content/${rec.recNo}">${rec.title}</a></div>
             <div class="rec-desc">${rec.content}</div>
-            <div class="rec-actions">
-              <a href="/rec/edit/${rec.recNo}">수정</a>
-              <a href="/rec/delete/${rec.recNo}" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
-            </div>
             <hr>
           `;
           container.appendChild(div);
