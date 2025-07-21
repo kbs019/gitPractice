@@ -1,0 +1,87 @@
+body {
+    font-family: 'Noto Serif KR', serif;
+    background-color: #f9f9f9;
+    color: #222;
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    font-size: 24px;
+    margin: 30px 0 10px;
+    color: #333;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    width: 400px;
+    margin-bottom: 30px;
+}
+
+.writeForm-wrapper {
+    width: 600px;
+    margin: 0 auto 60px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.writeForm-wrapper label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    font-size: 15px;
+    color: #444;
+}
+
+.writeForm-wrapper input[type="text"],
+.writeForm-wrapper select {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.writeForm-wrapper textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.writeForm-wrapper span {
+    font-size: 14px;
+    color: #666;
+}
+
+.writePage-button {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.writePage-button button {
+    font-size: 14px;
+    padding: 8px 16px;
+    margin: 0 8px;
+    border: 1px solid #444;
+    background-color: #fff;
+    color: #222;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.writePage-button button:hover {
+    background-color: #eee;
+}
+
+/* Summernote 내부 에디터 맞춤 (선택적) */
+.note-editor.note-frame {
+    border: 1px solid #bbb !important;
+    border-radius: 4px;
+}

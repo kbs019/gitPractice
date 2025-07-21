@@ -1,224 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정보 게시판</title>
+    <link rel="stylesheet" href="/css/infoList.css">
     <link rel="stylesheet" href="/css/header.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
-    body {
-    font-family: 'Noto Serif KR', serif;
-    background-color: #fff;
-    margin: 0;
-    padding: 0;
-}
-
-.container {
-    display: flex;
-    max-width: 1000px;
-    margin: 30px auto;
-}
-
-/* 사이드바 */
-.sidebar {
-    width: 160px;
-    border: 2px solid #000;
-    padding: 10px;
-    margin-right: 30px;
-    text-align: left;
-}
-
-.category-title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.category-list {
-    list-style: none;
-    padding-left: 0;
-}
-
-.category-list li {
-    margin-bottom: 10px;
-    font-size: 16px;
-}
-
-.category-list a {
-    text-decoration: none;
-    color: #000;
-}
-
-/* 게시판 */
-.board {
-    flex-grow: 1;
-}
-
-.board-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.board-title {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.board-search input {
-    padding: 5px;
-    font-size: 14px;
-    width: 160px;
-}
-
-.board-search button {
-    padding: 5px 10px;
-    margin-left: 5px;
-    cursor: pointer;
-}
-
-.board-content {
-    border-top: 2px solid #000;
-    padding-top: 10px;
-}
-
-.post-row {
-    margin-bottom: 20px;
-}
-
-.post-title {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.post-title a {
-    text-decoration: none;
-    color: #000;
-}
-
-.post-count {
-    color: red;
-    font-weight: bold;
-    margin-left: 5px;
-}
-
-.post-info {
-    color: gray;
-    font-size: 13px;
-    margin-top: 5px;
-}
-
-.post-views {
-    float: right;
-}
-
-<title>Document</title>
 </head>
 <body>
-<div th:replace="~{fragments/header.html :: headerFragment}"></div>
-    <div style="width: 150px; margin-right: 30px;">
-        <h3>정보공유</h3>
-        <ul style="list-style: none; padding-left: 0;">
-            <li><a href="/info/list?category=대형견">대형견</a></li>
-            <li><a href="/info/list?category=중형견">중형견</a></li>
-            <li><a href="/info/list?category=소형견">소형견</a></li>
-            <li><a href="/info/list">전체글</a></li>
-        </ul>
-    </div>
-    <div align="center">
-        <table width="800">
-            <tr>
-                <td>
-                    <a th:href="@{/info/write}">글쓰기</a>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div th:if="${count == 0}">
-        <table align="center" width="800">
-            <tr>
-                <td>
-                    <h3>
-                        정보 게시판 텅~!!!
-                    </h3>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div th:if="${count != 0}">
-        <div align="center">
-            <!-- <select id="category" name="category" onchange="changeCategory(this.value)">
-                <option value="전체글" th:selected="${category} == '전체글'">전체글</option>
-                <option value="소형견" th:selected="${category} == '소형견'">소형견</option>
-                <option value="중형견" th:selected="${category} == '중형견'">중형견</option>
-                <option value="대형견" th:selected="${category} == '대형견'">대형견</option>
-            </select> -->
-        <table align="center" width="800">
-            <tr height="30">
-                <th width="50">글번호</th>
-                <th width="100">작성자</th>
-                <th width="80">카테고리</th>
-                <th width="350">제목</th>
-                <th width="50">조회수</th>
-                <th width="200">작성날짜</th>
-            </tr>           
-            <tr height="30" align="center" th:each="dto : ${list}">
-                <td width="50" th:text="${dto.postNo}"></td>
-                <td width="100">
-                    <span th:text="${dto.writer}"></span>
-                    <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${dto.writer}">
-                    📋
-                    </span>
-                </td>
-                <td width="60"th:text="${dto.category}"></td>
-                <td width="350">
-                    <span th:if="${dto.status == 0}">
-                        <a th:href="@{|/info/content?postNo=${dto.postNo}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
-                    </span>
-                    <span th:if="${dto.status != 0}">
-                        <span>관리자에 의해 제재된 사용자의 글입니다.</span>
-                    </span>
-                </td>
-                <td th:text="${dto.views}"></td>
-                <td th:text="${#temporals.format(dto.reg, 'yy.MM.dd HH:mm')}" align="center"></td>
-            </tr>
-        </table>
-    </div>
-    <div class="paging" align="center" th:if="${count > 0}">
-        <span th:if="${startPage} > ${pageCount}">
-            <a th:href="@{|/info/list?pageNum=${startPage - pageBlock}&category=${category}|}">[이전]</a>
-        </span>
-        <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-            <a th:href="@{|/info/list?pageNum=${i}&category=${category}|}" th:text="'['+${i}+']'"></a>
-        </span>
-        <span th:if="${endPage} < ${pageCount}">
-            <a th:href="@{|/info/list?pageNum=${startPage + pageBlock}&category=${category}|}">[다음]</a>
-        </span>
-    </div>
+    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
 
+    <div id="info-wrapper">
+        <!-- ✅ 카테고리 사이드바 -->
+        <aside class="category-sidebar">
+            <ul>
+                <li><a th:href="@{/info/list}" th:classappend="${category} == '전체글' ? 'active'">전체글</a></li>
+                <li><a th:href="@{/info/list(category='대형견')}" th:classappend="${category} == '대형견' ? 'active'">대형견</a></li>
+                <li><a th:href="@{/info/list(category='중형견')}" th:classappend="${category} == '중형견' ? 'active'">중형견</a></li>
+                <li><a th:href="@{/info/list(category='소형견')}" th:classappend="${category} == '소형견' ? 'active'">소형견</a></li>
+            </ul>
+        </aside>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script>
-        function changeCategory(value) {
-            if (value === "전체글") {
-                location.href = "/info/list";
-            } else {
-                location.href = "/info/list?category=" + encodeURIComponent(value);
-            }
-        }
+        <!-- ✅ 게시판 본문 -->
+        <section class="info-list-area">
+            <div class="writeBtn">
+                <a th:href="@{/info/write}">글쓰기</a>
+            </div>
 
-        // 작성자명을 클릭하여 복사하는 API 사용
-        $(document).ready(function(){
-            $(document).on('click', '.copy-icon', function(e){
-                let writer = $(this).data('writer');
-    
-                navigator.clipboard.writeText(writer).then(function(){
-                    alert(`"${writer}" 복사됨`);
-                }).catch(function(err){
-                    console.log("복사 실패 : ", err);
-                });
-            });
-        });
-    </script>
+            <!-- ✅ 게시글 없음 -->
+            <div th:if="${count == 0}" class="empty-msg">
+                정보 게시판 텅~!!!
+            </div>
+
+            <!-- ✅ 게시글 목록 -->
+            <div th:if="${count != 0}">
+                <table class="info-table">
+                    <thead>
+                        <tr>
+                            <th>글번호</th>
+                            <th>작성자</th>
+                            <th>카테고리</th>
+                            <th>제목</th>
+                            <th>조회수</th>
+                            <th>작성날짜</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="dto : ${list}">
+                            <td th:text="${dto.postNo}"></td>
+                            <td th:text="${dto.writer}"></td>
+                            <td th:text="${dto.category}"></td>
+                            <td>
+                                <a th:href="@{|/info/content?postNo=${dto.postNo}&pageNum=${pageNum}|}"
+                                   th:text="${dto.title}"></a>
+                            </td>
+                            <td th:text="${dto.views}"></td>
+                            <td th:text="${#temporals.format(dto.reg, 'yy.MM.dd HH:mm')}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ✅ 페이징 -->
+            <div class="paging" th:if="${count > 0}">
+                <span th:if="${startPage > pageBlock}">
+                    <a th:href="@{|/info/list?pageNum=${startPage - pageBlock}&category=${category}|}">[이전]</a>
+                </span>
+                <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                    <a th:href="@{|/info/list?pageNum=${i}&category=${category}|}"
+                       th:text="'[' + ${i} + ']'"
+                       th:class="${i == pageNum} ? 'active' : null"></a>
+                </span>
+                <span th:if="${endPage < pageCount}">
+                    <a th:href="@{|/info/list?pageNum=${startPage + pageBlock}&category=${category}|}">[다음]</a>
+                </span>
+            </div>
+        </section>
+    </div>
 </body>
 </html>
