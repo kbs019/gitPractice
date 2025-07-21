@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.ex.gitprac.data.pet.PetDTO;
 import com.ex.gitprac.data.qna.QnaBoardDTO;
 import com.ex.gitprac.data.rec.RecDTO;
 
@@ -98,4 +99,21 @@ public interface QnaBoardMapper {
     public String selectIdByWriter(String writer);
     // id 에 대한 rec 리스트 조회
     public List<RecDTO> selectListById(String id);
+    // id 가 작성한 rec 리스트 갯수 조회
+    public int selectRecCountById(String id);
+    // id 에 대한 pet 정보 조회
+    public List<PetDTO> selectPetInfoById(String id);
+    // id 와 petNo 이 모두 일치하는 rec 정보 조회
+    public List<RecDTO> selectRecByIdAndPetNo(@Param("id") String id, @Param("petNo") int petNo);
+
+    // ✅ 새로 추가된 메서드들 (완성본에서 반드시 포함)
+    public List<RecDTO> findAllByWriter(@Param("writer") String writer);
+
+    public List<RecDTO> findFilteredByWriter(
+        @Param("writer") String writer,
+        @Param("petNo") Integer petNo,
+        @Param("startDate") String startDate,
+        @Param("endDate") String endDate,
+        @Param("categoryGroup") String categoryGroup
+    );
 }

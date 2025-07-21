@@ -1,0 +1,142 @@
+body {
+    font-family: 'Noto Serif KR', serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #222;
+}
+
+#info-wrapper {
+    width: 90%;
+    max-width: 1000px;
+    margin: 30px auto;
+    display: flex;
+    gap: 30px;
+}
+
+/* ✅ 카테고리 사이드바 */
+.category-sidebar {
+    width: 150px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    height: fit-content;
+}
+
+.category-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.category-sidebar li {
+    margin-bottom: 12px;
+}
+
+.category-sidebar a {
+    text-decoration: none;
+    color: #444;
+    font-size: 15px;
+    display: block;
+    padding: 6px 10px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.category-sidebar a:hover,
+.category-sidebar a.active {
+    background-color: #efefef;
+    font-weight: bold;
+}
+
+/* ✅ 본문 영역 */
+.info-list-area {
+    flex: 1;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 20px;
+}
+
+/* 글쓰기 버튼 */
+.writeBtn {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.writeBtn a {
+    padding: 7px 14px;
+    font-size: 14px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #222;
+    background-color: #fff;
+}
+
+.writeBtn a:hover {
+    background-color: #f2f2f2;
+}
+
+/* 게시글 테이블 */
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.info-table th, .info-table td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+.info-table th {
+    background-color: #f5f5f5;
+    color: #555;
+    font-weight: 600;
+}
+
+.info-table td a {
+    color: #222;
+    text-decoration: none;
+}
+
+.info-table td a:hover {
+    text-decoration: underline;
+    color: #888;
+}
+
+/* 텅~!!! 메시지 */
+.empty-msg {
+    text-align: center;
+    color: #aaa;
+    font-size: 18px;
+    margin: 40px 0;
+}
+
+/* 페이징 */
+.paging {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.paging a {
+    margin: 0 6px;
+    text-decoration: none;
+    color: #444;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.paging a:hover {
+    background-color: #e0e0e0;
+}
+
+.paging a.active {
+    font-weight: bold;
+    text-decoration: underline;
+}

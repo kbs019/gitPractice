@@ -196,6 +196,73 @@
 
   <!-- 일지 테이블에서 writer 가 id 와 같을 경우의 리스트 출력 -->
   <select id="selectListById" resultType="com.ex.gitprac.data.rec.RecDTO">
-    select * from rec where writer=#{id}
+    select * from rec where writer=#{id} order by reg desc
+  </select>
+
+  <!-- id 가 작성한 일지의 총 갯수 -->
+  <select id="selectRecCountById" resultType="int">
+    select count(*) from rec where writer=#{id}
+  </select>
+
+  <!-- pet 테이블에서 id 에 해당하는 반려견 정보 출력 -->
+  <select id="selectPetInfoById" resultType="com.ex.gitprac.data.pet.PetDTO">
+    select * from pet where id=#{id}
+  </select>
+
+  <!-- id 와 petNo 이 모두 같은 경우의 일지 출력 -->
+  <select id="selectRecByIdAndPetNo" resultType="com.ex.gitprac.data.rec.RecDTO">
+    select * from rec where writer=#{id} and petNo=#{petNo} order by reg desc
+  </select>
+
+  <!-- 가영님 일지 가져옴 -->
+  <!-- ✅ 1. 작성자 기준 전체 조회 -->
+  <select id="findAllByWriter" parameterType="string" resultType="com.ex.gitprac.data.rec.RecDTO">
+    SELECT *
+    FROM rec
+    WHERE writer = #{writer}
+    ORDER BY reg DESC
+  </select>
+
+  <!-- ✅ 2. 작성자 기준 + 필터 조회 -->
+  <select id="findFilteredByWriter" parameterType="map" resultType="com.ex.gitprac.data.rec.RecDTO">
+    SELECT *
+    FROM rec
+    <where>
+      writer = #{writer}
+      
+      <if test="petNo != null">
+        AND petNo = #{petNo}
+      </if>
+
+      <if test="startDate != null and startDate != '1900-01-01'
+          and endDate != null and endDate != '2100-12-31'">
+        <![CDATA[
+        AND reg >= TO_DATE(#{startDate}, 'YYYY-MM-DD')
+        AND reg < TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+        ]]>
+      </if>
+
+      <if test="categoryGroup != null and categoryGroup != ''">
+        AND category IN
+        <choose>
+          <when test="categoryGroup == '밥/간식'">
+            ('밥', '간식')
+          </when>
+          <when test="categoryGroup == '배변/배뇨'">
+            ('배변', '배뇨')
+          </when>
+          <when test="categoryGroup == '병원/약'">
+            ('병원', '약')
+          </when>
+          <when test="categoryGroup == '활동'">
+            ('활동')
+          </when>
+          <otherwise>
+            ('')
+          </otherwise>
+        </choose>
+      </if>
+    </where>
+    ORDER BY reg DESC
   </select>
 </mapper>

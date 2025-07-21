@@ -1,0 +1,147 @@
+body {
+    font-family: 'Noto Serif KR', serif;
+    background-color: #f9f9f9;
+    color: #222;
+    margin: 0;
+    padding: 0;
+}
+
+.content-top {
+    width: 600px;
+    margin: 40px auto 10px;
+    text-align: center;
+}
+
+.content-top-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.content-top-title hr {
+    margin: 10px auto;
+    border: none;
+    border-top: 1px solid #ccc;
+    width: 100%;
+}
+
+.content-top-btns {
+    text-align: right;
+    width: 600px;
+    margin: 10px auto;
+}
+
+.content-top-btns input[type="button"] {
+    margin-left: 5px;
+    padding: 6px 12px;
+    font-size: 14px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.content-top-btns input[type="button"]:hover {
+    background-color: #eee;
+}
+
+.content-body {
+    width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 20px;
+}
+
+.content-body h3 {
+    margin: 10px 0;
+    font-size: 17px;
+}
+
+.content-info-wrapper {
+    font-size: 14px;
+    color: #666;
+    margin-top: 10px;
+}
+
+.content-info-wrapper > div {
+    margin-bottom: 5px;
+}
+
+.content-content-wrapper {
+    margin-top: 20px;
+    line-height: 1.6;
+    font-size: 15px;
+    color: #333;
+}
+
+.reply-wrapper {
+    width: 600px;
+    margin: 40px auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 20px;
+}
+
+.reply-wrapper h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #444;
+}
+
+.reply-wrapper textarea {
+    width: 100%;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    padding: 8px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.reply-wrapper button {
+    margin-top: 8px;
+    padding: 6px 12px;
+    font-size: 14px;
+    background-color: #fff;
+    border: 1px solid #444;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.reply-wrapper button:hover {
+    background-color: #eee;
+}
+
+#replyList > div {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+#replyList b {
+    color: #333;
+}
+
+#replyList span {
+    font-size: 12px;
+    color: #888;
+}
+
+#replyList button {
+    margin-left: 5px;
+    font-size: 12px;
+    padding: 3px 8px;
+    border: 1px solid #aaa;
+    background-color: #fff;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#replyList button:hover {
+    background-color: #f2f2f2;
+}

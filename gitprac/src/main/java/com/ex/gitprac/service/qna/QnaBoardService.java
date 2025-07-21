@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.ex.gitprac.data.pet.PetDTO;
 import com.ex.gitprac.data.qna.QnaBoardDTO;
 import com.ex.gitprac.data.qna.QnaReplyDTO;
 import com.ex.gitprac.data.rec.RecDTO;
@@ -71,6 +72,18 @@ public class QnaBoardService {
     // id 에 해당하는 일지 조회
     public List<RecDTO> selectListById( String id ){
         return qnaBoardMapper.selectListById(id);
+    }
+    // id 에 해당하는 일지의 전체 갯수 조회
+    public int selectRecCountById( String id ){
+        return qnaBoardMapper.selectRecCountById( id );
+    }
+    // id 에 해당하는 pet 정보 조회
+    public List<PetDTO> selectPetInfoById( String id ){
+        return qnaBoardMapper.selectPetInfoById(id);
+    }
+    // id 에 해당하는 petNo 조회 후, id 와 petNo 가 모두 만족하는 rec 조회
+    public List<RecDTO> selectRecByIdAndPetNo( String id, int petNo ){
+        return qnaBoardMapper.selectRecByIdAndPetNo( id, petNo );
     }
 
     // 답변 작성 + isAnswered 컬럼의 값 변경
@@ -218,5 +231,50 @@ public class QnaBoardService {
         }
 
         return count;
+    }
+
+    // writer 값으로 id 찾기 (user 테이블) -> id 에 맞는 petNo 조회 (pet 테이블) -> petNo 에 맞는 petName 조회 (pet 테이블) -> id 에 맞는 rec 조회 (rec 테이블)
+    public List<RecDTO> allRecListById( String writer ){
+        List<String> petNameList = null;
+        List<RecDTO> recList = new ArrayList<>();
+
+        String id = qnaBoardMapper.selectIdByWriter(writer);
+
+        List<PetDTO> petList = qnaBoardMapper.selectPetInfoById(id);
+
+        for( PetDTO pto : petList ){
+            String petName = pto.getPetName();
+
+            petNameList.add(petName);
+        }
+
+
+
+        return recList;
+    }
+
+    // 작성자 기반 전체 조회 + 페이징
+    public List<RecDTO> getRecListWithPaging(String writer, int offset, int limit) {
+        List<RecDTO> all = qnaBoardMapper.findAllByWriter(writer); // ← 작성자 기준으로 전체 조회
+
+        if (offset >= all.size()) {
+            return new ArrayList<>();
+        }
+
+        int end = Math.min(offset + limit, all.size());
+        return all.subList(offset, end);
+    }
+
+    // 작성자 기반 필터링 + 페이징
+    public List<RecDTO> getRecListFilteredWithPaging(String writer, Integer petNo, String startDate, String endDate,
+                                                    String categoryGroup, int offset, int limit) {
+        List<RecDTO> filteredList = qnaBoardMapper.findFilteredByWriter(writer, petNo, startDate, endDate, categoryGroup); // ← 수정
+
+        if (offset >= filteredList.size()) {
+            return new ArrayList<>();
+        }
+
+        int end = Math.min(offset + limit, filteredList.size());
+        return filteredList.subList(offset, end);
     }
 }

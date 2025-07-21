@@ -30,6 +30,6 @@ create table info_board (
 );
 
 create sequence seq_info_post start with 1 increment by 1 nocache;
-
+ALTER TABLE info_board MODIFY title   VARCHAR2(200 BYTE);
 commit;
 */

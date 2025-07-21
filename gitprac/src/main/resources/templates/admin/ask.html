@@ -36,10 +36,10 @@
                 <table border="1" cellspacing="0" cellpadding="0" align="center" width="1000">
                     <tr height="30">
                         <th width="100">구분</th>
-                        <th width="300">글제목</th>
-                        <th width="100">작성자</th>
-                        <th width="200">작성일</th>
-                        <th width="200">답변여부</th>
+                        <th width="350">글제목</th>
+                        <th width="150">작성자</th>
+                        <th width="150">작성일</th>
+                        <th width="150">답변여부</th>
                         <th width="100">조회수</th>
                     </tr>			
                     <tr height="30" th:each="ato : ${list}">
@@ -52,7 +52,12 @@
                             </span>
                         </td>
                         <td>
-                            <a th:href="@{|/admin/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
+                            <span th:if="${ato.status == 0}">
+                                <a th:href="@{|/admin/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
+                            </span>
+                            <span th:if="${ato.status != 0}">
+                                <span>관리자에 의해 제재된 사용자의 글입니다.</span>
+                            </span>
                         </td>
                         <td align="center">
                             <span th:text="${ato.writer}"></span>

@@ -40,10 +40,10 @@
                 <table border="1" cellspacing="0" cellpadding="0" align="center" width="1000">
                     <tr height="30">
                         <th width="100">구분</th>
-                        <th width="300">글제목</th>
-                        <th width="100">작성자</th>
-                        <th width="200">작성일</th>
-                        <th width="200">답변여부</th>
+                        <th width="350">글제목</th>
+                        <th width="150">작성자</th>
+                        <th width="150">작성일</th>
+                        <th width="150">답변여부</th>
                         <th width="100">조회수</th>
                     </tr>			
                     <tr height="30" th:each="ato : ${list}">
@@ -57,10 +57,20 @@
                         </td>
                         <td>
                             <span th:if="${session.users.role == 2 || session.users.nick == ato.writer}">
-                                &nbsp; <a th:href="@{|/center/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
+                                <span th:if="${ato.status == 0}">
+                                    <a th:href="@{|/admin/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
+                                </span>
+                                <span th:if="${ato.status != 0}">
+                                    <span>관리자에 의해 제재된 사용자의 글입니다.</span>
+                                </span>
                             </span>
                             <span th:unless="${session.users.role == 2 || session.users.nick == ato.writer}">
-                                &nbsp; <span th:text="${ato.title}"></span>
+                                <span th:if="${ato.status == 0}">
+                                    <span th:text="${ato.title}"></span>
+                                </span>
+                                <span th:if="${ato.status != 0}">
+                                    <span>관리자에 의해 제재된 사용자의 글입니다.</span>
+                                </span>
                             </span>
                         </td>
                         <td th:text="${ato.writer}" align="center"></td>
@@ -79,14 +89,14 @@
             </div>
 
             <div align="center" th:if="${count > 0}">
-                <span th:if="${startPage} > ${pageBlock}">
-                    <a th:href="@{|/center/ask?pageNum=${startPage - pageBlock}|}">[이전]</a>
+                <span th:if="${startPage} > ${pageCount}">
+                    <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
                 </span>
-                <span th:each=" i : ${#numbers.sequence(startPage, endPage)} ">
-                    <a th:href="@{|/center/ask?pageNum=${i}|}" th:text="'['+${i}+']'"></a>
+                <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                    <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
                 </span>
                 <span th:if="${endPage} < ${pageCount}">
-                    <a th:href="@{|/center/ask?pageNum=${startPage + pageBlock}|}">[다음]</a>
+                    <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
                 </span>
             </div>
         </div>
@@ -101,13 +111,21 @@
                 searchPostList();
             });
 
-            function searchPostList(){
+            // 페이징 클릭 이벤트
+            $(document).on('click', '.ajax-page-link', function(e){
+                e.preventDefault();
+                let page = $(this).data('page');
+                searchPostList(page);  // 검색 결과에서 해당 페이지로 이동
+            });
+
+            function searchPostList(page = 1){
                 let isAnswered = $('#isAnsweredStatusCheck').is(':checked') ? 1 : 0;
 
                 $.ajax({
                     url : '/center/askListByIsAnswered',
                     type : 'post',
                     data : {
+                        pageNum : page,
                         isAnswered : isAnswered
                     },
                     success : function(list){

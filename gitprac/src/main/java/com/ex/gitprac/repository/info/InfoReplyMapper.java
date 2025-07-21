@@ -22,4 +22,10 @@ public interface InfoReplyMapper {
 
     // 댓글 삭제
     public int deleteReply(@Param("replyNo") int replyNo);
+
+    // 제재당한 인원의 닉네임이 작성한 게시글의 status 를 1 로 변경
+    public void updateStatusByNick(String nick);
+
+    // 제재 기간이 끝나 다시 status 값이 0 으로 돌아감
+    public void restoreStatusByNick(String nick);
 }
