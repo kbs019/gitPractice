@@ -58,6 +58,13 @@ public class MyPageController {
         
         return myPageService.getUser(id);
     }
+    
+    @PostMapping("getPet")
+    @ResponseBody
+    public PetDTO getPet(@RequestParam("petNo") int petNo){
+
+        return myPageService.getPet(petNo);
+    }
 
     @PostMapping("listPet")
     @ResponseBody
@@ -68,7 +75,7 @@ public class MyPageController {
         
     @PostMapping("updateUser")
     @ResponseBody
-    public String updateUser(UserDTO udto, HttpSession session) {
+    public String updateUser(@RequestBody UserDTO udto, HttpSession session) {
                 
         String result = "error";
         
@@ -120,10 +127,10 @@ public class MyPageController {
 
     @PostMapping("updatePet")
     @ResponseBody
-    public String updatePet(@RequestParam("petNo") int petNo, @RequestBody PetDTO pdto, HttpSession session) {
+    public String updatePet(@RequestBody PetDTO pdto) {
                 
         String result = "error";
-        
+        int petNo = pdto.getPetNo();
         PetDTO dto = myPageService.getPet(petNo);
         
         dto.setPetName(pdto.getPetName());

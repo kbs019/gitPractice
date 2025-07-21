@@ -50,11 +50,12 @@
         <button onclick="showPetInsertForm()">강아지 추가</button>
         <div id="petForm" style="display:none;">
             <input type="hidden" id="petNo">
-            <p><input type="text" id="petName" placeholder="이름"></p>
-            <p><input type="text" id="petBreed" placeholder="견종"></p>
-            <p><input type="number" id="petAge" placeholder="나이"></p>
-            <p><input type="text" id="petSize" placeholder="크기"></p>
-            <p><input type="text" id="petWeight" placeholder="몸무게"></p>
+            <input type="hidden" id="id" th:value="${session.users.id}">
+            <p>이름 : <input type="text" id="petName"></p>
+            <p>견종 : <input type="text" id="petBreed"></p>
+            <p>나이 : <input type="number" id="petAge" placeholder="개월수를 입력해주세요"></p>
+            <p>크기 : <input type="text" id="petSize" placeholder="m(미터)단위로 입력해주세요"></p>
+            <p>무게 : <input type="text" id="petWeight" placeholder="g(그램)단위로 입력해주세요"></p>
             <p><input type="date" id="petBirth"></p>
             <button onclick="submitPet()">저장</button>
         </div>
@@ -89,10 +90,8 @@
     function loadMyInfo() {
         $.post('/myPage/getUser', function(data) {
             $('#myInfoView').html(`
-                <p>닉네임: ${data.nick}</p>
-                <p>이메일: ${data.email}</p>
-                <p>전화번호: ${data.phone}</p>
-                <p>통신사: ${data.carrier}</p>
+                <span>닉네임: ${data.nick}  </span>
+                <span>이메일: ${data.email}</span>
             `);
         });
     }
@@ -103,19 +102,23 @@
     }
 
     function updateMyInfo() {
+        const user = {
+            pw: $('#pw').val(),
+            nick: $('#nick').val(),
+            email: $('#email').val(),
+            phone: $('#phone').val(),
+            carrier: $('#carrier').val()
+        };        
         $.ajax({
             url: '/myPage/updateUser',
             method: 'POST',
-            data: {
-                pw: $('#pw').val(),
-                nick: $('#nick').val(),
-                email: $('#email').val(),
-                phone: $('#phone').val(),
-                carrier: $('#carrier').val()
-            },
+            contentType: 'application/json',       // 🔸 반드시 명시
+            data: JSON.stringify(user),            // 🔸 문자열로 직렬화
+            
             success: function(res) {
                 alert('수정 완료');
                 loadMyInfo();
+                $('#myInfoEdit').hide();
             }
         });
     }
@@ -129,17 +132,26 @@
     }
 
     function loadPets() {
+        
         $.post('/myPage/getUser', function(user) {
             const id = user.id;
             $.post('/myPage/listPet', { id: id }, function(list) {
                 let html = '';
                 if (Array.isArray(list)) {
                     list.forEach(pet => {
+                        let ageText = '';
+                        const age = parseInt(pet.petAge, 10);
+                        if (age < 24) {
+                            ageText = `${age}개월`;
+                        } else {
+                            const years = Math.floor(age / 12);
+                            ageText = `${years}살`;
+                        }
                         html += `
                             <div class="pet-card">
-                                <p>이름: ${pet.petName}</p>
-                                <p>견종: ${pet.petBreed}</p>
-                                <p>나이: ${pet.petAge}</p>
+                                <span>이름: ${pet.petName}  </span>
+                                <span>견종: ${pet.petBreed}  </span>
+                                <span>나이: ${ageText}</span>
                                 <button onclick="editPet(${pet.petNo})">수정</button>
                                 <button onclick="deletePet(${pet.petNo})">삭제</button>
                             </div>
@@ -160,6 +172,7 @@
     }
 
     function editPet(petNo) {
+         console.log("editPet 호출됨: petNo =", petNo);
         $.post('/myPage/getPet', { petNo: petNo }, function(pet) {
             $('#petForm').show();
             $('#petNo').val(pet.petNo);
@@ -192,6 +205,8 @@
             success: function() {
                 alert('처리 완료');
                 loadPets();
+                $('#petForm input').val('');
+                $('#petForm').hide();
             }
         });
     }
