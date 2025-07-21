@@ -102,4 +102,9 @@ public class InfoBoardService {
             return Collections.emptyList();
         }
     }
+
+    public int infoBoardCount() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'infoBoardCount'");
+    }
 }

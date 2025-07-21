@@ -230,9 +230,9 @@ public class AdminService {
     public int askCountByIsAnswered( int isAnswered ){
         int count = 0;
 
-        if( isAnswered == 1 ){
+        if( isAnswered == 0 ){
             count = askMapper.askCountByIsAnswered( isAnswered );
-        } else if(isAnswered == 0) {
+        } else if(isAnswered == 1) {
             count = askMapper.askCount();
         }
 
@@ -243,9 +243,9 @@ public class AdminService {
     public List<AskDTO> askListByIsAnswered( int isAnswered, int start, int end ){
         List<AskDTO> list = null;
 
-        if( isAnswered == 1 ){
+        if( isAnswered == 0 ){
             list = askMapper.askListByIsAnswered( isAnswered, start, end );
-        } else if ( isAnswered == 0 ){
+        } else if ( isAnswered == 1 ){
             list = askMapper.askList(start, end);
         }
 
