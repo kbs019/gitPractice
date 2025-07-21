@@ -12,28 +12,33 @@
 
 <div th:replace="~{fragments/header.html :: headerFragment}"></div>
 
-<!-- 🐾 헤더 -->
-<!-- <header class="main-header">
-  <div class="title">하루犬과</div>
-  <nav class="main-nav">
-    <a class="selected">일지</a>
-    <a href="#">수의사</a>
-    <a href="#">사용자</a>
-  </nav>
-</header> -->
-
 <main class="rec-container">
+
+  <form method="get" action="/rec" style="margin-bottom: 16px;">
+    <select name="petNo" onchange="this.form.submit()" style="padding: 5px; font-size: 14px;">
+        <option value="" disabled
+                th:selected="${selectedPetNo == null}">-- 반려견 선택 --</option>
+        <option th:each="pet : ${petList}"
+                th:value="${pet.petNo}"
+                th:text="${pet.petName}"
+                th:selected="${pet.petNo == selectedPetNo}">
+        </option>
+    </select>
+    <span style="margin-left: 8px;">의 일지</span>
+</form>
+
 
   <!-- 🔎 날짜 & 카테고리 필터 -->
   <section class="rec-filter">
     <form method="get" action="/rec" class="filter-bar">
+      <input type="hidden" name="petNo" th:value="${selectedPetNo}" />
   <div class="filter-left">
     <input type="date" id="startDate" name="startDate" th:value="${startDate}">
     ~
     <input type="date" id="endDate" name="endDate" th:value="${endDate}">
     
     <input type="hidden" name="categoryGroup" id="hiddenCategoryGroup" th:value="${categoryGroup}">
-    
+
     <button type="submit" class="small">조회</button>
     <button type="submit" name="reset" value="true" class="small">전체 초기화</button>
   </div>
@@ -48,6 +53,7 @@
     <form method="get" action="/rec" class="category-form">
       <input type="hidden" name="startDate" id="hiddenStartDate" th:value="${param.startDate}">
       <input type="hidden" name="endDate" id="hiddenEndDate" th:value="${param.endDate}">
+      <input type="hidden" name="petNo" th:value="${selectedPetNo}" />
       <div class="category-tabs">
         <button type="submit" name="categoryGroup" value="밥/간식"
                 onclick="copyDates()"

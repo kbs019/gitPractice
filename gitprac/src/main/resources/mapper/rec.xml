@@ -132,7 +132,8 @@
     SET 
       title = #{title},
       content = #{content},
-      category = #{category}
+      category = #{category},
+      petNo = #{petNo}
     WHERE recNo = #{recNo}
   </update>
 

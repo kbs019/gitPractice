@@ -14,20 +14,33 @@
 
   <form th:action="@{/rec/edit}" th:object="${rec}" method="post">
     <input type="hidden" th:field="*{recNo}" />
+    <label for="petNo">반려견 선택</label>
+<select id="petNo" name="petNo" required>
+    <option value="" disabled
+        th:if="${rec.petNo == 0}"
+        selected>선택해주세요</option>
 
-    <label>제목</label>
-    <input type="text" th:field="*{title}" required />
+    <option th:each="pet : ${petList}"
+            th:value="${pet.petNo}"
+            th:text="${pet.petName}"
+            th:attr="selected=${pet.petNo == rec.petNo}">
+    </option>
+</select>
 
-    <label for="category">카테고리</label>
-    <select th:field="*{category}" id="category" required>
-      <option value="밥">밥</option>
-      <option value="간식">간식</option>
-      <option value="배변">배변</option>
-      <option value="배뇨">배뇨</option>
-      <option value="약">약</option>
-      <option value="병원">병원</option>
-      <option value="활동">활동</option>
-    </select>
+
+<label for="category">카테고리</label>
+<select th:field="*{category}" id="category" required>
+  <option value="밥">밥</option>
+  <option value="간식">간식</option>
+  <option value="배변">배변</option>
+  <option value="배뇨">배뇨</option>
+  <option value="약">약</option>
+  <option value="병원">병원</option>
+  <option value="활동">활동</option>
+</select>
+
+<label>제목</label>
+<input type="text" th:field="*{title}" required />
 
     <label>내용</label>
     <textarea th:field="*{content}" rows="10"></textarea>

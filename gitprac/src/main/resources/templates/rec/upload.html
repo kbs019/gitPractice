@@ -17,18 +17,17 @@
 <main class="rec-upload-container">
   <h2>✏️ 일지 작성</h2>
 
-  <form method="post" th:action="@{/rec/upload}" enctype="multipart/form-data">
+  <form method="post" th:object="${rec}" th:action="@{/rec/upload}" enctype="multipart/form-data">
 
     <!-- 작성자 (임시 하드코딩, 로그인 연동 시 변경 예정) -->
     <!-- <input type="hidden" name="writer" value="김가영" /> -->
 
     <div class="form-group">
-      <label for="petSelect">반려견 선택:</label>
-      <select name="petNo" id="petSelect" required>
-        <option value="" disabled selected>선택하세요</option>
-        <option value="1">kevin</option>
-        <option value="2">loey</option>
-      </select>
+      <label for="petNo">반려견 선택</label>
+        <select name="petNo" id="petNo" th:field="*{petNo}" required>
+            <option value="0" disabled selected>반려견을 선택하세요</option>
+            <option th:each="pet : ${petList}" th:value="${pet.petNo}" th:text="${pet.petName}">반려견</option>
+        </select>
     </div>
 
     <div class="form-group">

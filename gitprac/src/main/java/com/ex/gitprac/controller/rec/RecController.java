@@ -22,9 +22,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
 
+import com.ex.gitprac.data.pet.PetDTO;
 import com.ex.gitprac.data.rec.RecDTO;
 import com.ex.gitprac.data.user.UserDTO;
 import com.ex.gitprac.service.rec.RecService;
+import com.ex.gitprac.service.pet.PetService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -34,46 +36,51 @@ import jakarta.servlet.http.HttpSession;
 @RequiredArgsConstructor
 public class RecController {
 
+    private final PetService petService;
     private final RecService recService;
 
     /**
      * 🗂 일지 목록 조회 (필터 포함 + 전체 초기화)
      */
     @GetMapping("")
-    public String recListPage(
-        @RequestParam(name = "petNo", required = false) Integer petNo,
-        @RequestParam(name = "startDate", required = false) String startDate,
-        @RequestParam(name = "endDate", required = false) String endDate,
-        @RequestParam(name = "categoryGroup", required = false) String categoryGroup,
-        @RequestParam(name = "reset", required = false) String reset,
-        HttpSession session,
-        HttpServletResponse response,
-        Model model
-    ) throws IOException {
-        // 로그인한 사용자 ID (작성자)
-        UserDTO users = (UserDTO) session.getAttribute("users");
+public String recListPage(
+    @RequestParam(name = "petNo", required = false) Integer petNo,
+    @RequestParam(name = "startDate", required = false) String startDate,
+    @RequestParam(name = "endDate", required = false) String endDate,
+    @RequestParam(name = "categoryGroup", required = false) String categoryGroup,
+    @RequestParam(name = "reset", required = false) String reset,
+    HttpSession session,
+    HttpServletResponse response,
+    Model model
+) throws IOException {
+    // 로그인한 사용자 ID (작성자)
+    UserDTO users = (UserDTO) session.getAttribute("users");
 
-        // 로그인 안 되어 있을 경우 alert 후 로그인 페이지로 이동
-        if (users == null) {
-            response.setContentType("text/html; charset=UTF-8");
-            PrintWriter out = response.getWriter();
-            out.println("<script>alert('로그인 후 이용 가능합니다.'); window.location.replace('/user/login');</script>");
-            out.flush();
-            return null;
-        }
+    if (users == null) {
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        out.println("<script>alert('로그인 후 이용 가능합니다.'); window.location.replace('/user/login');</script>");
+        out.flush();
+        return null;
+    }
 
-        String writer = users.getId();
-        int offset = 0;
-        int limit = 15;
-        List<RecDTO> recList;
+    String writer = users.getId();
+    int offset = 0;
+    int limit = 15;
+    List<RecDTO> recList = null; // 기본값: 아무 것도 안 보이게
 
+    // 🐶 펫 목록 조회 (드롭다운 표시용)
+    List<PetDTO> petList = petService.getPetsByUserId(writer);
+    model.addAttribute("petList", petList);
+
+    // 🟡 petNo가 null이면 아무것도 보여주지 않음
+    if (petNo != null) {
         if ("true".equals(reset)) {
             recList = recService.getRecListWithPaging(writer, offset, limit);
             startDate = "";
             endDate = "";
             categoryGroup = "";
         } else {
-            // 기본 날짜 범위 설정
             if (startDate == null || startDate.isBlank()) {
                 startDate = "1900-01-01";
             }
@@ -81,25 +88,40 @@ public class RecController {
                 endDate = "2100-12-31";
             }
 
-            recList = recService.getRecListFilteredWithPaging(writer, petNo, startDate, endDate, categoryGroup, offset, limit);
+            recList = recService.getRecListFilteredWithPaging(
+                writer, petNo, startDate, endDate, categoryGroup, offset, limit);
         }
-
-        // model에 데이터 전달
-        model.addAttribute("recList", recList);
-        model.addAttribute("startDate", startDate.equals("1900-01-01") ? "" : startDate);
-        model.addAttribute("endDate", endDate.equals("2100-12-31") ? "" : endDate);
-        model.addAttribute("categoryGroup", categoryGroup);
-
-        return "rec/list";
     }
+
+    // 모델에 전달
+    model.addAttribute("recList", recList);
+    model.addAttribute("startDate", startDate != null && startDate.equals("1900-01-01") ? "" : startDate);
+    model.addAttribute("endDate", endDate != null && endDate.equals("2100-12-31") ? "" : endDate);
+    model.addAttribute("categoryGroup", categoryGroup);
+    model.addAttribute("selectedPetNo", petNo); // 선택값 유지
+
+    return "rec/list";
+}
+
 
 
     /**
      * 📝 일지 작성 폼 페이지
      */
     @GetMapping("/upload")
-    public String uploadPage() {
-        return "rec/upload";
+    public String uploadPage(HttpSession session, Model model) {
+    UserDTO users = (UserDTO) session.getAttribute("users");
+    if (users == null) {
+        return "redirect:/user/login";
+    }
+
+    String userId = users.getId();
+    List<PetDTO> petList = petService.getPetsByUserId(userId);
+    
+    model.addAttribute("petList", petList);
+    model.addAttribute("rec", new RecDTO()); // 바인딩 객체도 함께 전달 (폼 입력용)
+
+    return "rec/upload";
     }
 
     /**
@@ -164,12 +186,36 @@ public class RecController {
     }
 
     @GetMapping("/edit/{recNo}")
-    public String editRecForm(@PathVariable("recNo") Integer recNo, Model model) {
-        System.out.println(">> editRecForm() 호출됨: " + recNo);    // 호출됐는지 확인용
-        RecDTO rec = recService.getRecByNo(recNo);
-        model.addAttribute("rec", rec);
-        return "rec/edit";
+public String editRecForm(@PathVariable("recNo") Integer recNo,
+                          HttpSession session,
+                          HttpServletResponse response,
+                          Model model) throws IOException {
+
+    // 세션에서 사용자 정보 가져오기
+    UserDTO users = (UserDTO) session.getAttribute("users");
+
+    // 로그인 여부 확인
+    if (users == null) {
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        out.println("<script>alert('로그인 후 이용 가능합니다.'); window.location.replace('/user/login');</script>");
+        out.flush();
+        return null;
     }
+
+    // 기존 일지 정보
+    RecDTO rec = recService.getRecByNo(recNo);
+
+    // 사용자 ID로 반려견 리스트 가져오기
+    List<PetDTO> petList = petService.getPetsByUserId(users.getId());
+
+    // 모델에 담기
+    model.addAttribute("rec", rec);
+    model.addAttribute("petList", petList);
+
+    return "rec/edit";
+}
+
 
     @PostMapping("/edit")
     public String editRecSubmit(@ModelAttribute RecDTO rec, RedirectAttributes redirectAttributes) {
