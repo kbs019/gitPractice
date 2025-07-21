@@ -49,11 +49,20 @@
                     <tbody>
                         <tr th:each="dto : ${list}">
                             <td th:text="${dto.postNo}"></td>
-                            <td th:text="${dto.writer}"></td>
+                            <td>
+                                <span th:text="${dto.writer}"></span>
+                                <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${dto.writer}">
+                                    📋
+                                </span>
+                            </td>
                             <td th:text="${dto.category}"></td>
                             <td>
-                                <a th:href="@{|/info/content?postNo=${dto.postNo}&pageNum=${pageNum}|}"
-                                    th:text="${dto.title}"></a>
+                                <span th:if="${dto.status == 0}">
+                                    <a th:href="@{|/info/content?postNo=${dto.postNo}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
+                                </span>
+                                <span th:if="${dto.status != 0}">
+                                    <span>관리자에 의해 제재된 글입니다.</span>
+                                </span>
                             </td>
                             <td th:text="${dto.views}"></td>
                             <td th:text="${#temporals.format(dto.reg, 'yy.MM.dd HH:mm')}"></td>
@@ -69,8 +78,8 @@
                 </span>
                 <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
                     <a th:href="@{|/info/list?pageNum=${i}&category=${category}|}"
-                       th:text="'[' + ${i} + ']'"
-                       th:class="${i == pageNum} ? 'active' : null"></a>
+                        th:text="'[' + ${i} + ']'"
+                        th:class="${i == pageNum} ? 'active' : null"></a>
                 </span>
                 <span th:if="${endPage < pageCount}">
                     <a th:href="@{|/info/list?pageNum=${startPage + pageBlock}&category=${category}|}">[다음]</a>
@@ -78,5 +87,23 @@
             </div>
         </section>
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- ajax 시작 -->
+    <script>
+        // 작성자명을 클릭하여 복사하는 API 사용
+        $(document).ready(function(){
+            $(document).on('click', '.copy-icon', function(e){
+                let writer = $(this).data('writer');
+    
+                navigator.clipboard.writeText(writer).then(function(){
+                    alert(`"${writer}" 복사됨`);
+                }).catch(function(err){
+                    console.log("복사 실패 : ", err);
+                });
+            });
+        });
+
+    </script>
 </body>
 </html>
