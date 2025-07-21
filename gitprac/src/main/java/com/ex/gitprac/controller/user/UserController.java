@@ -13,7 +13,6 @@ import com.ex.gitprac.service.user.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -119,15 +118,23 @@ public class UserController {
     @PostMapping("findId")
     public String findId(@RequestParam("email") String email, Model model) {
         UserDTO fidto = userService.findId(email);
-        model.addAttribute("email", email);
-        return "user/findId";
+        String id = fidto.getId();
+        model.addAttribute("id", id);
+        return "user/findIdPro";
     }
     
     @PostMapping("findPw")
     public String findPw(@RequestParam("id") String id, @RequestParam("email") String email, Model model) {
         UserDTO fidto = userService.findPw(id, email);
-        model.addAttribute("id", id);
-        model.addAttribute("email", email);
-        return "user/findPw";
+
+        if (fidto != null) {
+            // 아이디와 이메일이 일치하는 사용자 존재 → pw만 전달
+            model.addAttribute("pw", fidto.getPw());
+        } else {
+            // 일치하는 사용자 없음 → pw를 null로 전달
+            model.addAttribute("pw", null);
+        }
+
+        return "user/findPwPro";
     }
 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이디/비밀번호 찾기</title>
+    <script>
+        window.onload = function() {
+            showForm('id'); // 기본값 : 아이디 찾기 표시
+        }
+        function showForm(type) {
+            document.getElementById('idForm').style.display = (type === 'id') ? 'block' : 'none';
+            document.getElementById('pwForm').style.display = (type === 'pw') ? 'block' : 'none';
+        }
+    </script>
+</head>
+<body>
+    <h2>아이디 / 비밀번호 찾기</h2>
+    <button onclick="showForm('id')">아이디 찾기</button>
+    <button onclick="showForm('pw')">비밀번호 찾기</button>
+
+    <!-- 아이디 찾기 -->
+    <div id="idForm">
+        <form th:action="@{/user/findId}" method="post">
+            <label>가입한 이메일 :</label>
+            <input type="email" name="email" required />
+            <button type="submit">아이디 찾기</button>
+        </form>
+    </div>
+
+    <!-- 비밀번호 찾기 -->
+    <div id="pwForm">
+        <form th:action="@{/user/findPw}" method="post">
+            <label>아이디</label>
+            <input type="text" name="id" required />
+            <label>가입한 이메일</label>
+            <input type="email" name="email" required />
+            <button type="submit">비밀번호 찾기</button>
+        </form>
+    </div>
+</body>
+</html>

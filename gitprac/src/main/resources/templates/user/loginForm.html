@@ -6,10 +6,10 @@
         <label for="password">비밀번호</label> : 
         <input type="password" id="password" name="pw" required /><br>
         <input type="submit" value="로그인" />
-        
     </form>
     <div class="insert-button">
         <!-- <a th:href="@{/user/insert}">회원가입</a> -->
+        <button type="button" onclick="window.location='/user/findForm'">아이디/비밀번호 찾기</button>
         <button type="button" onclick="window.location='/user/insert'">회원가입</button>
     </div>
 </div>

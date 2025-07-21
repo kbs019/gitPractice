@@ -42,7 +42,7 @@ public interface  UserMapper {
     // 이메일 중복 체크
     public UserDTO checkByEmail(String email);
     // 아이디 찾기
-    public UserDTO findId(String email);
+    public UserDTO findId(@Param("email") String email);
     // 비밀번호 찾기
     public UserDTO findPw(@Param("id") String id, @Param("email") String email);
 }
