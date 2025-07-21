@@ -13,16 +13,20 @@
             document.getElementById('pwForm').style.display = (type === 'pw') ? 'block' : 'none';
         }
     </script>
+    <link rel="stylesheet" href="/css/userFindForm.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
     <h2>아이디 / 비밀번호 찾기</h2>
+    <div class="tab-buttons">
     <button onclick="showForm('id')">아이디 찾기</button>
     <button onclick="showForm('pw')">비밀번호 찾기</button>
+</div>
 
     <!-- 아이디 찾기 -->
     <div id="idForm">
         <form th:action="@{/user/findId}" method="post">
-            <label>가입한 이메일 :</label>
+            <label>가입한 이메일</label>
             <input type="email" name="email" required />
             <button type="submit">아이디 찾기</button>
         </form>
