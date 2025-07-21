@@ -69,4 +69,19 @@
   <update id="viewsUp">
     update info_board set views = views + 1 where postNo = #{postNo}
   </update>
+
+  <!-- 작성자로 검색 -->
+  <select id="searchByWriter" resultType="com.ex.gitprac.data.info.InfoBoardDTO">
+    SELECT * FROM info_board
+    WHERE lower(writer) LIKE '%' || lower(#{keyword}) || '%'
+    ORDER BY postNo DESC
+  </select>
+
+  <!-- 제목으로 검색 -->
+  <select id="searchByTitle" resultType="com.ex.gitprac.data.info.InfoBoardDTO">
+      SELECT * FROM info_board
+      WHERE lower(title) LIKE '%' || lower(#{keyword}) || '%'
+      ORDER BY postNo DESC
+  </select>
+
 </mapper>

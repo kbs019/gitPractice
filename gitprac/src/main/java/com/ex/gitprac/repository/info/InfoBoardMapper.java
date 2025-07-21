@@ -46,4 +46,10 @@ public interface InfoBoardMapper {
 
     // 제재 기간이 끝나 다시 status 값이 0 으로 돌아감
     public void restoreStatusByNick(String nick);
+
+    // 작성자로 검색
+    public List<InfoBoardDTO> searchByWriter(@Param("keyword") String ketword);
+
+    // 제목으로 검색
+    public List<InfoBoardDTO> searchByTitle(@Param("keyword") String keyword);
 }

@@ -1,5 +1,6 @@
 package com.ex.gitprac.service.info;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -91,4 +92,14 @@ public class InfoBoardService {
         return infoReplyMapper.deleteReply(replyNo);
     }
 
+    // 검색
+    public List<InfoBoardDTO> searchByOption(String option, String keyword) {
+        if ("writer".equals(option)) {
+            return infoBoardMapper.searchByWriter(keyword);
+        } else if ("title".equals(option)) {
+            return infoBoardMapper.searchByTitle(keyword);
+        } else {
+            return Collections.emptyList();
+        }
+    }
 }

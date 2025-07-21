@@ -14,12 +14,22 @@
     <div id="info-wrapper">
         <!-- ✅ 카테고리 사이드바 -->
         <aside class="category-sidebar">
+            <!-- ✅ 검색 영역 -->
+            <div class="search-bar">
+                <select id="searchOption">
+                    <option value="writer">작성자</option>
+                    <option value="title">제목</option>
+                </select>
+                <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요">
+                <button id="searchBtn">검색</button>
+            </div>
             <ul>
                 <li><a th:href="@{/info/list}" th:classappend="${category} == '전체글' ? 'active'">전체글</a></li>
                 <li><a th:href="@{/info/list(category='대형견')}" th:classappend="${category} == '대형견' ? 'active'">대형견</a></li>
                 <li><a th:href="@{/info/list(category='중형견')}" th:classappend="${category} == '중형견' ? 'active'">중형견</a></li>
                 <li><a th:href="@{/info/list(category='소형견')}" th:classappend="${category} == '소형견' ? 'active'">소형견</a></li>
             </ul>
+            
         </aside>
 
         <!-- ✅ 게시판 본문 -->
@@ -91,19 +101,80 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- ajax 시작 -->
     <script>
-        // 작성자명을 클릭하여 복사하는 API 사용
-        $(document).ready(function(){
-            $(document).on('click', '.copy-icon', function(e){
-                let writer = $(this).data('writer');
-    
-                navigator.clipboard.writeText(writer).then(function(){
-                    alert(`"${writer}" 복사됨`);
-                }).catch(function(err){
-                    console.log("복사 실패 : ", err);
-                });
+    $(document).ready(function() {
+
+        // ✅ 1. 검색 기능 AJAX
+        $('#searchBtn').click(function() {
+            const option = $('#searchOption').val();
+            const keyword = $('#searchKeyword').val();
+
+            if (!keyword.trim()) {
+                alert("검색어를 입력하세요.");
+                return;
+            }
+
+            $.ajax({
+                url: '/info/search',
+                method: 'GET',
+                data: {
+                    option: option,
+                    keyword: keyword
+                },
+                success: function(result) {
+                    // 기존 리스트 비우기
+                    $('.info-table tbody').empty();
+
+                    if (result.length === 0) {
+                        $('.info-table tbody').append('<tr><td colspan="6">검색 결과가 없습니다.</td></tr>');
+                    } else {
+                        result.forEach(function(dto) {
+                            const postNo = dto.postNo;
+                            const writer = dto.writer;
+                            const category = dto.category;
+                            const views = dto.views;
+                            const reg = dto.reg.replace('T', ' ');
+                            const titleHtml = dto.status == 0
+                                ? `<a href='/info/content?postNo=${postNo}&pageNum=1'>${dto.title}</a>`
+                                : '관리자에 의해 제재된 글입니다.';
+
+                            $('.info-table tbody').append(`
+                                <tr>
+                                    <td>${postNo}</td>
+                                    <td>
+                                        <span>${writer}</span>
+                                        <span class="copy-icon" data-writer="${writer}">📋</span>
+                                    </td>
+                                    <td>${category}</td>
+                                    <td>${titleHtml}</td>
+                                    <td>${views}</td>
+                                    <td>${reg}</td>
+                                </tr>
+                            `);
+                        });
+                    }
+
+                    // 페이징 숨김
+                    $('.paging').hide();
+                },
+                error: function() {
+                    alert('검색 중 오류가 발생했습니다.');
+                }
             });
         });
 
+        // ✅ 2. 작성자 복사 기능
+        $(document).on('click', '.copy-icon', function() {
+            const writer = $(this).data('writer');
+
+            navigator.clipboard.writeText(writer).then(function() {
+                alert(`"${writer}" 복사됨`);
+            }).catch(function(err) {
+                console.log("복사 실패: ", err);
+            });
+        });
+
+    });
     </script>
+
 </body>
 </html>
