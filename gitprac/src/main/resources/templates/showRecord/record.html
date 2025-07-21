@@ -19,10 +19,12 @@
     <input type="date" id="endDate" name="endDate" th:value="${endDate}">
     
     <input type="hidden" name="categoryGroup" id="hiddenCategoryGroup" th:value="${categoryGroup}">
+    <input type="hidden" name="nick" id="hiddenNick" th:value="${nick}">
     
     <button type="submit" class="small">조회</button>
     <button type="submit" name="reset" value="true" class="small">전체 초기화</button>
   </div>
+    </form>
 
     <form method="get" action="/qna/showRecord" class="category-form">
       <input type="hidden" name="startDate" id="hiddenStartDate" th:value="${param.startDate}">
@@ -65,7 +67,7 @@
             </div>
           </div>
           <div class="rec-title">
-            <a th:href="@{'/qna/content/' + ${rec.recNo}}" th:text="${rec.title}">제목</a>
+            <a th:href="@{'/qna/content/' + ${rec.recNo} +'/'+ ${rec.writer}}" th:text="${rec.title}">제목</a>
           </div>
           <hr>
         </div>
@@ -91,15 +93,17 @@
   }
 </script>
 
-<script>
+<script th:inline="javascript">
   let offset = 15; 
   const limit = 15;
+  let nick = /*[[${nick}]]*/ 'anonymous';
 
   document.getElementById("loadMoreBtn").addEventListener("click", function () {
-    fetch(`/qna/showRecord/more?offset=${offset}&limit=${limit}`)
+    fetch(`/qna/showRecord/more?offset=${offset}&limit=${limit}&nick=${nick}`)
       .then(res => res.json())
       .then(data => {
-        if (data.length === 0) {
+        const recList = Array.isArray(data.result) ? data.result : data; 
+        if (!Array.isArray(recList) || recList.length === 0) {
           document.getElementById("loadMoreBtn").style.display = 'none';
           return;
         }
@@ -109,10 +113,15 @@
           const div = document.createElement("div");
           div.className = "rec-entry";
           div.innerHTML = `
-            <div class="rec-date">${rec.reg}</div>
-            <div class="rec-time">${rec.time}</div>
-            <div class="rec-title"><a href="/qna/content/${rec.recNo}">${rec.title}</a></div>
-            <div class="rec-desc">${rec.content}</div>
+            <div class="rec-top">
+              <div class="rec-meta">
+                <span class="rec-date">${rec.reg}</span>
+                <span class="rec-category">${rec.category}</span>
+              </div>
+            </div>
+            <div class="rec-title">
+              <a href="/qna/content/${rec.recNo}/${rec.writer}">${rec.title}</a>
+            </div>
             <hr>
           `;
           container.appendChild(div);

@@ -265,4 +265,9 @@
     </where>
     ORDER BY reg DESC
   </select>
+
+  <!-- 글내용 조회 -->
+  <select id="findByNo" resultType="com.ex.gitprac.data.rec.RecDTO">
+    SELECT * FROM rec WHERE recNo = #{recNo}
+  </select>
 </mapper>

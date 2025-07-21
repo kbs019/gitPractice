@@ -270,7 +270,7 @@ public class CenterController {
 
         model.addAttribute("list", list);
 
-        return "/center/askReplyList";
+        return "/center/askReplyList :: fragment";
     }
 
     // 답변 삭제
