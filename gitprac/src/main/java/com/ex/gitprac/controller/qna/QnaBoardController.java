@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +21,12 @@ import com.ex.gitprac.data.pet.PetDTO;
 import com.ex.gitprac.data.qna.QnaBoardDTO;
 import com.ex.gitprac.data.qna.QnaReplyDTO;
 import com.ex.gitprac.data.rec.RecDTO;
+import com.ex.gitprac.data.user.UserDTO;
 import com.ex.gitprac.service.qna.QnaBoardService;
 import com.ex.gitprac.service.rec.RecService;
 
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -191,23 +196,60 @@ public class QnaBoardController {
 
     // showRecord 팝업창 화면 구성
     @GetMapping("showRecord")
-    public String showRecord( @RequestParam("nick") String nick, Model model ){
-        // uri 에 get 방식으로 넘어온 nick 값을 사용하여 id 조회
-        String id = qnaBoardService.selectIdByWriter(nick);
+    public String showRecord(
+        @RequestParam("nick") String nick,
+        @RequestParam(name = "petNo", required = false) Integer petNo,
+        @RequestParam(name = "startDate", required = false) String startDate,
+        @RequestParam(name = "endDate", required = false) String endDate,
+        @RequestParam(name = "categoryGroup", required = false) String categoryGroup,
+        @RequestParam(name = "reset", required = false) String reset,
+        HttpSession session,
+        HttpServletResponse response,
+        Model model
+    ) throws IOException {
+        // 로그인한 사용자 ID (작성자)
+        UserDTO users = (UserDTO) session.getAttribute("users");
 
-        // 해당 id 가 작성한 전체 일지 리스트 조회
-        List<RecDTO> allRecList = qnaBoardService.selectListById(id);
-        // 해당 id 가 작성한 일지의 총 갯수 조회
-        int count = qnaBoardService.selectRecCountById(id);
+        // 로그인 안 되어 있을 경우 alert 후 로그인 페이지로 이동
+        if (users == null) {
+            response.setContentType("text/html; charset=UTF-8");
+            PrintWriter out = response.getWriter();
+            out.println("<script>alert('로그인 후 이용 가능합니다.'); window.location.replace('/user/login');</script>");
+            out.flush();
+            return null;
+        }
 
-        // 해당 id 가 데리고 있는 pet 정보 조회
-        List<PetDTO> allPetList = qnaBoardService.selectPetInfoById(id);
+        String writer = qnaBoardService.selectIdByWriter(nick);
+        int offset = 0;
+        int limit = 15;
+        List<RecDTO> recList;
 
-        model.addAttribute("allRecList", allRecList);
-        model.addAttribute("count", count);
-        model.addAttribute("allPetList", allPetList);
+        if ("true".equals(reset)) {
+            recList = qnaBoardService.getRecListWithPaging(writer, offset, limit);
+            startDate = "";
+            endDate = "";
+            categoryGroup = "";
+        } else {
+            // 기본 날짜 범위 설정
+            if (startDate == null || startDate.isBlank()) {
+                startDate = "1900-01-01";
+            }
+            if (endDate == null || endDate.isBlank()) {
+                endDate = "2100-12-31";
+            }
 
-        return "/qna/record";
+            recList = qnaBoardService.getRecListFilteredWithPaging(writer, petNo, startDate, endDate, categoryGroup, offset, limit);
+        }
+
+        // model에 데이터 전달
+        model.addAttribute("recList", recList);
+        model.addAttribute("startDate", startDate.equals("1900-01-01") ? "" : startDate);
+        model.addAttribute("endDate", endDate.equals("2100-12-31") ? "" : endDate);
+        model.addAttribute("categoryGroup", categoryGroup);
+        model.addAttribute("writer", writer);
+        model.addAttribute("nick", nick);
+
+        return "showRecord/record";
     }
 
     // ajax 로 넘어온 댓글 작성
