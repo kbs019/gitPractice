@@ -233,25 +233,25 @@ public class QnaBoardService {
         return count;
     }
 
-    // writer 값으로 id 찾기 (user 테이블) -> id 에 맞는 petNo 조회 (pet 테이블) -> petNo 에 맞는 petName 조회 (pet 테이블) -> id 에 맞는 rec 조회 (rec 테이블)
-    public List<RecDTO> allRecListById( String writer ){
-        List<String> petNameList = null;
-        List<RecDTO> recList = new ArrayList<>();
+    // // writer 값으로 id 찾기 (user 테이블) -> id 에 맞는 petNo 조회 (pet 테이블) -> petNo 에 맞는 petName 조회 (pet 테이블) -> id 에 맞는 rec 조회 (rec 테이블)
+    // public List<RecDTO> allRecListById( String writer ){
+    //     List<String> petNameList = null;
+    //     List<RecDTO> recList = new ArrayList<>();
 
-        String id = qnaBoardMapper.selectIdByWriter(writer);
+    //     String id = qnaBoardMapper.selectIdByWriter(writer);
 
-        List<PetDTO> petList = qnaBoardMapper.selectPetInfoById(id);
+    //     List<PetDTO> petList = qnaBoardMapper.selectPetInfoById(id);
 
-        for( PetDTO pto : petList ){
-            String petName = pto.getPetName();
+    //     for( PetDTO pto : petList ){
+    //         String petName = pto.getPetName();
 
-            petNameList.add(petName);
-        }
+    //         petNameList.add(petName);
+    //     }
 
 
 
-        return recList;
-    }
+    //     return recList;
+    // }
 
     // 작성자 기반 전체 조회 + 페이징
     public List<RecDTO> getRecListWithPaging(String writer, int offset, int limit) {
@@ -276,5 +276,10 @@ public class QnaBoardService {
 
         int end = Math.min(offset + limit, filteredList.size());
         return filteredList.subList(offset, end);
+    }
+
+    // 팝업창에서 글내용 조회
+    public RecDTO getRecByNo(int recNo) {
+        return qnaBoardMapper.findByNo(recNo);
     }
 }

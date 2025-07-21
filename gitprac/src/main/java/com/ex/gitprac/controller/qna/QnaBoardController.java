@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -194,7 +195,7 @@ public class QnaBoardController {
         return "/qna/deletePro";
     }
 
-    // showRecord 팝업창 화면 구성
+    // =============================== showRecord 팝업창 화면 구성 ===========================================
     @GetMapping("showRecord")
     public String showRecord(
         @RequestParam("nick") String nick,
@@ -252,7 +253,28 @@ public class QnaBoardController {
         return "showRecord/record";
     }
 
-    // ajax 로 넘어온 댓글 작성
+    // 팝업창에서 글내용으로 이동
+    @GetMapping("/content/{recNo}/{nick}")
+    public String recContentPage(@PathVariable("recNo") int recNo, Model model, @PathVariable("nick") String nick) {
+        RecDTO rto = qnaBoardService.getRecByNo(recNo);
+        model.addAttribute("rto", rto);
+        model.addAttribute("nick", nick);
+        return "showRecord/recContent";
+    }
+
+    // 팝업창에서 더보기
+    @GetMapping("/showRecord/more")
+    @ResponseBody
+    public List<RecDTO> loadMoreRecs(@RequestParam(name="offset") int offset,
+                                    @RequestParam(name="limit") int limit,
+                                    @RequestParam(name="nick") String nick,
+                                    HttpSession session) {
+        String writer = qnaBoardService.selectIdByWriter(nick);
+        return qnaBoardService.getRecListWithPaging(writer, offset, limit);
+    }
+
+
+    // ================================================== ajax 로 넘어온 댓글 작성 ========================================================
     @PostMapping("replyInsert")
     @ResponseBody
     public String replyInsert( @RequestParam("postNo") int postNo, @RequestParam("writer") String writer, @RequestParam("content") String content ){
