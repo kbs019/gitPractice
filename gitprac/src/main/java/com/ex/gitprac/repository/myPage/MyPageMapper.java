@@ -1,25 +1,50 @@
 package com.ex.gitprac.repository.myPage;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.ex.gitprac.data.ask.AskDTO;
+import com.ex.gitprac.data.diary.DiaryDTO;
+import com.ex.gitprac.data.info.InfoBoardDTO;
 import com.ex.gitprac.data.pet.PetDTO;
+import com.ex.gitprac.data.qna.QnaBoardDTO;
 import com.ex.gitprac.data.user.UserDTO;
 
 @Mapper
 public interface MyPageMapper {
 
-    public UserDTO getUser(String id);
     public int updateUser(UserDTO udto);
+    public String pwCheck(String id);
+    public UserDTO getUser(String id);
     public int deleteUser(String id);
     public PetDTO getPet(int petNo);
+    public List<PetDTO> listPet(String id);
     public int insertPet(PetDTO pdto);
     public int updatePet(PetDTO pdto);
     public int deletePet(int petNo);
-    public int deletePetRec(int petNo);
-    public int changeWriterFromQNA(@Param("udto")UserDTO udto, @Param("pastWriter")String writer);
-    public int changeWriterFromQNARe(@Param("udto")UserDTO udto, @Param("pastWriter")String writer);
-    public int changeWriterFromAsk(@Param("udto")UserDTO udto, @Param("pastWriter")String writer);
-    public int changeWriterFromInfo(@Param("udto")UserDTO udto, @Param("pastWriter")String writer);
-    public int changeWriterFromInfoRe(@Param("udto")UserDTO udto, @Param("pastWriter")String writer);
+    public void deletePetRec(int petNo);
+    public int changeWriterFromQNA(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
+    public int changeWriterFromQNARe(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
+    public int changeWriterFromAsk(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
+    public int changeWriterFromInfo(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
+    public int changeWriterFromDiary(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
+    // public int changeWriterFromInfoRe(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
+    // Ask
+    int countAsk(String id);
+    List<AskDTO> listAsk(Map<String, Object> map);
+
+    // Diary
+    int countDiary(String id);
+    List<DiaryDTO> listDiary(Map<String, Object> map);
+
+    // Info
+    int countInfo(String id);
+    List<InfoBoardDTO> listInfo(Map<String, Object> map);
+
+    // Qna
+    int countQna(String id);
+    List<QnaBoardDTO> listQna(Map<String, Object> map);
 }
