@@ -3,46 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>공지사항 내용</title>
     <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/centersidebar.css" />
+    <link rel="stylesheet" href="/css/centerNoticeContent.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-    <div class="content-top">
-        <div class="content-top-title">
-            <center>공지사항 내용</center>
-            <hr width="800" align="center" color="orange">
+
+    <!-- ✅ 전체 컨테이너 -->
+    <div class="center-container">
+        <!-- ✅ 사이드바 -->
+        <div class="sidebar-wrapper">
+            <div th:replace="~{fragments/centersidebar.html :: centersidebar}"></div>
         </div>
-        <div class="content-top-btns">
-            <div width="800" align="right">
-                <span th:if="${ session.users.role == 2 }">
-                    <input type="button" value="수정" th:onclick="|window.location='@{/admin/noticeUpdate(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">  &nbsp;&nbsp;
+
+        <!-- ✅ 본문 내용 -->
+        <div class="content-wrapper">
+            <div class="content-top">
+                <div class="content-top-title">
+                    <h2>공지사항 내용</h2>
+                </div>
+                <div class="content-top-btns" th:if="${ session.users.role == 2 }">
+                    <input type="button" value="수정" th:onclick="|window.location='@{/admin/noticeUpdate(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
                     <input type="button" value="삭제" th:onclick="|window.location='@{/admin/noticeDelete(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
-                </span>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="content-body">
-        <div class="content-title-wrapper">
-            <h3><span th:text="${nto.title}"></span></h3>
-        </div>
-        <div class="content-info-wrapper">
-            <div class="content-writer-wrapper">
-                작성자 | <span th:text="${nto.writer}"></span>
+
+            <div class="content-body">
+                <div class="content-title-wrapper">
+                    <h3 th:text="${nto.title}"></h3>
+                </div>
+                <div class="content-info-wrapper">
+                    <div class="content-writer-wrapper">
+                        작성자 | <span th:text="${nto.writer}"></span>
+                    </div>
+                    <div class="content-views-wrapper">
+                        조회수 | <span th:text="${nto.views}"></span>
+                    </div>
+                    <div class="content-reg-wrapper">
+                        작성일자 | <span th:text="${#temporals.format(nto.reg, 'yy/MM/dd HH:mm')}"></span>
+                    </div>
+                </div>    
+
+                <div class="content-image-wrapper" th:if="${nto.originalName != null}">
+                    <img th:src="@{|${nto.imgPath + nto.imgName}|}">    
+                </div>
+
+                <div class="content-content-wrapper">
+                    <div th:text="${nto.content}"></div>
+                </div>
             </div>
-            <div class="content-views-wrapper">
-                조회수 | <span th:text="${nto.views}"></span>
-            </div>
-            <div class="content-reg-wrapper">
-                작성일자 | <span th:text="${#temporals.format(nto.reg, 'yy/MM/dd HH:mm')}"></span>
-            </div>
-        </div>    
-        <div class="content-image-wrapper" th:if="${nto.originalName != null}">
-            <img th:src="@{|${nto.imgPath + nto.imgName}|}">    
-        </div>
-        <div class="content-content-wrapper">
-            <div th:text="${nto.content}"></div>
         </div>
     </div>
 </body>

@@ -1,0 +1,119 @@
+body {
+    font-family: 'Noto Serif KR', serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #222;
+}
+
+.center-container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 30px auto;
+    display: flex;
+    gap: 30px;
+}
+
+.sidebar-wrapper {
+    width: 150px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    height: fit-content;
+}
+
+/* 오른쪽 본문 */
+.content-wrapper {
+    flex: 1;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+
+/* 전체 내용 wrapper */
+.content-top,
+.content-body {
+    width: 90%;
+    max-width: 800px;
+    margin: 30px auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 제목 */
+.content-top-title center {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* 버튼 영역 */
+.content-top-btns {
+    text-align: right;
+    margin-top: 10px;
+}
+
+.content-top-btns input[type="button"] {
+    padding: 6px 12px;
+    font-size: 14px;
+    border: 1px solid #444;
+    background-color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.content-top-btns input[type="button"]:hover {
+    background-color: #f2f2f2;
+}
+
+/* 본문 제목 */
+.content-title-wrapper h3 {
+    margin: 0;
+    font-size: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+/* 작성 정보 영역 */
+.content-info-wrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.content-info-wrapper > div {
+    margin-bottom: 5px;
+}
+
+/* 이미지 영역 */
+.content-image-wrapper {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.content-image-wrapper img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* 본문 내용 */
+.content-content-wrapper {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+    white-space: pre-line;
+}

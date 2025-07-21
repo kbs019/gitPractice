@@ -1,138 +1,118 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/css/centersidebar.css">
+    <title>질의응답</title>
     <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/centerAsk.css">
+    <link rel="stylesheet" href="/css/centersidebar.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-    <div class="sidebar-wrapper">
-        <div th:replace="~{fragments/centersidebar.html :: centersidebar}"></div>
-    </div>
-    <h1 align="center">질의응답</h1>
-    <div id="ask-wrapper">
-        <div align="center">	
-            <span class="isAnswered-check">
-                <input type="checkbox" id="isAnsweredStatusCheck">
-                <span>답변완료된 질문만 보기</span>
-            </span>
-            <table width="1000">		
-                <tr>
-                    <td align="right">
-                        <a th:href="@{/admin/askWrite}">글쓰기</a>				
-                    </td>
-                </tr>
-            </table>
+
+    <div class="center-container">
+        <div class="sidebar-wrapper">
+            <div th:replace="~{fragments/centersidebar.html :: centersidebar}"></div>
         </div>
-        <div id="askList-wrapper">
-        <div th:if="${count == 0}">
-            <table border="1" cellspacing="0" cellpadding="0" align="center" width="1000">
-                <tr align="center">
-                    <td><h3>게시판에 저장된 게시글이 없습니다.</h3></td>
-                </tr>
-            </table>
-        </div>
-            <div th:if="${count != 0}">
-                <table border="1" cellspacing="0" cellpadding="0" align="center" width="1000">
-                    <tr height="30">
-                        <th width="100">구분</th>
-                        <th width="350">글제목</th>
-                        <th width="150">작성자</th>
-                        <th width="150">작성일</th>
-                        <th width="150">답변여부</th>
-                        <th width="100">조회수</th>
-                    </tr>			
-                    <tr height="30" th:each="ato : ${list}">
-                        <td align="center">
-                            <span th:if="${ato.category == 0}">
-                                <span>문의</span>
-                            </span>
-                            <span th:if="${ato.category == 1}">
-                                <span>신고</span>
-                            </span>
-                        </td>
-                        <td>
-                            <span th:if="${session.users.role == 2 || session.users.nick == ato.writer}">
-                                <span th:if="${ato.status == 0}">
-                                    <a th:href="@{|/admin/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
-                                </span>
-                                <span th:if="${ato.status != 0}">
-                                    <span>관리자에 의해 제재된 사용자의 글입니다.</span>
-                                </span>
-                            </span>
-                            <span th:unless="${session.users.role == 2 || session.users.nick == ato.writer}">
-                                <span th:if="${ato.status == 0}">
-                                    <span th:text="${ato.title}"></span>
-                                </span>
-                                <span th:if="${ato.status != 0}">
-                                    <span>관리자에 의해 제재된 사용자의 글입니다.</span>
-                                </span>
-                            </span>
-                        </td>
-                        <td th:text="${ato.writer}" align="center"></td>
-                        <td th:text="${#temporals.format(ato.reg, 'yy.MM.dd HH:mm')}" align="center"></td>
-                        <td align="center">
-                            <span th:if="${ato.isAnswered == 0}">
-                                <span>미답변</span>
-                            </span>
-                            <span th:if="${ato.isAnswered == 1}">
-                                <span>답변 완료</span>
-                            </span>
-                        </td>
-                        <td th:text="${ato.views}" align="center"></td>
-                    </tr>
-                </table>
+
+        <div id="ask-wrapper">
+            <h1>질의응답</h1>
+
+            <div class="ask-filter-bar">
+                <label class="isAnswered-check">
+                    <input type="checkbox" id="isAnsweredStatusCheck">
+                    <span>답변완료된 질문만 보기</span>
+                </label>
+                <div class="writeBtn" th:if="${session.users.role == 0}">
+                    <a th:href="@{/admin/askWrite}">글쓰기</a>
+                </div>
             </div>
 
-            <div align="center" th:if="${count > 0}">
-                <span th:if="${startPage} > ${pageCount}">
-                    <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
-                </span>
-                <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-                    <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
-                </span>
-                <span th:if="${endPage} < ${pageCount}">
-                    <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
-                </span>
+            <div id="askList-wrapper">
+                <div th:if="${count == 0}">
+                    <div class="empty-msg">게시판에 저장된 게시글이 없습니다.</div>
+                </div>
+
+                <div th:if="${count != 0}">
+                    <table class="info-table">
+                        <thead>
+                            <tr>
+                                <th width="100">구분</th>
+                                <th width="350">글제목</th>
+                                <th width="150">작성자</th>
+                                <th width="150">작성일</th>
+                                <th width="150">답변여부</th>
+                                <th width="100">조회수</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="ato : ${list}">
+                                <td th:text="${ato.category == 0 ? '문의' : '신고'}"></td>
+                                <td>
+                                    <span th:if="${session.users.role == 2 || session.users.nick == ato.writer}">
+                                        <span th:if="${ato.status == 0}">
+                                            <a th:href="@{|/admin/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
+                                        </span>
+                                        <span th:if="${ato.status != 0}">관리자에 의해 제재된 사용자의 글입니다.</span>
+                                    </span>
+                                    <span th:unless="${session.users.role == 2 || session.users.nick == ato.writer}">
+                                        <span th:if="${ato.status == 0}" th:text="${ato.title}"></span>
+                                        <span th:if="${ato.status != 0}">관리자에 의해 제재된 사용자의 글입니다.</span>
+                                    </span>
+                                </td>
+                                <td th:text="${ato.writer}"></td>
+                                <td th:text="${#temporals.format(ato.reg, 'yy.MM.dd HH:mm')}"></td>
+                                <td th:text="${ato.isAnswered == 1 ? '답변 완료' : '미답변'}"></td>
+                                <td th:text="${ato.views}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="paging" th:if="${count > 0}">
+                    <span th:if="${startPage} > ${pageBlock}">
+                        <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
+                    </span>
+                    <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                        <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
+                    </span>
+                    <span th:if="${endPage} < ${pageCount}">
+                        <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
+                    </span>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
-        $(document).ready(function(){
-
-            // 체크박스 변경
-            $('#isAnsweredStatusCheck').change(function(){
+        $(document).ready(function () {
+            $('#isAnsweredStatusCheck').change(function () {
                 searchPostList();
             });
 
-            // 페이징 클릭 이벤트
-            $(document).on('click', '.ajax-page-link', function(e){
+            $(document).on('click', '.ajax-page-link', function (e) {
                 e.preventDefault();
                 let page = $(this).data('page');
-                searchPostList(page);  // 검색 결과에서 해당 페이지로 이동
+                searchPostList(page);
             });
 
-            function searchPostList(page = 1){
+            function searchPostList(page = 1) {
                 let isAnswered = $('#isAnsweredStatusCheck').is(':checked') ? 1 : 0;
 
                 $.ajax({
-                    url : '/center/askListByIsAnswered',
-                    type : 'post',
-                    data : {
-                        pageNum : page,
-                        isAnswered : isAnswered
+                    url: '/center/askListByIsAnswered',
+                    type: 'post',
+                    data: {
+                        pageNum: page,
+                        isAnswered: isAnswered
                     },
-                    success : function(list){
+                    success: function (list) {
                         $('#askList-wrapper').html(list);
                     },
-                    error : function( xhr, status, error ){
-                        console.log(error + ' 오류 발생');
+                    error: function () {
                         alert('오류 발생');
                     }
                 });
