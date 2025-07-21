@@ -1,10 +1,13 @@
 package com.ex.gitprac.service.qna;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.ex.gitprac.data.pet.PetDTO;
 import com.ex.gitprac.data.qna.QnaBoardDTO;
 import com.ex.gitprac.data.qna.QnaReplyDTO;
 import com.ex.gitprac.data.rec.RecDTO;
@@ -71,6 +74,18 @@ public class QnaBoardService {
     // id 에 해당하는 일지 조회
     public List<RecDTO> selectListById( String id ){
         return qnaBoardMapper.selectListById(id);
+    }
+    // id 에 해당하는 일지의 전체 갯수 조회
+    public int selectRecCountById( String id ){
+        return qnaBoardMapper.selectRecCountById( id );
+    }
+    // id 에 해당하는 pet 정보 조회
+    public List<PetDTO> selectPetInfoById( String id ){
+        return qnaBoardMapper.selectPetInfoById(id);
+    }
+    // id 에 해당하는 petNo 조회 후, id 와 petNo 가 모두 만족하는 rec 조회
+    public List<RecDTO> selectRecByIdAndPetNo( String id, int petNo ){
+        return qnaBoardMapper.selectRecByIdAndPetNo( id, petNo );
     }
 
     // 답변 작성 + isAnswered 컬럼의 값 변경

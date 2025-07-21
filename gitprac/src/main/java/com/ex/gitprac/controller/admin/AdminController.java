@@ -467,6 +467,8 @@ public class AdminController {
     }
 
     // userManage 에서 체크박스 선택으로 미답변 게시글 출력
+
+    
     // 답변 여부 선택
     @PostMapping("askListByIsAnswered")
     public String searchList2( @RequestParam(name="pageNum", defaultValue="1") int pageNum, @RequestParam("isAnswered") int isAnswered , Model model) {

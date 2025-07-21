@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ex.gitprac.data.pet.PetDTO;
 import com.ex.gitprac.data.qna.QnaBoardDTO;
 import com.ex.gitprac.data.qna.QnaReplyDTO;
 import com.ex.gitprac.data.rec.RecDTO;
@@ -191,11 +192,21 @@ public class QnaBoardController {
     // showRecord 팝업창 화면 구성
     @GetMapping("showRecord")
     public String showRecord( @RequestParam("nick") String nick, Model model ){
+        // uri 에 get 방식으로 넘어온 nick 값을 사용하여 id 조회
         String id = qnaBoardService.selectIdByWriter(nick);
 
-        List<RecDTO> list = qnaBoardService.selectListById(id);
+        // 해당 id 가 작성한 전체 일지 리스트 조회
+        List<RecDTO> allRecList = qnaBoardService.selectListById(id);
+        // 해당 id 가 작성한 일지의 총 갯수 조회
+        int count = qnaBoardService.selectRecCountById(id);
 
-        model.addAttribute("list", list);
+        // 해당 id 가 데리고 있는 pet 정보 조회
+        List<PetDTO> allPetList = qnaBoardService.selectPetInfoById(id);
+
+        model.addAttribute("allRecList", allRecList);
+        model.addAttribute("count", count);
+        model.addAttribute("allPetList", allPetList);
+
         return "/qna/record";
     }
 

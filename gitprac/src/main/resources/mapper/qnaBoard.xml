@@ -196,6 +196,21 @@
 
   <!-- 일지 테이블에서 writer 가 id 와 같을 경우의 리스트 출력 -->
   <select id="selectListById" resultType="com.ex.gitprac.data.rec.RecDTO">
-    select * from rec where writer=#{id}
+    select * from rec where writer=#{id} order by reg desc
+  </select>
+
+  <!-- id 가 작성한 일지의 총 갯수 -->
+  <select id="selectRecCountById" resultType="int">
+    select count(*) from rec where writer=#{id}
+  </select>
+
+  <!-- pet 테이블에서 id 에 해당하는 반려견 정보 출력 -->
+  <select id="selectPetInfoById" resultType="com.ex.gitprac.data.pet.PetDTO">
+    select * from pet where id=#{id}
+  </select>
+
+  <!-- id 와 petNo 이 모두 같은 경우의 일지 출력 -->
+  <select id="selectRecByIdAndPetNo" resultType="com.ex.gitprac.data.rec.RecDTO">
+    select * from rec where writer=#{id} and petNo=#{petNo} order by reg desc
   </select>
 </mapper>
