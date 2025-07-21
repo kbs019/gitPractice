@@ -4,7 +4,9 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
@@ -74,47 +76,29 @@ public class DiaryController {
         return "diary/main";
     }
     
-    @PostMapping("main")
+    @PostMapping("listByDate")
     @ResponseBody
-    public String listByDate(HttpSession session, Model model,@RequestParam("startDate") LocalDate startDate, @RequestParam("endDate") LocalDate endDate, @RequestParam(name="pageNum", defaultValue="1" )int pageNum) {
-        
-        UserDTO udto = (UserDTO)session.getAttribute("users");
-        String writer = udto.getNick();
-        if (writer == null) return "redirect:/user/login";
+    public Map<String, Object> listByDate(@RequestParam("startDate") String startDate,
+                                        @RequestParam("endDate") String endDate,
+                                        @RequestParam(name="pageNum", defaultValue = "1") int pageNum,
+                                        HttpSession session) {
+        UserDTO dto = (UserDTO)session.getAttribute("users");
+        String writer = dto.getNick();
 
-        int pageSize = 6;
-		int currentPage = pageNum;
-		int start = (currentPage - 1)*pageSize + 1;
-		int end = currentPage * pageSize;
-		int count = diaryService.countDiary(writer);
-		String strStartDate = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String strEndDate = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		List<DiaryDTO> listDate = null;
-		if( count > 0) {
-			listDate = diaryService.listDiaryByDate(writer, strStartDate, strEndDate, start, end);
-		}else {
-			listDate = Collections.EMPTY_LIST;
-		}
-		int pageCount = count/pageSize + (count%pageSize == 0 ? 0 : 1);
-		int startPage = (int)((currentPage - 1)/10)*10 + 1;
-		int pageBlock = 10;
-		int endPage = startPage+pageBlock - 1 ;
-		if(endPage > pageCount) {
-			endPage = pageCount;
-		}
-		
-		model.addAttribute("pageCount", pageCount);
-		model.addAttribute("startPage", startPage);
-		model.addAttribute("pageBlock", pageBlock);
-		model.addAttribute("endPage", endPage);
-		model.addAttribute("pageSize", pageSize);
-		model.addAttribute("pageNum", pageNum);
-		model.addAttribute("start", start);
-		model.addAttribute("end", end);
-		model.addAttribute("count", count);
-		model.addAttribute("list", listDate);
-        
-        return "diary/main";
+        int pageSize = 9;
+        int start = (pageNum - 1) * pageSize + 1;
+        int end = start + pageSize - 1;
+
+        int count = diaryService.countDiaryByDate(writer, startDate, endDate);
+        List<DiaryDTO> list = diaryService.listDiaryByDate(writer, startDate, endDate, start, end);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", list);
+        map.put("count", count);
+        map.put("pageNum", pageNum);
+        map.put("pageSize", pageSize);
+
+        return map;
     }
 
     @PostMapping("insert")
@@ -132,7 +116,21 @@ public class DiaryController {
         // 이미지 파일의 중복을 피하기 위해 새로운 이미지 파일의 이름 생성
         String newName = UUID.randomUUID().toString().replace("-", "")+originalName;
         // 현재 프로젝트 내의 이미지 파일을 저장할 폴더의 경로를 지정
-        String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\diaryUpload\\";
+
+
+
+        // 여러분 여기에용!!!
+        // 여러분 여기에용!!!       \\gitprac
+        // 여러분 여기에용!!!
+
+        String uploadPath = new File("").getAbsolutePath()+"\\gitprac\\src\\main\\resources\\static\\diaryUpload\\";
+
+        // 여러분 여기에용!!!
+        // 여러분 여기에용!!!       \\gitprac
+        // 여러분 여기에용!!!
+
+
+
         // 브라우저가 접근할 수 있는 URL 경로
         String imgWebPath = "/diaryUpload/";
         
