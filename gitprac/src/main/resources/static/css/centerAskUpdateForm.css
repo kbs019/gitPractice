@@ -1,0 +1,99 @@
+/* centerAskUpdateForm.css */
+
+body {
+    font-family: 'Noto Serif KR', serif;
+    background-color: #f9f9f9;
+    color: #222;
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    font-size: 24px;
+    margin: 30px 0 10px;
+    color: #333;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    width: 400px;
+    margin-bottom: 30px;
+}
+
+.body-content {
+    margin-bottom: 60px;
+}
+
+.update {
+    width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 30px;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.update label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    font-size: 15px;
+    color: #444;
+}
+
+.update input[type="text"],
+.update select,
+.update input[type="file"],
+.update textarea {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+.update textarea {
+    min-height: 200px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.writer-wrapper span {
+    font-size: 14px;
+    color: #666;
+}
+
+.image-wrapper img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.btns-wrapper {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.btns-wrapper button {
+    font-size: 14px;
+    padding: 8px 16px;
+    margin: 0 8px;
+    border: 1px solid #444;
+    background-color: #fff;
+    color: #222;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btns-wrapper button:hover {
+    background-color: #eee;
+}

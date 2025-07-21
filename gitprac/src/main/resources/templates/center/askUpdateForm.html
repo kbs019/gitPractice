@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/centerAskUpdateForm.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -20,7 +21,7 @@
                 <input type="hidden" name="askNo" th:value="${ato.askNo}">
                 <div class="update" align="center">
                     <div class="title-wrapper">
-                        <label for="title">제목</label> : 
+                        <label for="title">제목</label>
                         <input type="text" id="title" name="title" th:value="${ato.title}" required>
                     </div>
                     <div class="writer-wrapper">

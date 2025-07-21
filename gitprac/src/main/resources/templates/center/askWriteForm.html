@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/centerAskWriteForm.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -18,7 +19,7 @@
             <form th:action="@{/center/askWrite}" method="post" enctype="multipart/form-data">
                 <div class="writeForm-wrapper" align="center">
                     <div class="title-wrapper">
-                        <label for="title">글 제목</label> : 
+                        <label for="title">글 제목</label>
                         <input type="text" id="title" name="title" required>
                     </div>
                     <div class="writer-wrapper">
