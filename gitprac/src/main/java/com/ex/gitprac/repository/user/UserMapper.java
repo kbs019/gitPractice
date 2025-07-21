@@ -35,4 +35,10 @@ public interface  UserMapper {
     public UserDTO findById( String id );
     // 회원 정지 기간 설정
     public boolean banUser( @Param("id") String id, @Param("until") LocalDate until );
+    // 아이디 중복 체크 
+    public UserDTO checkById(String id);
+    // 닉네임 중복 체크
+    public UserDTO checkByNick(String nick);
+    // 이메일 중복 체크
+    public UserDTO checkByEmail(String email);
 }

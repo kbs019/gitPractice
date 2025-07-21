@@ -94,6 +94,8 @@ public interface QnaBoardMapper {
     // 제재 기간이 끝나 다시 status 값이 0 으로 돌아감
     public void restoreStatusByNick( String nick );
 
-    // 일지 확인 메서드 (writer 값에 대한)
+    // id 를 확인 메서드 (writer 값에 대한)
     public String selectIdByWriter(String writer);
+    // id 에 대한 rec 리스트 조회
+    public List<RecDTO> selectListById(String id);
 }

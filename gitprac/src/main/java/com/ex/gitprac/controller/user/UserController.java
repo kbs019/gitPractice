@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ex.gitprac.data.user.UserDTO;
 import com.ex.gitprac.service.user.UserService;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
     private final UserService userService;
 
+    // 로그인
     @GetMapping("login")
     public String loginString() {
         return "user/loginForm";
@@ -40,6 +42,7 @@ public class UserController {
         return "user/loginPro";
     } 
 
+    // 로그아웃
     @GetMapping("logout")
     public String logout( HttpSession session ) {
         session.invalidate();
@@ -50,7 +53,7 @@ public class UserController {
         return new String();
     }
     
-
+    // 회원가입
     @GetMapping("insert")
     public String userInsert() {
         return "user/insertForm";
@@ -83,4 +86,28 @@ public class UserController {
 
         return "user/loginPro2";
     }
+
+    // 아이디 중복체크
+    @GetMapping("checkId")
+    @ResponseBody
+    public String checkId(@RequestParam("id") String id) {
+
+        return (userService.checkById(id) == null ) ? "ok" : "no";
+    }
+
+    // 닉네임 중복체크
+    @GetMapping("checkNick")
+    @ResponseBody
+    public String checkNick(@RequestParam("nick") String nick) {
+        return (userService.checkByNick(nick) == null) ? "ok" : "no";
+    }
+    
+
+    // 이메일 중복체크
+    @GetMapping("checkEmail")
+    @ResponseBody
+    public String chckEmail(@RequestParam("email") String email) {
+        return (userService.checkByEmail(email) == null ) ? "ok" : "no";
+    }
+    
 }
