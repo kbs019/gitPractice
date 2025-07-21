@@ -1,144 +1,143 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>하루犬과 - 질의응답</title>
+
     <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/adminAsk.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- ✅ 공통 헤더 -->
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-    <h1>질의응답</h1>
-    <div id="ask-wrapper">
-        <div align="center">	
-            <span class="isAnswered-check">
-                <input type="checkbox" id="isAnsweredStatusCheck">
-                <span>미답변 질문만 보기</span>
-            </span>
-            <table width="1000">		
-                <tr>
-                    <td align="right">
-                        <a th:href="@{/admin/askWrite}">글쓰기</a>				
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div id="askList-wrapper">
-            <div th:if="${count == 0}">
-                <table border="1" cellspacing="0" cellpadding="0" align="center" width="1000">
-                    <tr align="center">
-                        <td><h3>게시판에 저장된 게시글이 없습니다.</h3></td>
-                    </tr>
-                </table>
-            </div>
-            <div th:if="${count != 0}">
-                <table border="1" cellspacing="0" cellpadding="0" align="center" width="1000">
-                    <tr height="30">
-                        <th width="100">구분</th>
-                        <th width="350">글제목</th>
-                        <th width="150">작성자</th>
-                        <th width="150">작성일</th>
-                        <th width="150">답변여부</th>
-                        <th width="100">조회수</th>
-                    </tr>			
-                    <tr height="30" th:each="ato : ${list}">
-                        <td align="center">
-                            <span th:if="${ato.category == 0}">
-                                <span>문의</span>
-                            </span>
-                            <span th:if="${ato.category == 1}">
-                                <span>신고</span>
-                            </span>
-                        </td>
-                        <td>
-                            <span th:if="${ato.status == 0}">
-                                <a th:href="@{|/admin/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
-                            </span>
-                            <span th:if="${ato.status != 0}">
-                                <span>관리자에 의해 제재된 사용자의 글입니다.</span>
-                            </span>
-                        </td>
-                        <td align="center">
-                            <span th:text="${ato.writer}"></span>
-                            <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${ato.writer}">
-                            📋
-                            </span>
-                        </td>
-                        <td th:text="${#temporals.format(ato.reg, 'yy.MM.dd HH:mm')}" align="center"></td>
-                        <td align="center">
-                            <span th:if="${ato.isAnswered == 0}">
-                                <span>미답변</span>
-                            </span>
-                            <span th:if="${ato.isAnswered == 1}">
-                                <span>답변 완료</span>
-                            </span>
-                        </td>
-                        <td th:text="${ato.views}" align="center"></td>
-                    </tr>
-                </table>
+
+    <div class="center-container">
+        <!-- 사이드바는 필요 시 여기에 추가 -->
+
+        <!-- ✅ 메인 콘텐츠 -->
+        <div id="ask-wrapper">
+            <h1>질의응답</h1>
+
+            <!-- ✅ 필터 & 글쓰기 버튼 -->
+            <div class="ask-filter-bar">
+                <label class="isAnswered-check">
+                    <input type="checkbox" id="isAnsweredStatusCheck">
+                    <span>미답변 질문만 보기</span>
+                </label>
+
+                <div class="writeBtn">
+                    <a th:href="@{/admin/askWrite}">글쓰기</a>
+                </div>
             </div>
 
-            <div align="center" th:if="${count > 0}">
-                <span th:if="${startPage} > ${pageCount}">
-                    <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
-                </span>
-                <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-                    <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
-                </span>
-                <span th:if="${endPage} < ${pageCount}">
-                    <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
-                </span>
+            <!-- ✅ 게시글 리스트 -->
+            <div id="askList-wrapper">
+                <!-- 게시글 없을 때 -->
+                <div th:if="${count == 0}" class="empty-msg">
+                    게시판에 저장된 게시글이 없습니다.
+                </div>
+
+                <!-- 게시글 있을 때 -->
+                <div th:if="${count != 0}">
+                    <table class="info-table">
+                        <thead>
+                            <tr>
+                                <th>구분</th>
+                                <th>글제목</th>
+                                <th>작성자</th>
+                                <th>작성일</th>
+                                <th>답변여부</th>
+                                <th>조회수</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="ato : ${list}">
+                                <td>
+                                    <span th:if="${ato.category == 0}">문의</span>
+                                    <span th:if="${ato.category == 1}">신고</span>
+                                </td>
+                                <td>
+                                    <span th:if="${ato.status == 0}">
+                                        <a th:href="@{|/admin/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
+                                    </span>
+                                    <span th:if="${ato.status != 0}">
+                                        관리자에 의해 제재된 사용자의 글입니다.
+                                    </span>
+                                </td>
+                                <td>
+                                    <span th:text="${ato.writer}"></span>
+                                    <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${ato.writer}">📋</span>
+                                </td>
+                                <td th:text="${#temporals.format(ato.reg, 'yy.MM.dd HH:mm')}"></td>
+                                <td>
+                                    <span th:if="${ato.isAnswered == 0}">미답변</span>
+                                    <span th:if="${ato.isAnswered == 1}">답변 완료</span>
+                                </td>
+                                <td th:text="${ato.views}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ✅ 페이징 영역 -->
+                <div class="paging" th:if="${count > 0}">
+                    <span th:if="${startPage} > ${pageBlock}">
+                        <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
+                    </span>
+                    <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                        <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
+                    </span>
+                    <span th:if="${endPage} < ${pageCount}">
+                        <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
+                    </span>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- ✅ JS 스크립트 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
-        $(document).ready(function(){
-
-            // 체크박스 변경
-            $('#isAnsweredStatusCheck').change(function(){
+        $(function () {
+            // 필터 체크박스
+            $('#isAnsweredStatusCheck').on('change', function () {
                 searchPostList();
             });
 
-            // 페이징 클릭 이벤트
-            $(document).on('click', '.ajax-page-link', function(e){
+            // 페이징 클릭
+            $(document).on('click', '.ajax-page-link', function (e) {
                 e.preventDefault();
-                let page = $(this).data('page');
-                searchPostList(page);  // 검색 결과에서 해당 페이지로 이동
+                const page = $(this).data('page');
+                searchPostList(page);
             });
 
-            function searchPostList(page = 1){
-                let isAnswered = $('#isAnsweredStatusCheck').is(':checked') ? 0 : 1;
+            // Ajax 호출
+            function searchPostList(page = 1) {
+                const isAnswered = $('#isAnsweredStatusCheck').is(':checked') ? 0 : 1;
 
                 $.ajax({
-                    url : '/admin/askListByIsAnswered',
-                    type : 'post',
-                    data : {
-                        pageNum : page,
-                        isAnswered : isAnswered
-                    },
-                    success : function(list){
+                    url: '/admin/askListByIsAnswered',
+                    type: 'post',
+                    data: { pageNum: page, isAnswered: isAnswered },
+                    success: function (list) {
                         $('#askList-wrapper').html(list);
                     },
-                    error : function( xhr, status, error ){
-                        console.log(error + ' 오류 발생');
-                        alert('오류 발생');
+                    error: function (xhr, status, error) {
+                        console.log("오류 발생:", error);
+                        alert("오류 발생");
                     }
                 });
             }
-        });
 
-        // 작성자명을 클릭하여 복사하는 API 사용
-        $(document).ready(function(){
-            $(document).on('click', '.copy-icon', function(e){
-                let writer = $(this).data('writer');
-    
-                navigator.clipboard.writeText(writer).then(function(){
+            // 작성자 복사
+            $(document).on('click', '.copy-icon', function () {
+                const writer = $(this).data('writer');
+                navigator.clipboard.writeText(writer).then(() => {
                     alert(`"${writer}" 복사됨`);
-                }).catch(function(err){
-                    console.log("복사 실패 : ", err);
+                }).catch(err => {
+                    console.error("복사 실패: ", err);
                 });
             });
         });

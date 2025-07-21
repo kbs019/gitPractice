@@ -1,0 +1,101 @@
+body {
+    font-family: 'Noto Serif KR', serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #222;
+}
+
+#post-Management {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+/* 각 게시판 영역 공통 */
+#qna-board-connect,
+#info-board-connect {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+/* 제목 */
+#qna-board-connect h1,
+#info-board-connect h1 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #333;
+    text-align: center;
+}
+
+/* 더보기 링크 */
+#qna-board-connect span > a,
+#info-board-connect h4 > a {
+    font-size: 14px;
+    color: #666;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+#qna-board-connect span > a:hover,
+#info-board-connect h4 > a:hover {
+    text-decoration: underline;
+}
+
+/* 게시판 테이블 */
+#qna-list-wrapper table,
+#info-list-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+#qna-list-wrapper th,
+#qna-list-wrapper td,
+#info-list-wrapper th,
+#info-list-wrapper td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+#qna-list-wrapper th,
+#info-list-wrapper th {
+    background-color: #f5f5f5;
+    font-weight: 600;
+    color: #555;
+}
+
+#qna-list-wrapper td a,
+#info-list-wrapper td a {
+    color: #222;
+    text-decoration: none;
+}
+
+#qna-list-wrapper td a:hover,
+#info-list-wrapper td a:hover {
+    text-decoration: underline;
+    color: #888;
+}
+
+/* 작성자 이름 + 복사 아이콘 */
+.writer-name-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.copy-icon {
+    cursor: pointer;
+    font-size: 16px;
+    color: #888;
+}
+
+.copy-icon:hover {
+    color: #444;
+}

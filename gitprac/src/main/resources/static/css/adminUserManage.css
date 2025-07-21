@@ -1,0 +1,150 @@
+body {
+    font-family: 'Noto Serif KR', serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #222;
+}
+
+#user-manage {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+#user-manage h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: left;
+}
+
+/* 검색창 */
+#select-users-info {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#select-users-info input[type="text"] {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+#select-users-info button {
+    padding: 8px 16px;
+    background-color: #fff;
+    border: 1px solid #444;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #222;
+}
+
+#select-users-info button:hover {
+    background-color: #f0f0f0;
+}
+
+/* 회원 수 */
+.users-count {
+    display: inline-block;
+    margin-right: 8px;
+    font-weight: 600;
+    color: #444;
+}
+
+#users-info {
+    margin-top: 20px;
+}
+
+/* 테이블 */
+.users-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.users-wrapper th, 
+.users-wrapper td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+.users-wrapper th {
+    background-color: #f5f5f5;
+    color: #555;
+    font-weight: 600;
+}
+
+.users-wrapper td select {
+    padding: 5px 8px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+/* 제재 기간 드롭다운만 특별 처리 */
+.ban-period {
+    margin-top: 6px;
+    width: 100%;
+}
+
+/* 제재 기간 텍스트 */
+.banned-until {
+    font-size: 13px;
+    color: #666;
+}
+
+/* 페이징 */
+.paging {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.paging a {
+    margin: 0 6px;
+    text-decoration: none;
+    color: #444;
+    padding: 4px 10px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.paging a:hover {
+    background-color: #e0e0e0;
+}
+
+.paging a.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* 반응형 대응 최소화 */
+@media (max-width: 768px) {
+    #user-manage {
+        padding: 10px;
+    }
+
+    .users-wrapper table {
+        font-size: 13px;
+    }
+
+    #select-users-info {
+        flex-direction: column;
+    }
+
+    #select-users-info input, #select-users-info button {
+        width: 100%;
+    }
+}
