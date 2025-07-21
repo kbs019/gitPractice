@@ -1,83 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정보 게시판</title>
+    <link rel="stylesheet" href="/css/infoList.css">
     <link rel="stylesheet" href="/css/header.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
-<title>Document</title>
 </head>
 <body>
-<div th:replace="~{fragments/header.html :: headerFragment}"></div>
-    <div align="center">
-        <table width="800">
-            <tr>
-                <td>
-                    <a th:href="@{/info/write}">글쓰기</a>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div th:if="${count == 0}">
-        <table align="center" width="800">
-            <tr>
-                <td>
-                    <h3>
-                        정보 게시판 텅~!!!
-                    </h3>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div th:if="${count != 0}">
-        <div align="center">
-            <select id="category" name="category" onchange="changeCategory(this.value)">
-                <option value="전체글" th:selected="${category} == '전체글'">전체글</option>
-                <option value="소형견" th:selected="${category} == '소형견'">소형견</option>
-                <option value="중형견" th:selected="${category} == '중형견'">중형견</option>
-                <option value="대형견" th:selected="${category} == '대형견'">대형견</option>
-            </select>
-        <table align="center" width="800">
-            <tr height="30">
-                <th width="50">글번호</th>
-                <th width="100">작성자</th>
-                <th width="80">카테고리</th>
-                <th width="350">제목</th>
-                <th width="50">조회수</th>
-                <th width="200">작성날짜</th>
-            </tr>           
-            <tr height="30" align="center" th:each="dto : ${list}">
-                <td width="50" th:text="${dto.postNo}"></td>
-                <td width="100" th:text="${dto.writer}"></td>
-                <td width="60"th:text="${dto.category}"></td>
-                <td width="350">
-                    <a th:href="@{|/info/content?postNo=${dto.postNo}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
-                </td>
-                <td th:text="${dto.views}"></td>
-                <td th:text="${#temporals.format(dto.reg, 'yy.MM.dd HH:mm')}" align="center"></td>
-            </tr>
-        </table>
-    </div>
-    <div class="paging" align="center" th:if="${count > 0}">
-        <span th:if="${startPage} > ${pageCount}">
-            <a th:href="@{|/info/list?pageNum=${startPage - pageBlock}&category=${category}|}">[이전]</a>
-        </span>
-        <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-            <a th:href="@{|/info/list?pageNum=${i}&category=${category}|}" th:text="'['+${i}+']'"></a>
-        </span>
-        <span th:if="${endPage} < ${pageCount}">
-            <a th:href="@{|/info/list?pageNum=${startPage + pageBlock}&category=${category}|}">[다음]</a>
-        </span>
-    </div>
+    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
 
-    <script>
-        function changeCategory(value) {
-            if (value === "전체글") {
-                location.href = "/info/list";
-            } else {
-                location.href = "/info/list?category=" + encodeURIComponent(value);
-            }
-        }
-    </script>
+    <div id="info-wrapper">
+        <!-- ✅ 카테고리 사이드바 -->
+        <aside class="category-sidebar">
+            <ul>
+                <li><a th:href="@{/info/list}" th:classappend="${category} == '전체글' ? 'active'">전체글</a></li>
+                <li><a th:href="@{/info/list(category='대형견')}" th:classappend="${category} == '대형견' ? 'active'">대형견</a></li>
+                <li><a th:href="@{/info/list(category='중형견')}" th:classappend="${category} == '중형견' ? 'active'">중형견</a></li>
+                <li><a th:href="@{/info/list(category='소형견')}" th:classappend="${category} == '소형견' ? 'active'">소형견</a></li>
+            </ul>
+        </aside>
+
+        <!-- ✅ 게시판 본문 -->
+        <section class="info-list-area">
+            <div class="writeBtn">
+                <a th:href="@{/info/write}">글쓰기</a>
+            </div>
+
+            <!-- ✅ 게시글 없음 -->
+            <div th:if="${count == 0}" class="empty-msg">
+                정보 게시판 텅~!!!
+            </div>
+
+            <!-- ✅ 게시글 목록 -->
+            <div th:if="${count != 0}">
+                <table class="info-table">
+                    <thead>
+                        <tr>
+                            <th>글번호</th>
+                            <th>작성자</th>
+                            <th>카테고리</th>
+                            <th>제목</th>
+                            <th>조회수</th>
+                            <th>작성날짜</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="dto : ${list}">
+                            <td th:text="${dto.postNo}"></td>
+                            <td th:text="${dto.writer}"></td>
+                            <td th:text="${dto.category}"></td>
+                            <td>
+                                <a th:href="@{|/info/content?postNo=${dto.postNo}&pageNum=${pageNum}|}"
+                                   th:text="${dto.title}"></a>
+                            </td>
+                            <td th:text="${dto.views}"></td>
+                            <td th:text="${#temporals.format(dto.reg, 'yy.MM.dd HH:mm')}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ✅ 페이징 -->
+            <div class="paging" th:if="${count > 0}">
+                <span th:if="${startPage > pageBlock}">
+                    <a th:href="@{|/info/list?pageNum=${startPage - pageBlock}&category=${category}|}">[이전]</a>
+                </span>
+                <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                    <a th:href="@{|/info/list?pageNum=${i}&category=${category}|}"
+                       th:text="'[' + ${i} + ']'"
+                       th:class="${i == pageNum} ? 'active' : null"></a>
+                </span>
+                <span th:if="${endPage < pageCount}">
+                    <a th:href="@{|/info/list?pageNum=${startPage + pageBlock}&category=${category}|}">[다음]</a>
+                </span>
+            </div>
+        </section>
+    </div>
 </body>
 </html>
