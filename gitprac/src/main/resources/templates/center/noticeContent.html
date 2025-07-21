@@ -25,9 +25,11 @@
                 <div class="content-top-title">
                     <h2>공지사항 내용</h2>
                 </div>
-                <div class="content-top-btns" th:if="${ session.users.role == 2 }">
-                    <input type="button" value="수정" th:onclick="|window.location='@{/center/noticeUpdate(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
-                    <input type="button" value="삭제" th:onclick="|window.location='@{/center/noticeDelete(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
+                <div class="content-top-btns">
+                    <span th:if="${ session.users.role == 2 }">
+                        <input type="button" value="수정" th:onclick="|window.location='@{/center/noticeUpdate(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
+                        <input type="button" value="삭제" th:onclick="|window.location='@{/center/noticeDelete(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
+                    </span>
                 </div>
             </div>
 
@@ -54,6 +56,9 @@
                 <div class="content-content-wrapper">
                     <div th:text="${nto.content}"></div>
                 </div>
+            </div>
+            <div class="content-bottom-btns">
+                <input type="button" value="글목록" th:onclick="|window.location='@{/center/notice(pageNum=${pageNum})}'|">
             </div>
         </div>
     </div>

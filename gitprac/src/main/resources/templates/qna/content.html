@@ -20,7 +20,9 @@
             <div width="600" align="right">
                 <span th:if="${ session.users.nick == qto.writer }">
                     <input type="button" value="수정" th:onclick="|window.location='@{/qna/update(postNo=${qto.postNo}, pageNum=${pageNum})}'|">  &nbsp;&nbsp;
-                    <input type="button" value="삭제" th:onclick="|window.location='@{/qna/delete(postNo=${qto.postNo}, pageNum=${pageNum})}'|">
+                </span>
+                <span th:if="${session.users.nick == qto.writer || session.users.role == 2}">
+                    <input type="button" value="삭제" th:onclick="|window.location='@{/qna/delete(postNo=${qto.postNo}, pageNum=${pageNum})}'|">  &nbsp;&nbsp;
                 </span>
             </div>
         </div>
@@ -54,6 +56,10 @@
                 <button onclick="showRecord()">일지 보기</button>
             </span>
         </div>
+    </div>
+
+    <div class="content-bottom-btns">
+        <input type="button" value="글목록" th:onclick="|window.location='@{/qna/list(pageNum=${pageNum})}'|">
     </div>
 
     <div class="reply-block">

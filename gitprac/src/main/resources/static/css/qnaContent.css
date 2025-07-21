@@ -25,6 +25,7 @@ body {
     width: 100%;
 }
 
+/* 버튼 영역 */
 .content-top-btns {
     text-align: right;
     margin-top: 10px;
@@ -44,6 +45,26 @@ body {
     background-color: #f2f2f2;
 }
 
+.content-bottom-btns {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.content-bottom-btns input[type="button"] {
+    padding: 6px 12px;
+    font-size: 14px;
+    border: 1px solid #444;
+    background-color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.content-bottom-btns input[type="button"]:hover {
+    background-color: #f2f2f2;
+}
+
+/* 본문 부분 */
 .content-body {
     width: 80%;
     max-width: 800px;
