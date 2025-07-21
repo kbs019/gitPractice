@@ -162,15 +162,6 @@ public class MyPageController {
         return result;
     }
     
-    // @GetMapping("/listAsk")
-    // @ResponseBody
-    // public Map<String, Object> listAsk(@RequestParam int page, HttpSession session) {
-    //     String writer = ((UserDTO) session.getAttribute("users")).getNick();
-    //     int total = myPageService.countAsk(writer);
-    //     List<AskDTO> list = myPageService.listAsk(writer, page);
-    //     return Map.of("list", list, "total", total);
-    // }
-
     @GetMapping("/listAsk")
     @ResponseBody
     public Map<String, Object> listAsk(@RequestParam int page, HttpSession session) {

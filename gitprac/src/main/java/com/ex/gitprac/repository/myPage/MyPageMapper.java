@@ -34,15 +34,10 @@ public interface MyPageMapper {
     public int changeWriterFromAskRe(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
     public int changeWriterFromDiary(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
     public int changeWriterFromRec(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
-    // Ask
-    int countAsk(String writer);
-    List<AskDTO> listAsk(Map<String, Object> map);
-
-    // Info
-    int countInfo(String writer);
-    List<InfoBoardDTO> listInfo(Map<String, Object> map);
-
-    // Qna
-    int countQna(String writer);
-    List<QnaBoardDTO> listQna(Map<String, Object> map);
+    public int countAsk(String writer);
+    public List<AskDTO> listAsk(Map<String, Object> map);
+    public int countInfo(String writer);
+    public List<InfoBoardDTO> listInfo(Map<String, Object> map);
+    public int countQna(String writer);
+    public List<QnaBoardDTO> listQna(Map<String, Object> map);
 }

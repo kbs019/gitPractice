@@ -8,7 +8,6 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import com.ex.gitprac.data.ask.AskDTO;
-import com.ex.gitprac.data.diary.DiaryDTO;
 import com.ex.gitprac.data.info.InfoBoardDTO;
 import com.ex.gitprac.data.pet.PetDTO;
 import com.ex.gitprac.data.qna.QnaBoardDTO;
@@ -82,17 +81,7 @@ public class MyPageService {
     public void deletePetRec(int petNo){        
         myPageMapper.deletePetRec(petNo);
     };
-        // 🟡 공통: 페이징 계산
-    private Map<String, Object> getPagingParams(String id, int page) {
-        int start = (page - 1) * 10 + 1;
-        int end = page * 10;
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", id);
-        map.put("start", start);
-        map.put("end", end);
-        return map;
-    }
-
+        
     public List<AskDTO> listAsk(Map<String, Object> param) {
         return myPageMapper.listAsk(param);
     }
