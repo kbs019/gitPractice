@@ -50,13 +50,29 @@
             background-color: #333;
             color: #fff;
         }
+        #datePickerArea input[type="date"] {
+            padding: 5px;
+            margin: 0 10px;
+        }
+        #datePickerArea button {
+            padding: 5px 10px;
+            margin-left: 5px;
+        }
     </style>
 </head>
 <body>
-    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+<div th:replace="~{fragments/header.html :: headerFragment}"></div>
 <h2 style="text-align:center;">나의 다이어리</h2>
 <!-- 여기에 달력버튼 + 달력에 의한 조회 해야함 -->
+<div id="dateSearchContainer" style="text-align:center; margin-top:20px;">
+    <button id="showDateSearchBtn">기간 조회</button>
 
+    <div id="datePickerArea" style="display:none; margin-top:10px;">
+        <input type="date" id="startDate"> ~ <input type="date" id="endDate">
+        <button id="searchByDateBtn">조회</button>
+        <button id="resetDateBtn">초기화</button>
+    </div>
+</div>
 <!-- 글쓰기 버튼 -->
 <div style="text-align:center;">
     <button id="writeBtn">글 쓰기</button>
@@ -120,8 +136,95 @@
 
 
 <script>
+    // 기간조회 버튼 클릭 시 달력 표시
+    $('#showDateSearchBtn').click(function () {
+        $('#datePickerArea').slideToggle(); // 달력 영역 보이기/숨기기 토글
+    });
+
+    // Ajax로 기간 조회 실행 함수
+    function loadDiaryByDate(startDate, endDate, pageNum = 1) {
+        console.log("start:", startDate, "end:", endDate);
+        $.post('/diary/listByDate', { startDate, endDate, pageNum }, function (res) {
+            $('#listNormal').hide();
+            $('#listByDate').empty().show();
+
+            const list = res.list;
+            const count = res.count;
+            const pageSize = res.pageSize;
+            const currentPage = res.pageNum;
+
+            if (list.length === 0) {
+                $('#listByDate').html('<p style="text-align:center;">해당 기간에 작성된 다이어리가 없습니다.</p>');
+                return;
+            }
+
+            let html = '<div class="diary-grid">';
+            list.forEach(d => {
+                html += `
+                    <div class="diary-card">
+                        ${d.imgPath && d.imgName ? `<img src="${d.imgPath}/${d.imgName}" alt="사진">` : ''}
+                        <p>${d.content}</p>
+                        <p>${d.reg.split('T')[0]}</p>
+                        <button class="deleteBtn" data-no="${d.diaryNo}">삭제</button>
+                        <button class="updateBtn"
+                                data-no="${d.diaryNo}"
+                                data-content="${d.content}"
+                                data-imgname="${d.imgName}"
+                                data-imgpath="${d.imgPath}">
+                            수정
+                        </button>
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            // 페이징 추가
+            const totalPage = Math.ceil(count / pageSize);
+            html += `<div class="pagination" style="text-align:center; margin-top:20px;">`;
+
+            for (let i = 1; i <= totalPage; i++) {
+                html += `<a href="#" class="date-page-btn ${i === currentPage ? 'current-page' : ''}" data-page="${i}">[${i}]</a>`;
+            }
+            html += '</div>';
+
+            $('#listByDate').html(html);
+        });
+    }
+
+    // 조회 버튼 클릭
+    $('#searchByDateBtn').click(function () {
+        const startDate = $('#startDate').val();
+        const endDate = $('#endDate').val();
+
+        if (!startDate || !endDate) {
+            alert('시작일과 종료일을 모두 선택해주세요.');
+            return;
+        }
+
+        loadDiaryByDate(startDate, endDate, 1);
+    });
+
+    // 동적으로 만들어진 페이지 버튼 클릭 이벤트 위임
+    $(document).on('click', '.date-page-btn', function (e) {
+        e.preventDefault();
+        const page = $(this).data('page');
+        const startDate = $('#startDate').val();
+        const endDate = $('#endDate').val();
+
+        loadDiaryByDate(startDate, endDate, page);
+    });
+
+    // 초기화 버튼 클릭 시
+    $('#resetDateBtn').click(function () {
+        $('#datePickerArea').hide();
+        $('#startDate').val('');
+        $('#endDate').val('');
+        $('#listByDate').hide().empty();
+        $('#listNormal').show(); // 기존 리스트 다시 표시
+    });
+
+    // 글쓰기 버튼 클릭
     $(function () {
-        // 글쓰기 버튼 클릭
         $('#writeBtn').click(function () {
             $(this).hide();
             $('#formArea').toggle();
