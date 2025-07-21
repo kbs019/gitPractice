@@ -67,4 +67,19 @@
     <update id="clearBanDate">
         update users set bannedUntil=null where id=#{id}
     </update>
+
+    <!-- 아이디 중복 체크 -->
+    <select id="checkById" resultType="com.ex.gitprac.data.user.UserDTO">
+        select * from users where id = #{id}
+    </select>
+
+    <!-- 닉네임 중복 체크 -->
+    <select id="checkByNick" resultType="com.ex.gitprac.data.user.UserDTO">
+        select * from users where nick = #{nick}
+    </select>
+
+    <!-- 이메일 중복 체크 -->
+    <select id="checkByEmail" resultType="com.ex.gitprac.data.user.UserDTO">
+        select * from users where email = #{email}
+    </select>
 </mapper>
