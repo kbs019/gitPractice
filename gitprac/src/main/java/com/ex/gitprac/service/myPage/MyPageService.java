@@ -32,9 +32,10 @@ public class MyPageService {
         myPageMapper.changeWriterFromQNARe(newWriter, pastWriter);
         myPageMapper.changeWriterFromAsk(newWriter, pastWriter);
         myPageMapper.changeWriterFromInfo(newWriter, pastWriter);
+        myPageMapper.changeWriterFromInfoRe(newWriter, pastWriter);
+        myPageMapper.changeWriterFromAskRe(newWriter, pastWriter);
         myPageMapper.changeWriterFromDiary(newWriter, pastWriter);
-        // myPageMapper.changeWriterFromInfoRe(udto, pastWriter);
-        
+        myPageMapper.changeWriterFromRec(newWriter, pastWriter);
         return 1;
     }
     
@@ -92,40 +93,28 @@ public class MyPageService {
         return map;
     }
 
-    // ✅ Ask 게시판
-    public int countAsk(String id) {
-        return myPageMapper.countAsk(id);
+    public List<AskDTO> listAsk(Map<String, Object> param) {
+        return myPageMapper.listAsk(param);
     }
 
-    public List<AskDTO> listAsk(String id, int page) {
-        return myPageMapper.listAsk(getPagingParams(id, page));
+    public int countAsk(String writer) {
+        return myPageMapper.countAsk(writer);
     }
 
-    // ✅ Diary 게시판
-    public int countDiary(String id) {
-        return myPageMapper.countDiary(id);
+    public List<InfoBoardDTO> listInfo(Map<String, Object> param) {
+        return myPageMapper.listInfo(param);
     }
 
-    public List<DiaryDTO> listDiary(String id, int page) {
-        return myPageMapper.listDiary(getPagingParams(id, page));
+    public int countInfo(String writer) {
+        return myPageMapper.countInfo(writer);
     }
 
-    // ✅ Info 게시판
-    public int countInfo(String id) {
-        return myPageMapper.countInfo(id);
+    public List<QnaBoardDTO> listQna(Map<String, Object> param) {
+        return myPageMapper.listQna(param);
     }
 
-    public List<InfoBoardDTO> listInfo(String id, int page) {
-        return myPageMapper.listInfo(getPagingParams(id, page));
-    }
-
-    // ✅ Qna 게시판
-    public int countQna(String id) {
-        return myPageMapper.countQna(id);
-    }
-
-    public List<QnaBoardDTO> listQna(String id, int page) {
-        return myPageMapper.listQna(getPagingParams(id, page));
+    public int countQna(String writer) {
+        return myPageMapper.countQna(writer);
     }
 }
 

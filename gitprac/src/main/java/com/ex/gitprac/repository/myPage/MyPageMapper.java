@@ -30,21 +30,19 @@ public interface MyPageMapper {
     public int changeWriterFromQNARe(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
     public int changeWriterFromAsk(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
     public int changeWriterFromInfo(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
+    public int changeWriterFromInfoRe(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
+    public int changeWriterFromAskRe(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
     public int changeWriterFromDiary(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
-    // public int changeWriterFromInfoRe(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
+    public int changeWriterFromRec(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
     // Ask
-    int countAsk(String id);
+    int countAsk(String writer);
     List<AskDTO> listAsk(Map<String, Object> map);
 
-    // Diary
-    int countDiary(String id);
-    List<DiaryDTO> listDiary(Map<String, Object> map);
-
     // Info
-    int countInfo(String id);
+    int countInfo(String writer);
     List<InfoBoardDTO> listInfo(Map<String, Object> map);
 
     // Qna
-    int countQna(String id);
+    int countQna(String writer);
     List<QnaBoardDTO> listQna(Map<String, Object> map);
 }

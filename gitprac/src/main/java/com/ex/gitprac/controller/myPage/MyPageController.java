@@ -1,5 +1,6 @@
 package com.ex.gitprac.controller.myPage;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -161,40 +162,77 @@ public class MyPageController {
         return result;
     }
     
+    // @GetMapping("/listAsk")
+    // @ResponseBody
+    // public Map<String, Object> listAsk(@RequestParam int page, HttpSession session) {
+    //     String writer = ((UserDTO) session.getAttribute("users")).getNick();
+    //     int total = myPageService.countAsk(writer);
+    //     List<AskDTO> list = myPageService.listAsk(writer, page);
+    //     return Map.of("list", list, "total", total);
+    // }
+
     @GetMapping("/listAsk")
     @ResponseBody
     public Map<String, Object> listAsk(@RequestParam int page, HttpSession session) {
-        String id = ((UserDTO) session.getAttribute("users")).getId();
-        int total = myPageService.countAsk(id);
-        List<AskDTO> list = myPageService.listAsk(id, page);
-        return Map.of("list", list, "total", total);
-    }
+        String writer = ((UserDTO) session.getAttribute("users")).getId();
+        int start = (page - 1) * 10 + 1;
+        int end = page * 10;
 
-    @GetMapping("/listDiary")
-    @ResponseBody
-    public Map<String, Object> listDiary(@RequestParam int page, HttpSession session) {
-        String id = ((UserDTO) session.getAttribute("users")).getId();
-        int total = myPageService.countDiary(id);
-        List<DiaryDTO> list = myPageService.listDiary(id, page);
-        return Map.of("list", list, "total", total);
+        Map<String, Object> param = new HashMap<>();
+        param.put("writer", writer);
+        param.put("start", start);
+        param.put("end", end);
+
+        List<AskDTO> list = myPageService.listAsk(param);
+        int total = myPageService.countAsk(writer);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", list);
+        result.put("total", total);
+        return result;
     }
 
     @GetMapping("/listInfo")
     @ResponseBody
     public Map<String, Object> listInfo(@RequestParam int page, HttpSession session) {
-        String id = ((UserDTO) session.getAttribute("users")).getId();
-        int total = myPageService.countInfo(id);
-        List<InfoBoardDTO> list = myPageService.listInfo(id, page);
-        return Map.of("list", list, "total", total);
+        String writer = ((UserDTO) session.getAttribute("users")).getId();
+        int start = (page - 1) * 10 + 1;
+        int end = page * 10;
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("writer", writer);
+        param.put("start", start);
+        param.put("end", end);
+
+        List<InfoBoardDTO> list = myPageService.listInfo(param);
+        int total = myPageService.countInfo(writer);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", list);
+        result.put("total", total);
+        return result;
     }
 
     @GetMapping("/listQna")
     @ResponseBody
     public Map<String, Object> listQna(@RequestParam int page, HttpSession session) {
-        String id = ((UserDTO) session.getAttribute("users")).getId();
-        int total = myPageService.countQna(id);
-        List<QnaBoardDTO> list = myPageService.listQna(id, page);
-        return Map.of("list", list, "total", total);
+        String writer = ((UserDTO) session.getAttribute("users")).getId();
+        int start = (page - 1) * 10 + 1;
+        int end = page * 10;
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("writer", writer);
+        param.put("start", start);
+        param.put("end", end);
+
+        List<QnaBoardDTO> list = myPageService.listQna(param);
+        int total = myPageService.countQna(writer);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", list);
+        result.put("total", total);
+        return result;
     }
+
 
 }

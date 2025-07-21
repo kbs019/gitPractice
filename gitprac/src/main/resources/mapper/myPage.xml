@@ -21,15 +21,22 @@ UPDATE QNA_REPLY SET writer=#{newWriter} WHERE writer=#{pastWriter}
 <update id="changeWriterFromAsk">
 UPDATE ASK SET writer= #{newWriter} WHERE writer=#{pastWriter}
 </update>
+<update id="changeWriterFromAskRe">
+UPDATE ASK_REPLY SET writer=#{newWriter} WHERE writer=#{pastWriter}
+</update>
 <update id="changeWriterFromInfo">
 UPDATE INFO_BOARD SET writer=#{newWriter} WHERE writer=#{pastWriter}
+</update>
+<update id="changeWriterFromInfoRe">
+UPDATE INFO_REPLY SET writer = #{writer} WHERE writer = #{pastWriter}
 </update>
 <update id="changeWriterFromDiary">
 UPDATE DIARY SET writer=#{newWriter} WHERE writer=#{pastWriter}
 </update>
-<!-- <update id="changeWriterFromInfoRe">
-UPDATE INFO_REPLY SET writer = #{writer} WHERE writer = #{pastWriter}
-</update> -->
+<update id="changeWriterFromRec">
+UPDATE DIARY REC writer=#{newWriter} WHERE writer=#{pastWriter}
+</update>
+
 
 <update id="deleteUser">
 UPDATE USERS SET status = 2 where id=#{id}
@@ -55,45 +62,28 @@ DELETE FROM REC WHERE petNo=#{petNo}
 </delete>
 <!-- Ask -->
 <select id="countAsk" resultType="int">
-  SELECT COUNT(*) FROM ASK WHERE writer = #{id}
+  SELECT COUNT(*) FROM ASK WHERE writer = #{writer}
 </select>
 <select id="listAsk" resultType="com.ex.gitprac.data.ask.AskDTO">
 <![CDATA[
   SELECT * FROM (
     SELECT A.*, ROWNUM rnum FROM (
-      SELECT * FROM ASK WHERE writer = #{id} ORDER BY regDate DESC
+      SELECT * FROM ASK WHERE writer = #{writer} ORDER BY reg DESC
     ) A
     WHERE ROWNUM <= #{end}
   )
   WHERE rnum >= #{start}
 ]]>
 </select>
-
-<!-- Diary -->
-<select id="countDiary" resultType="int">
-  SELECT COUNT(*) FROM DIARY WHERE writer = #{id}
-</select>
-<select id="listDiary" resultType="com.ex.gitprac.data.diary.DiaryDTO">
-<![CDATA[
-  SELECT * FROM (
-    SELECT A.*, ROWNUM rnum FROM (
-      SELECT * FROM DIARY WHERE writer = #{id} ORDER BY regDate DESC
-    ) A
-    WHERE ROWNUM <= #{end}
-  )
-  WHERE rnum >= #{start}
-]]>
-</select>
-
 <!-- Info -->
 <select id="countInfo" resultType="int">
-  SELECT COUNT(*) FROM INFO_BOARD WHERE writer = #{id}
+  SELECT COUNT(*) FROM INFO_BOARD WHERE writer = #{writer}
 </select>
 <select id="listInfo" resultType="com.ex.gitprac.data.info.InfoBoardDTO">
 <![CDATA[
   SELECT * FROM (
     SELECT A.*, ROWNUM rnum FROM (
-      SELECT * FROM INFO_BOARD WHERE writer = #{id} ORDER BY regDate DESC
+      SELECT * FROM INFO_BOARD WHERE writer = #{writer} ORDER BY reg DESC
     ) A
     WHERE ROWNUM <= #{end}
   )
@@ -103,13 +93,13 @@ DELETE FROM REC WHERE petNo=#{petNo}
 
 <!-- Qna -->
 <select id="countQna" resultType="int">
-  SELECT COUNT(*) FROM QNA_BOARD WHERE writer = #{id}
+  SELECT COUNT(*) FROM QNA_BOARD WHERE writer = #{writer}
 </select>
 <select id="listQna" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
 <![CDATA[
   SELECT * FROM (
     SELECT A.*, ROWNUM rnum FROM (
-      SELECT * FROM QNA_BOARD WHERE writer = #{id} ORDER BY regDate DESC
+      SELECT * FROM QNA_BOARD WHERE writer = #{writer} ORDER BY reg DESC
     ) A
     WHERE ROWNUM <= #{end}
   )
