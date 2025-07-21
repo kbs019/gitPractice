@@ -20,12 +20,13 @@
             <!-- 사용자 정보가 여기에 표시됩니다 -->
         </div>
 
-        <button onclick="showUpdateForm()">수정</button>
+        <button id="checkPwBtn" onclick="checkPassword()">수정</button>
         <div id="myInfoEdit" style="display:none;">
-            <p>비밀번호: <input type="password" id="pw" required></p>
-            <p>닉네임: <input type="text" id="nick" required></p>
-            <p>이메일: <input type="text" id="email" required></p>
-            <p>휴대폰번호: <input type="text" id="phone" required></p>
+            <p>비밀번호: <input type="password" id="pw" placeholder=""></p>
+            <p>닉네임: <input type="text" id="nick" placeholder=""></p>
+            <p>이메일: <input type="text" id="email" placeholder=""></p>
+            <p>휴대폰번호: <input type="text" id="phone" placeholder=""></p>
+            
             <label for="carrier">통신사:</label>
             <select name="carrier" id="carrier" required>
                 <option value="SKT">SKT</option>
@@ -33,6 +34,7 @@
                 <option value="LG U+">LG U+</option>
                 <option value="알뜰폰">알뜰폰</option>
             </select>
+
             <br><br>
             <button onclick="updateMyInfo()">수정 완료</button>
             <button onclick="deleteUser()">회원 탈퇴</button>
@@ -56,7 +58,7 @@
             <p>나이 : <input type="number" id="petAge" placeholder="개월수를 입력해주세요"></p>
             <p>크기 : <input type="text" id="petSize" placeholder="m(미터)단위로 입력해주세요"></p>
             <p>무게 : <input type="text" id="petWeight" placeholder="g(그램)단위로 입력해주세요"></p>
-            <p><input type="date" id="petBirth"></p>
+            <p>생일 : <input type="date" id="petBirth"></p>
             <button onclick="submitPet()">저장</button>
         </div>
     </div>
@@ -86,12 +88,37 @@
         showTab('ask');
     });
 
+    let originalUserData = {}; // 전역 저장소
+
     function loadMyInfo() {
         $.post('/myPage/getUser', function(data) {
+            originalUserData = data;
+
             $('#myInfoView').html(`
                 <span>닉네임: ${data.nick}  </span>
                 <span>이메일: ${data.email}</span>
             `);
+
+            $('#nick').attr('placeholder', data.nick);
+            $('#email').attr('placeholder', data.email);
+            $('#phone').attr('placeholder', data.phone);
+            $('#pw').attr('placeholder', '****');
+            $('#carrier').val(data.carrier);
+        });
+    }
+
+    function checkPassword() {
+        const pw = prompt("비밀번호를 입력하세요");
+        if (!pw) return; // 취소 또는 빈 값일 경우 종료
+
+        $.post('/myPage/pwCheck', { pw: pw }, function(result) {
+            if (result === "success") {
+                alert("비밀번호가 확인되었습니다.");
+                $('#checkPwBtn').hide();
+                showUpdateForm(); // 수정 폼 표시 함수
+            } else {
+                alert("비밀번호가 틀렸습니다.");
+            }
         });
     }
 
@@ -101,19 +128,22 @@
     }
 
     function updateMyInfo() {
+        const pwInput = $('#pw').val(); // 사용자가 입력한 비밀번호
+        const finalPw = pwInput || originalUserData.pw; // 비어있으면 기존 비밀번호 사용
+
         const user = {
-            pw: $('#pw').val(),
-            nick: $('#nick').val(),
-            email: $('#email').val(),
-            phone: $('#phone').val(),
-            carrier: $('#carrier').val()
-        };        
+            pw: finalPw,
+            nick: $('#nick').val() || originalUserData.nick,
+            email: $('#email').val() || originalUserData.email,
+            phone: $('#phone').val() || originalUserData.phone,
+            carrier: $('#carrier').val() || originalUserData.carrier
+        };
+
         $.ajax({
             url: '/myPage/updateUser',
             method: 'POST',
-            contentType: 'application/json',       // 🔸 반드시 명시
-            data: JSON.stringify(user),            // 🔸 문자열로 직렬화
-            
+            contentType: 'application/json',
+            data: JSON.stringify(user),
             success: function(res) {
                 alert('수정 완료');
                 loadMyInfo();
@@ -171,7 +201,6 @@
     }
 
     function editPet(petNo) {
-         console.log("editPet 호출됨: petNo =", petNo);
         $.post('/myPage/getPet', { petNo: petNo }, function(pet) {
             $('#petForm').show();
             $('#petNo').val(pet.petNo);

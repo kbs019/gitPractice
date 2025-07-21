@@ -28,13 +28,13 @@ UPDATE ASK_REPLY SET writer=#{newWriter} WHERE writer=#{pastWriter}
 UPDATE INFO_BOARD SET writer=#{newWriter} WHERE writer=#{pastWriter}
 </update>
 <update id="changeWriterFromInfoRe">
-UPDATE INFO_REPLY SET writer = #{writer} WHERE writer = #{pastWriter}
+UPDATE INFO_REPLY SET writer=#{newWriter} WHERE writer = #{pastWriter}
 </update>
 <update id="changeWriterFromDiary">
 UPDATE DIARY SET writer=#{newWriter} WHERE writer=#{pastWriter}
 </update>
 <update id="changeWriterFromRec">
-UPDATE DIARY REC writer=#{newWriter} WHERE writer=#{pastWriter}
+UPDATE REC SET writer=#{newWriter} WHERE writer=#{pastWriter}
 </update>
 
 

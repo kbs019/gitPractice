@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ex.gitprac.data.ask.AskDTO;
-import com.ex.gitprac.data.diary.DiaryDTO;
 import com.ex.gitprac.data.info.InfoBoardDTO;
 import com.ex.gitprac.data.pet.PetDTO;
 import com.ex.gitprac.data.qna.QnaBoardDTO;
@@ -39,6 +38,7 @@ public class MyPageController {
     }
 
     @PostMapping("pwCheck")
+    @ResponseBody
     public String pwCheck(@RequestParam("pw") String pw, HttpSession session) {
         
         String result = "error";
@@ -73,11 +73,10 @@ public class MyPageController {
 
         return myPageService.listPet(id);
     }
-        
-    @PostMapping("updateUser")
+     
+    @PostMapping("/updateUser")
     @ResponseBody
     public String updateUser(@RequestBody UserDTO udto, HttpSession session) {
-                
         String result = "error";
         
         UserDTO dto = (UserDTO) session.getAttribute("users");
@@ -88,14 +87,21 @@ public class MyPageController {
         dto.setEmail(udto.getEmail());
         dto.setPhone(udto.getPhone());
         dto.setCarrier(udto.getCarrier());
-
-        myPageService.changeWriter(newWriter, pastWriter);
+        // 세션 값도 갱신
+        dto.setNick(newWriter);
+        dto.setEmail(udto.getEmail());
+        dto.setPhone(udto.getPhone());
+        dto.setCarrier(udto.getCarrier());
+        if (!pastWriter.equals(newWriter)) {
+            myPageService.changeWriter(newWriter, pastWriter);
+        }
         int ok = myPageService.updateUser(dto);
         if(ok == 1){
             result = "success";
         }
         return result;
     }
+
 
     @PostMapping("deleteUser")
     public String deleteUser(HttpSession session){
@@ -165,7 +171,7 @@ public class MyPageController {
     @GetMapping("/listAsk")
     @ResponseBody
     public Map<String, Object> listAsk(@RequestParam int page, HttpSession session) {
-        String writer = ((UserDTO) session.getAttribute("users")).getId();
+        String writer = ((UserDTO) session.getAttribute("users")).getNick();
         int start = (page - 1) * 10 + 1;
         int end = page * 10;
 
@@ -186,7 +192,7 @@ public class MyPageController {
     @GetMapping("/listInfo")
     @ResponseBody
     public Map<String, Object> listInfo(@RequestParam int page, HttpSession session) {
-        String writer = ((UserDTO) session.getAttribute("users")).getId();
+        String writer = ((UserDTO) session.getAttribute("users")).getNick();
         int start = (page - 1) * 10 + 1;
         int end = page * 10;
 
@@ -207,7 +213,7 @@ public class MyPageController {
     @GetMapping("/listQna")
     @ResponseBody
     public Map<String, Object> listQna(@RequestParam int page, HttpSession session) {
-        String writer = ((UserDTO) session.getAttribute("users")).getId();
+        String writer = ((UserDTO) session.getAttribute("users")).getNick();
         int start = (page - 1) * 10 + 1;
         int end = page * 10;
 
@@ -224,6 +230,4 @@ public class MyPageController {
         result.put("total", total);
         return result;
     }
-
-
 }
