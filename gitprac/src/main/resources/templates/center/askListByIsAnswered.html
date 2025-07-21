@@ -27,7 +27,7 @@
             <td>
                 <span th:if="${session.users.role == 2 || session.users.nick == ato.writer}">
                     <span th:if="${ato.status == 0}">
-                        <a th:href="@{|/admin/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
+                        <a th:href="@{|/center/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
                     </span>
                     <span th:if="${ato.status != 0}">
                         <span>관리자에 의해 제재된 사용자의 글입니다.</span>

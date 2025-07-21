@@ -23,11 +23,11 @@
             <div class="content-top-btns">
                 <div class="btn-group" align="right">
                     <span th:if="${ session.users.nick == ato.writer }">
-                        <input type="button" value="수정" th:onclick="|window.location='@{/admin/askUpdate(askNo=${ato.askNo}, pageNum=${pageNum})}'|"> &nbsp;&nbsp;
-                        <input type="button" value="삭제" th:onclick="|window.location='@{/admin/askDelete(askNo=${ato.askNo}, pageNum=${pageNum})}'|">
+                        <input type="button" value="수정" th:onclick="|window.location='@{/center/askUpdate(askNo=${ato.askNo}, pageNum=${pageNum})}'|"> &nbsp;&nbsp;
+                        <input type="button" value="삭제" th:onclick="|window.location='@{/center/askDelete(askNo=${ato.askNo}, pageNum=${pageNum})}'|">
                     </span>
                     <span th:if="${ session.users.role == 2 }">
-                        <input type="button" value="삭제" th:onclick="|window.location='@{/admin/askDelete(askNo=${ato.askNo}, pageNum=${pageNum})}'|">
+                        <input type="button" value="삭제" th:onclick="|window.location='@{/center/askDelete(askNo=${ato.askNo}, pageNum=${pageNum})}'|">
                     </span>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                     </form>
                 </div>
 
-                <input type="hidden" id="askNo" th:value="${ato.askNo}">
+                <input type="hidden" class="askNo" th:value="${ato.askNo}">
                 <div id="replyList"></div>
             </div>
         </div>
@@ -80,10 +80,14 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
+        $(document).ready(function(){
+            loadReplies();
+        });
+
         $(document).ready(function () {
             $('#replyInsertBtn').click(function () {
                 $.ajax({
-                    url: '/admin/askReplyInsert',
+                    url: '/center/askReplyInsert',
                     type: 'post',
                     data: {
                         askNo: $('#askNo').val(),
@@ -102,12 +106,10 @@
                 });
             });
 
-            loadReplies();
-
             $(document).on('click', '.replyDelete', function () {
                 let replyNo = $(this).closest('.reply-item').find('.replyNo').val();
                 $.ajax({
-                    url: '/admin/replyDelete',
+                    url: '/center/replyDelete',
                     type: 'post',
                     data: {
                         replyNo: replyNo
@@ -126,13 +128,14 @@
 
         function loadReplies() {
             $.ajax({
-                url: '/admin/askReplyList',
+                url: '/center/askReplyList',
                 type: 'post',
                 data: {
-                    askNo: $('#askNo').val()
+                    askNo: $('.askNo').val()
                 },
                 success: function (replyTable) {
                     $('#replyList').html(replyTable);
+                    console.log("성공");
                 },
                 error: function (xhr, status, error) {
                     console.log(error + "-- 발생");
