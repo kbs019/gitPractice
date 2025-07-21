@@ -34,7 +34,6 @@ public class MyPageService {
         myPageMapper.changeWriterFromInfoRe(newWriter, pastWriter);
         myPageMapper.changeWriterFromAskRe(newWriter, pastWriter);
         myPageMapper.changeWriterFromDiary(newWriter, pastWriter);
-        myPageMapper.changeWriterFromRec(newWriter, pastWriter);
         return 1;
     }
     

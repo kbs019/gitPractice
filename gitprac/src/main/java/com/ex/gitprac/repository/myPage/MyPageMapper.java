@@ -33,7 +33,6 @@ public interface MyPageMapper {
     public int changeWriterFromInfoRe(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
     public int changeWriterFromAskRe(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
     public int changeWriterFromDiary(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
-    public int changeWriterFromRec(@Param("newWriter")String newWriter, @Param("pastWriter")String pastWriter);
     public int countAsk(String writer);
     public List<AskDTO> listAsk(Map<String, Object> map);
     public int countInfo(String writer);

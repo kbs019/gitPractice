@@ -33,9 +33,6 @@ UPDATE INFO_REPLY SET writer=#{newWriter} WHERE writer = #{pastWriter}
 <update id="changeWriterFromDiary">
 UPDATE DIARY SET writer=#{newWriter} WHERE writer=#{pastWriter}
 </update>
-<update id="changeWriterFromRec">
-UPDATE REC SET writer=#{newWriter} WHERE writer=#{pastWriter}
-</update>
 
 
 <update id="deleteUser">
