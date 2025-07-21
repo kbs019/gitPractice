@@ -187,8 +187,8 @@ public class RecController {
 
     @GetMapping("/more")
     @ResponseBody
-    public List<RecDTO> loadMoreRecs(@RequestParam int offset,
-                                    @RequestParam int limit,
+    public List<RecDTO> loadMoreRecs(@RequestParam(name = "offset") int offset,
+                                    @RequestParam(name = "limit") int limit,
                                     HttpSession session) {
         UserDTO users = (UserDTO) session.getAttribute("users");
         String writer = users.getId();

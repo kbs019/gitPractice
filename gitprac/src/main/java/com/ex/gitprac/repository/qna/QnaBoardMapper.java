@@ -116,4 +116,7 @@ public interface QnaBoardMapper {
         @Param("endDate") String endDate,
         @Param("categoryGroup") String categoryGroup
     );
+
+    // recNo 에 해당하는 글내용 조회
+    public RecDTO findByNo(int recNo);
 }
