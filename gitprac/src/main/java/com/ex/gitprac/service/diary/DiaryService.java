@@ -30,6 +30,10 @@ public class DiaryService {
     public DiaryDTO getDiary(int diaryNo){
         return diaryMapper.getDiary(diaryNo);
     }
+    public int countDiaryByDate(String writer, String startDate, String endDate){
+        int result = diaryMapper.countDiaryByDate(writer, startDate, endDate);
+        return result;
+    }
     public List<DiaryDTO> listDiaryByDate(String writer, String startDate, String endDate, int start, int end) {
         return diaryMapper.listDiaryByDate(writer, startDate, endDate, start, end);
     }

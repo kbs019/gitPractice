@@ -1,6 +1,8 @@
 package com.ex.gitprac.controller.diary;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -72,6 +74,49 @@ public class DiaryController {
         return "diary/main";
     }
     
+    @PostMapping("main")
+    @ResponseBody
+    public String listByDate(HttpSession session, Model model,@RequestParam("startDate") LocalDate startDate, @RequestParam("endDate") LocalDate endDate, @RequestParam(name="pageNum", defaultValue="1" )int pageNum) {
+        
+        UserDTO udto = (UserDTO)session.getAttribute("users");
+        String writer = udto.getNick();
+        if (writer == null) return "redirect:/user/login";
+
+        int pageSize = 6;
+		int currentPage = pageNum;
+		int start = (currentPage - 1)*pageSize + 1;
+		int end = currentPage * pageSize;
+		int count = diaryService.countDiary(writer);
+		String strStartDate = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String strEndDate = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		List<DiaryDTO> listDate = null;
+		if( count > 0) {
+			listDate = diaryService.listDiaryByDate(writer, strStartDate, strEndDate, start, end);
+		}else {
+			listDate = Collections.EMPTY_LIST;
+		}
+		int pageCount = count/pageSize + (count%pageSize == 0 ? 0 : 1);
+		int startPage = (int)((currentPage - 1)/10)*10 + 1;
+		int pageBlock = 10;
+		int endPage = startPage+pageBlock - 1 ;
+		if(endPage > pageCount) {
+			endPage = pageCount;
+		}
+		
+		model.addAttribute("pageCount", pageCount);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("pageBlock", pageBlock);
+		model.addAttribute("endPage", endPage);
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("pageNum", pageNum);
+		model.addAttribute("start", start);
+		model.addAttribute("end", end);
+		model.addAttribute("count", count);
+		model.addAttribute("list", listDate);
+        
+        return "diary/main";
+    }
+
     @PostMapping("insert")
     @ResponseBody
     public String insertDiary(@RequestParam("uploadFile") MultipartFile uploadFile,
