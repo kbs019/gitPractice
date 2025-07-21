@@ -26,8 +26,8 @@
                     <h2>공지사항 내용</h2>
                 </div>
                 <div class="content-top-btns" th:if="${ session.users.role == 2 }">
-                    <input type="button" value="수정" th:onclick="|window.location='@{/admin/noticeUpdate(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
-                    <input type="button" value="삭제" th:onclick="|window.location='@{/admin/noticeDelete(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
+                    <input type="button" value="수정" th:onclick="|window.location='@{/center/noticeUpdate(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
+                    <input type="button" value="삭제" th:onclick="|window.location='@{/center/noticeDelete(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
                 </div>
             </div>
 

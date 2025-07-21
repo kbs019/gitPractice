@@ -72,7 +72,7 @@
                     </form>
                 </div>
 
-                <input type="hidden" class="askNo" th:value="${ato.askNo}">
+                <input type="hidden" id="askNo" th:value="${ato.askNo}">
                 <div id="replyList"></div>
             </div>
         </div>
@@ -131,7 +131,7 @@
                 url: '/center/askReplyList',
                 type: 'post',
                 data: {
-                    askNo: $('.askNo').val()
+                    askNo: $('#askNo').val()
                 },
                 success: function (replyTable) {
                     $('#replyList').html(replyTable);

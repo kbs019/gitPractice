@@ -49,7 +49,7 @@
                             </select>
 
                             <select class="ban-period" style="display:none;">
-                                <option value="" selected disabled hidden>기간 선택</option>
+                                <option value="0" disabled selected>기간 선택</option>
                                 <option value="1">1일</option>
                                 <option value="7">7일</option>
                                 <option value="14">14일</option>
@@ -144,7 +144,7 @@
                 $periodSelect.off('change').on('change', function(){
                     let period = $(this).val();
 
-                    if( period === 'cancel' || !period ){
+                    if( period === '0' || !period ){
                         return;
                     }
 

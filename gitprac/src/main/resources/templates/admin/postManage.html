@@ -70,7 +70,7 @@
                     <tr th:each="ito : ${infoList}" align="center">
                         <td>
                             <span th:if="${ito.status == 0}">
-                                <a th:href="@{|/info/content(postNo=${ito.postNo}, pageNum=${pageNum})|}" th:text="${ito.title}"></a>
+                                <a th:href="@{|/info/content?postNo=${ito.postNo}&pageNum=${pageNum}|}" th:text="${ito.title}"></a>
                             </span>
                             <span th:if="${ito.status != 0}">
                                 <span>관리자에 의해 제재된 글입니다.</span>
