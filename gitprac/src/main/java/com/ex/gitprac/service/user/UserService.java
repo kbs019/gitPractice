@@ -68,5 +68,17 @@ public class UserService {
         }
 
         return user;
+    }   
+    // 아이디 중복체크
+    public UserDTO checkById(String id) {
+        return userMapper.checkById(id);
+    }
+    // 닉네임 중복체크
+    public UserDTO checkByNick(String nick) {
+        return userMapper.checkByNick(nick);
+    }
+    // 이메일 중복체크
+    public UserDTO checkByEmail(String id) {
+        return userMapper.checkByEmail(id);
     }
 }
