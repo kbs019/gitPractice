@@ -1,0 +1,159 @@
+/* myPage.css */
+
+body {
+    font-family: 'Noto Serif KR', serif;
+    background-color: #f9f9f9;
+    color: #222;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 28px;
+    margin: 40px 0 20px;
+    color: #333;
+}
+
+h2 {
+    font-size: 22px;
+    margin: 40px 0 20px;
+    color: #333;
+    text-align: center;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 40px auto;
+    width: 80%;
+}
+
+/* 공통 섹션 */
+#myInfoSection, #petSection, #postSection {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+}
+
+/* form 요소 스타일 */
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+select {
+    width: 100%;
+    max-width: 400px;
+    padding: 8px 10px;
+    font-size: 14px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #222;
+}
+
+/* 버튼 공통 */
+button {
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #fff;
+    color: #222;
+    border: 1px solid #444;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #eee;
+}
+
+/* 내 정보 */
+#myInfoEdit p {
+    margin: 10px 0;
+}
+
+/* 강아지 카드 */
+.pet-card {
+    border: 1px solid #ccc;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* 강아지 등록 폼 */
+#petForm p {
+    margin: 10px 0;
+}
+
+/* 탭 버튼 스타일 */
+.tab-buttons {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.tab-buttons button {
+    margin: 0 10px;
+    font-weight: bold;
+}
+
+/* 탭 콘텐츠 영역 */
+.tab-content {
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+/* Ajax로 불러오는 게시글 목록 */
+.tab-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tab-content li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 15px;
+}
+
+.tab-content li a {
+    color: #222;
+    text-decoration: none;
+}
+
+.tab-content li a:hover {
+    text-decoration: underline;
+}
+
+/* 페이징 버튼 */
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination button {
+    margin: 0 4px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.pagination button[disabled] {
+    background-color: #ddd;
+    cursor: default;
+    color: #888;
+}
