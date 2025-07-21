@@ -21,9 +21,11 @@
             <div width="600" align="right">
                 <span th:if="${ session.users.nick == idto.writer }">
                     <input type="button" value="수정" th:onclick="|window.location='@{/info/update(postNo=${idto.postNo}, pageNum=${pageNum}, category=${category})}'|"/>
-                    <input type="button" value="삭제" th:onclick="|window.location='@{/info/delete(postNo=${idto.postNo}, pageNum=${pageNum}, category=${category})}'|"/>
-                    <input type="button" value="글목록" th:onclick="|window.location='@{/info/list(pageNum=${pageNum}, category=${idto.category})}'|"/>
                 </span>
+                <span th:if="${session.users.nick == idto.writer || session.users.role == 2}">
+                    <input type="button" value="삭제" th:onclick="|window.location='@{/info/delete(postNo=${idto.postNo}, pageNum=${pageNum}, category=${category})}'|"/>
+                </span>
+                <input type="button" value="글목록" th:onclick="|window.location='@{/info/list(pageNum=${pageNum}, category=${idto.category})}'|"/>
             </div>
         </div>
     </div>
@@ -38,6 +40,9 @@
         <div class="content-info-wrapper">
             <div class="content-writer-wrapper">
                 작성자 : <span th:text="${idto.writer}"></span>
+                <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${idto.writer}">
+                📋
+                </span>
             </div>
             <div class="content-views-wrapper">
                 조회수 | <span th:text="${idto.views}"></span>
@@ -62,8 +67,9 @@
     </div>
 
     <script th:inline="javascript">
-    const postNo = [[${idto.postNo}]];
-    const currentUser = [[${session.users.nick}]];
+    const postNo = /*[[${idto.postNo}]]*/ 0;
+    const currentUser = /*[[${session.users.nick}]]*/ 'anonymous';
+    const currentUserRole = /*[[${session.users.role}]]*/ 0;
 
     function addReply(refNo) {
         const textareaId = refNo === 0 ? "replyContent" : `reContent-${refNo}`;
@@ -150,10 +156,23 @@
                     html += `
                         <div style="margin-left:${isReply ? '30px' : '0'}; padding: 5px; border-bottom: 1px solid #ccc;">
                             <div id="replyDiv-${reply.replyNo}">
-                                <b>${reply.writer}</b>: ${reply.content}
+                                <b>${reply.writer}</b>`;
+                    if( currentUserRole === 2 ){
+                        html += `<span class="copy-icon" data-writer="${reply.writer}">📋</span>`;
+                    }
+                    html += ` : `;
+                    
+                    if( reply.status === 0 ){
+                        html += `${reply.content}`;
+                    } else {
+                        html += `<span style="color:gray;">관리자에 의해 제재된 사용자의 글입니다.</span>`;
+                    }
+                    
+                    html += `
                                 <span style="font-size: 0.9em; color: gray;">(${reply.reg})</span>
                                 ${isWriter ? `
-                                    <button onclick="showEditBox(${reply.replyNo}, '${reply.content}')">수정</button>
+                                    <button onclick="showEditBox(${reply.replyNo}, '${reply.content}')">수정</button>` : ""}
+                                ${isWriter || currentUserRole === 2 ? `
                                     <button onclick="deleteReply(${reply.replyNo})">삭제</button>` : ""}
                                 <button onclick="showReplyBox(${reply.replyNo})">답글</button>
                             </div>
@@ -171,5 +190,18 @@
 
     $(document).ready(function () {
         loadReply();
+    });
+
+    // 작성자명을 클릭하여 복사하는 API 사용
+    $(document).ready(function(){
+        $(document).on('click', '.copy-icon', function(e){
+            let writer = $(this).data('writer');
+    
+            navigator.clipboard.writeText(writer).then(function(){
+                alert(`"${writer}" 복사됨`);
+            }).catch(function(err){
+                console.log("복사 실패 : ", err);
+            });
+        });
     });
 </script>

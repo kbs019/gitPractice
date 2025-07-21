@@ -48,10 +48,20 @@
             </tr>           
             <tr height="30" align="center" th:each="dto : ${list}">
                 <td width="50" th:text="${dto.postNo}"></td>
-                <td width="100" th:text="${dto.writer}"></td>
+                <td width="100">
+                    <span th:text="${dto.writer}"></span>
+                    <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${dto.writer}">
+                    📋
+                    </span>
+                </td>
                 <td width="60"th:text="${dto.category}"></td>
                 <td width="350">
-                    <a th:href="@{|/info/content?postNo=${dto.postNo}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
+                    <span th:if="${dto.status == 0}">
+                        <a th:href="@{|/info/content?postNo=${dto.postNo}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
+                    </span>
+                    <span th:if="${dto.status != 0}">
+                        <span>관리자에 의해 제재된 사용자의 글입니다.</span>
+                    </span>
                 </td>
                 <td th:text="${dto.views}"></td>
                 <td th:text="${#temporals.format(dto.reg, 'yy.MM.dd HH:mm')}" align="center"></td>
@@ -70,6 +80,8 @@
         </span>
     </div>
 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         function changeCategory(value) {
             if (value === "전체글") {
@@ -78,6 +90,19 @@
                 location.href = "/info/list?category=" + encodeURIComponent(value);
             }
         }
+
+        // 작성자명을 클릭하여 복사하는 API 사용
+        $(document).ready(function(){
+            $(document).on('click', '.copy-icon', function(e){
+                let writer = $(this).data('writer');
+    
+                navigator.clipboard.writeText(writer).then(function(){
+                    alert(`"${writer}" 복사됨`);
+                }).catch(function(err){
+                    console.log("복사 실패 : ", err);
+                });
+            });
+        });
     </script>
 </body>
 </html>

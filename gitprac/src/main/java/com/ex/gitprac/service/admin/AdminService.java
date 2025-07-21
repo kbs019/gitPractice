@@ -15,6 +15,7 @@ import com.ex.gitprac.data.user.UserDTO;
 import com.ex.gitprac.repository.ask.AskMapper;
 import com.ex.gitprac.repository.ask.AskReplyMapper;
 import com.ex.gitprac.repository.info.InfoBoardMapper;
+import com.ex.gitprac.repository.info.InfoReplyMapper;
 import com.ex.gitprac.repository.notice.NoticeMapper;
 import com.ex.gitprac.repository.qna.QnaBoardMapper;
 import com.ex.gitprac.repository.qna.QnaReplyMapper;
@@ -29,6 +30,7 @@ public class AdminService {
     private final QnaBoardMapper qnaBoardMapper;
     private final QnaReplyMapper qnaReplyMapper;
     private final InfoBoardMapper infoBoardMapper;
+    private final InfoReplyMapper infoReplyMapper;
     private final NoticeMapper noticeMapper;
     private final AskMapper askMapper;
     private final AskReplyMapper askReplyMapper;
@@ -73,6 +75,7 @@ public class AdminService {
                 qnaBoardMapper.restoreStatusByNick(nick);
                 qnaReplyMapper.restoreStatusByNick(nick);
                 infoBoardMapper.restoreStatusByNick(nick);
+                infoReplyMapper.restoreStatusByNick(nick);
                 askMapper.restoreStatusByNick(nick);
             }
         }
@@ -106,6 +109,7 @@ public class AdminService {
         infoBoardMapper.updateStatusByNick(nick);
 
         // 정보게시판에서 댓글부분
+        infoReplyMapper.updateStatusByNick(nick);
 
         // 질의응답게시판에서 작성자명이 같은 경우(where writer = nick), status = 1 로 update   --- void
         askMapper.updateStatusByNick(nick);

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.ex.gitprac.data.user.UserDTO;
 import com.ex.gitprac.repository.ask.AskMapper;
 import com.ex.gitprac.repository.info.InfoBoardMapper;
+import com.ex.gitprac.repository.info.InfoReplyMapper;
 import com.ex.gitprac.repository.qna.QnaBoardMapper;
 import com.ex.gitprac.repository.qna.QnaReplyMapper;
 import com.ex.gitprac.repository.user.UserMapper;
@@ -20,7 +21,7 @@ public class UserService {
     private final QnaBoardMapper qnaBoardMapper;
     private final QnaReplyMapper qnaReplyMapper;
     private final InfoBoardMapper infoBoardMapper;
-    // private final InfoReplyMapper infoReplyMapper;
+    private final InfoReplyMapper infoReplyMapper;
     private final AskMapper askMapper;
 
     // 회원가입
@@ -63,6 +64,7 @@ public class UserService {
                 qnaBoardMapper.restoreStatusByNick(nick);
                 qnaReplyMapper.restoreStatusByNick(nick);
                 infoBoardMapper.restoreStatusByNick(nick);
+                infoReplyMapper.restoreStatusByNick(nick);
                 askMapper.restoreStatusByNick(nick);
             }
         }

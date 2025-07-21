@@ -2,7 +2,12 @@
     <span th:each="rto : ${list}" class="reply-item">
         <div class="reply-content">
             <div class="reply-title">
-                <span th:text="${rto.content}"></span>
+                <span th:if="${rto.status == 0}">
+                    <span th:text="${rto.content}"></span>
+                </span>
+                <span th:if="${rto.status != 0}">
+                    <span>관리자에 의해 제재된 사용자의 글입니다.</span>
+                </span>
             </div>
             <div class="reply-info">
                 <span th:text="${rto.writer}"></span>

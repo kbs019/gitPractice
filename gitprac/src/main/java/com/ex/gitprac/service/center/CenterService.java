@@ -77,12 +77,28 @@ public class CenterService {
 
     // isAnswered 컬럼값에 의한 게시글 갯수 조회
     public int askCountByIsAnswered( int isAnswered ){
-        return askMapper.askCountByIsAnswered( isAnswered );
+        int count = 0;
+
+        if( isAnswered == 1 ){
+            count = askMapper.askCountByIsAnswered( isAnswered );
+        } else if(isAnswered == 0) {
+            count = askMapper.askCount();
+        }
+
+        return count;
     }
 
     // isAnswered 컬럼값에 의한 게시글 조회
     public List<AskDTO> askListByIsAnswered( int isAnswered, int start, int end ){
-        return askMapper.askListByIsAnswered( isAnswered, start, end );
+        List<AskDTO> list = null;
+
+        if( isAnswered == 1 ){
+            list = askMapper.askListByIsAnswered( isAnswered, start, end );
+        } else if ( isAnswered == 0 ){
+            list = askMapper.askList(start, end);
+        }
+
+        return list;
     }
 
     // 답변 리스트 조회
