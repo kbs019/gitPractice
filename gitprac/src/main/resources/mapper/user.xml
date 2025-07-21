@@ -82,4 +82,14 @@
     <select id="checkByEmail" resultType="com.ex.gitprac.data.user.UserDTO">
         select * from users where email = #{email}
     </select>
+
+    <!-- 이메일로 아이디 찾기 -->
+    <select id="findId" resultType="com.ex.gitprac.data.user.UserDTO">
+        select id from users where email = #{email}
+    </select>
+
+    <!-- 이메일로 비밀번호 찾기 -->
+    <select id="findPw" resultType="com.ex.gitprac.data.user.UserDTO">
+        select pw from users where  id = #{id} and email = #{email}
+    </select>
 </mapper>

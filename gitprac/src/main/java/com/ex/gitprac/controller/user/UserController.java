@@ -13,6 +13,8 @@ import com.ex.gitprac.service.user.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 
@@ -101,7 +103,6 @@ public class UserController {
     public String checkNick(@RequestParam("nick") String nick) {
         return (userService.checkByNick(nick) == null) ? "ok" : "no";
     }
-    
 
     // 이메일 중복체크
     @GetMapping("checkEmail")
@@ -110,4 +111,23 @@ public class UserController {
         return (userService.checkByEmail(email) == null ) ? "ok" : "no";
     }
     
+    @GetMapping("findForm")
+    public String findForm() {
+        return "user/findForm";
+    }
+    
+    @PostMapping("findId")
+    public String findId(@RequestParam("email") String email, Model model) {
+        UserDTO fidto = userService.findId(email);
+        model.addAttribute("email", email);
+        return "user/findId";
+    }
+    
+    @PostMapping("findPw")
+    public String findPw(@RequestParam("id") String id, @RequestParam("email") String email, Model model) {
+        UserDTO fidto = userService.findPw(id, email);
+        model.addAttribute("id", id);
+        model.addAttribute("email", email);
+        return "user/findPw";
+    }
 }

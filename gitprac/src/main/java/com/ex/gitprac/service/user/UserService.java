@@ -83,4 +83,12 @@ public class UserService {
     public UserDTO checkByEmail(String id) {
         return userMapper.checkByEmail(id);
     }
+    // 아이디 찾기
+    public UserDTO findId(String email) {
+        return userMapper.findById(email);
+    }
+    // 아이디 찾기
+    public UserDTO findPw(String id, String email) {
+        return userMapper.findPw(id, email);
+    }
 }
