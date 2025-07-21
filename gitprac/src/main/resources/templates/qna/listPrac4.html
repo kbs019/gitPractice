@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/qnaList.css">
+    <link rel="stylesheet" href="/css/qnaSearchList.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+    <div align="center">
+        <span class="isAnswered-check">
+            <span th:if="${session.users.role == 0}">
+                <input type="checkbox" id="userIsAnsweredStatusCheck">
+                <span>답변완료된 질문만 보기</span>
+            </span>
+            <span th:if="${session.users.role == 1}">
+                <input type="checkbox" id="vetUnAnsweredStatusCheck">
+                <span>미답변 질문만 보기</span>
+            </span>
+        </span>
+        <span class="search-wrapper">
+            <select id="category">
+                <option value="total">전체</option>
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="titleAndContent">제목+내용</option>
+            </select>
+            <input type="text" id="keyword" placeholder="2글자 이상 작성해주세요.">
+            <button type="button" id="selectPostByKeyword">검색</button>
+        </span>
+        <span class="writeBtn">
+            <a th:href="@{/qna/write}">글쓰기</a>
+        </span>
+    </div>
+    <div id="list-wrapper">
+        <div th:if="${count == 0}">
+            <div class="post-content">
+                <h2>게시글이 존재하지 않습니다.</h2>
+            </div>
+        </div>
+        <div th:if="${count != 0}">
+            <div align="center" width="800">
+                <div class="post-info" th:each="qto : ${list}">
+                    <div class="post-title-wrapper">
+                        <span th:if="${qto.status == 0}">
+                            <a th:href="@{|/qna/content?postNo=${qto.postNo}&pageNum=${pageNum}|}" th:text="${qto.title}"></a>
+                        </span>
+                        <span th:if="${qto.status != 0}">
+                            <span>관리자에 의해 제재된 글입니다.</span>
+                        </span>
+                    </div>
+                    <span class="writer-name-wrapper">
+                        <span class="post-writer-wrapper" th:text="${qto.writer}"></span>
+                        <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${qto.writer}">
+                            📋
+                        </span>
+                    </span>
+                    <span class="post-views-wrapper">
+                        <span>조회수 : </span>
+                        <span th:text="${qto.views}"></span>
+                    </span>
+                    <span th:text="${#temporals.format(qto.reg, 'yy.MM.dd HH:mm')}"></span>
+                    <div class="post-isAnswered-status">
+                        <span th:if="${qto.isAnswered == 0}">
+                            <span>미답변</span>
+                        </span>
+                        <span th:if="${qto.isAnswered == 1}">
+                            <span>답변 완료</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="paging" align="center" th:if="${count > 0}">
+            <span th:if="${startPage} > ${pageCount}">
+                <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
+            </span>
+            <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
+            </span>
+            <span th:if="${endPage} < ${pageCount}">
+                <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
+            </span>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- ajax 시작 -->
+    <script>
+        $(document).ready(function(){
+            applyCSS();
+
+            // 검색 버튼 클릭
+            $('#selectPostByKeyword').click(function(){
+                searchPostList();
+            });
+
+            // 사용자의 체크박스 변경
+            $('#userIsAnsweredStatusCheck').change(function(){
+                searchPostListForUser();
+            });
+
+            // 수의사의 체크박스 변경
+            $('#vetUnAnsweredStatusCheck').change(function(){
+                searchPostListForVet();
+            });
+
+            // 공통 검색 함수 (role에 따라 함수 선택)
+            function getRoleFilteredSearchFunc(){
+                if( $('#userIsAnsweredStatusCheck').length ) return searchPostListForUser(1);
+                if( $('#vetUnAnsweredStatusCheck').length ) return searchPostListForVet(1);
+                return searchPostList(1);
+            }
+
+            // 페이징 클릭 이벤트
+            $(document).on('click', '.ajax-page-link', function(e){
+                e.preventDefault();
+                let page = $(this).data('page');
+                let searchFunc = getRoleFilteredSearchFunc();
+                searchFunc(page);
+            });
+
+            function searchPostList(page = 1){
+                let category = $('#category').val();
+                let keyword = $('#keyword').val().trim();
+
+                if( keyword.length > 0 && keyword.length < 2 ){
+                    alert('2글자 이상 입력해주세요.');
+                    return;
+                }
+
+                $.ajax({
+                    url : '/qna/searchList',
+                    type : 'post',
+                    data : {
+                        pageNum : page,
+                        category : category,
+                        keyword : keyword
+                    },
+                    success : function(list){
+                        $('#list-wrapper').html(list);
+                        applyCSS();  // 스타일을 다시 적용하는 함수 호출
+                    },
+                    error : function( xhr, status, error ){
+                        console.log(error + ' 오류 발생');
+                        alert('오류 발생');
+                    }
+                });
+            }
+
+            function searchPostListForUser(page = 1){
+                let isAnswered = $('#userIsAnsweredStatusCheck').is(':checked') ? 1 : 0;
+                let category = $('#category').val();
+                let keyword = $('#keyword').val().trim();
+
+                if( keyword.length > 0 && keyword.length < 2 ){
+                    alert('2글자 이상 입력해주세요.');
+                    return;
+                }
+
+                $.ajax({
+                    url : '/qna/searchList2',
+                    type : 'post',
+                    data : {
+                        pageNum : page,
+                        category : category,
+                        keyword : keyword,
+                        isAnswered: isAnswered
+                    },
+                    success : function(list){
+                        $('#list-wrapper').html(list);
+                        applyCSS();
+                    },
+                    error : function( xhr, status, error ){
+                        console.log(error + ' 오류 발생');
+                        alert('오류 발생');
+                    }
+                });
+            }
+
+            function searchPostListForVet(page = 1){
+                let isAnswered = $('#vetUnAnsweredStatusCheck').is(':checked') ? 0 : 1;  // 수의사는 미답변 필터
+                let category = $('#category').val();
+                let keyword = $('#keyword').val().trim();
+
+                if( keyword.length > 0 && keyword.length < 2 ){
+                    alert('2글자 이상 입력해주세요.');
+                    return;
+                }
+
+                $.ajax({
+                    url : '/qna/searchList3',
+                    type : 'post',
+                    data : {
+                        pageNum : page,
+                        category : category,
+                        keyword : keyword,
+                        isAnswered: isAnswered
+                    },
+                    success : function(list){
+                        $('#list-wrapper').html(list);
+                        applyCSS();
+                    },
+                    error : function( xhr, status, error ){
+                        console.log(error + ' 오류 발생');
+                        alert('오류 발생');
+                    }
+                });
+            }
+
+            function applyCSS() {
+                // 각 게시글에 경계선 추가
+                $('.post-info').css('border-bottom', '1px solid #ddd');
+                
+                // 제목 링크 색상 수정
+                $('.post-title-wrapper a').css('color', '#333');
+                
+                // 답변 상태에 패딩 추가 및 둥근 테두리 설정
+                $('.post-isAnswered-status span').css({
+                    'padding': '5px',
+                    'border-radius': '12px'
+                });
+
+                // 미답변, 답변 완료 상태의 배경 색상 설정
+                $('.post-isAnswered-status span:contains("미답변")').css('background-color', '#e1e1e1');
+                $('.post-isAnswered-status span:contains("답변 완료")').css('background-color', '#b3e6b3');
+            }
+        });
+
+        // 작성자명을 클릭하여 복사하는 API 사용
+        $(document).ready(function(){
+            $(document).on('click', '.copy-icon', function(e){
+                let writer = $(this).data('writer');
+    
+                navigator.clipboard.writeText(writer).then(function(){
+                    alert(`"${writer}" 복사됨`);
+                }).catch(function(err){
+                    console.log("복사 실패 : ", err);
+                });
+            });
+        });
+
+    </script>
+</body>
+</html>

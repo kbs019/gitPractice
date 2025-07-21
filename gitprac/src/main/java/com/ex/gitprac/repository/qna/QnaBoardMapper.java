@@ -58,25 +58,59 @@ public interface QnaBoardMapper {
     public int searchListCountByTitleAndContent(String keyword);
 
     // 모든 컬럼에 대한 검색결과 + 답변 완료됨(글목록) 
-    public List<QnaBoardDTO> searchListByTotal2(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered, @Param("start") int start, @Param("end") int end);
+    public List<QnaBoardDTO> searchListByTotalAndIsAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered, @Param("start") int start, @Param("end") int end);
     
     // category 값이 title 일 때의 검색결과 + 답변 완료됨에 대한 글목록
-    public List<QnaBoardDTO> searchListByTitle2(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered, @Param("start") int start, @Param("end") int end);
+    public List<QnaBoardDTO> searchListByTitleAndIsAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered, @Param("start") int start, @Param("end") int end);
     
     // category 값이 content 일 때의 검색결과 + 답변 완료됨에 대한 글목록
-    public List<QnaBoardDTO> searchListByContent2(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered, @Param("start") int start, @Param("end") int end);
+    public List<QnaBoardDTO> searchListByContentAndIsAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered, @Param("start") int start, @Param("end") int end);
     
     // category 값이 titleAndContent 일 때의 검색결과 + 답변 완료됨에 대한 글목록
-    public List<QnaBoardDTO> searchListByTitleAndContent2(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered, @Param("start") int start, @Param("end") int end);
+    public List<QnaBoardDTO> searchListByTitleAndContentAndIsAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered, @Param("start") int start, @Param("end") int end);
+
+    // 모든 컬럼에 대한 검색결과 + 답변 "미"완료됨(글목록) 
+    public List<QnaBoardDTO> searchListByTotalAndUnAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered, @Param("start") int start, @Param("end") int end);
+    
+    // category 값이 title 일 때의 검색결과 + 답변 "미"완료됨에 대한 글목록
+    public List<QnaBoardDTO> searchListByTitleAndUnAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered, @Param("start") int start, @Param("end") int end);
+    
+    // category 값이 content 일 때의 검색결과 + 답변 "미"완료됨에 대한 글목록
+    public List<QnaBoardDTO> searchListByContentAndUnAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered, @Param("start") int start, @Param("end") int end);
+    
+    // category 값이 titleAndContent 일 때의 검색결과 + 답변 "미"완료됨에 대한 글목록
+    public List<QnaBoardDTO> searchListByTitleAndContentAndUnAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered, @Param("start") int start, @Param("end") int end);
+
     
     // 모든 컬럼에 대한 검색 결과 + 답변 완료됨(글 갯수)
-    public int searchListCountByTotal2(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered);
+    public int searchListCountByTotalAndIsAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered);
     // category 값이 title 일 때의 검색결과 + 답변 완료됨에 대한 글갯수
-    public int searchListCountByTitle2(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered);
+    public int searchListCountByTitleAndIsAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered);
     // category 값이 content 일 때의 검색결과 + 답변 완료됨에 대한 글갯수
-    public int searchListCountByContent2(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered);
+    public int searchListCountByContentAndIsAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered);
     // category 값이 titleAndContent 일 때의 검색결과 + 답변 완료됨에 대한 글갯수
-    public int searchListCountByTitleAndContent2(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered);
+    public int searchListCountByTitleAndContentAndIsAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered);
+
+
+
+    // 모든 컬럼에 대한 검색 결과 + 답변 "미"완료됨(글 갯수) 
+    public int searchListCountByTotalAndUnAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered);
+    // category 값이 title 일 때의 검색결과 + 답변 "미"완료됨에 대한 글갯수
+    public int searchListCountByTitleAndUnAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered);
+    // category 값이 content 일 때의 검색결과 + 답변 "미"완료됨에 대한 글갯수
+    public int searchListCountByContentAndUnAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered);
+    // category 값이 titleAndContent 일 때의 검색결과 + 답변 "미"완료됨에 대한 글갯수
+    public int searchListCountByTitleAndContentAndUnAnswered(@Param("keyword") String keyword, @Param("isAnswered") int isAnswered);
+
+
+    // 검색창 + role 에 대한 체크박스 연동 게시글 갯수
+    public int getFilteredCount( @Param("category") String category, @Param("keyword") String keyword, @Param("isAnswered") int isAnswered );
+
+    // 검색창 + role 에 대한 체크박스 연동 리스트
+    public List<QnaBoardDTO> getFilteredList( @Param("category") String category, @Param("keyword") String keyword, @Param("isAnswered") int isAnswered, @Param("start") int start, @Param("end") int end );
+
+
+    // =======================================================================
 
     // 답변 완료된 질문만 보는 체크박스 클릭 시, 실행될 메서드
     public List<QnaBoardDTO> isAnsweredStatusChecked(@Param("start") int start, @Param("end") int end );

@@ -14,7 +14,7 @@
         <div align="center">	
             <span class="isAnswered-check">
                 <input type="checkbox" id="isAnsweredStatusCheck">
-                <span>답변완료된 질문만 보기</span>
+                <span>미답변 질문만 보기</span>
             </span>
             <table width="1000">		
                 <tr>
@@ -110,7 +110,7 @@
             });
 
             function searchPostList(page = 1){
-                let isAnswered = $('#isAnsweredStatusCheck').is(':checked') ? 1 : 0;
+                let isAnswered = $('#isAnsweredStatusCheck').is(':checked') ? 0 : 1;
 
                 $.ajax({
                     url : '/admin/askListByIsAnswered',

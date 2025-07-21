@@ -113,7 +113,7 @@
 
   <!-- 검색 결과에서  -->
     <!-- category 가 total 일 때, -->
-  <select id="searchListByTotal2" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
+  <select id="searchListByTotalAndIsAnswered" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
     <![CDATA[
     select * from 
       ( select b.*, rownum r from 
@@ -129,26 +129,26 @@
     ]]>
   </select>
     <!-- category 가 title 일 때, -->
-  <select id="searchListByTitle2" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
+  <select id="searchListByTitleAndIsAnswered" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
     <![CDATA[
     select * from ( select b.*, rownum r from ( select * from qna_board where ( lower(title) like '%' || lower(trim(#{keyword})) || '%' ) and isAnswered = 1 order by postNo desc ) b ) where r >= #{start} and r <= #{end}
     ]]>
   </select>
     <!-- category 가 content 일 때, -->
-  <select id="searchListByContent2" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
+  <select id="searchListByContentAndIsAnswered" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
     <![CDATA[
     select * from ( select b.*, rownum r from ( select * from qna_board where ( lower(content) like '%' || lower(trim(#{keyword})) || '%' ) and isAnswered = 1 order by postNo desc ) b ) where r >= #{start} and r <= #{end}
     ]]>
   </select>
     <!-- category 가 titleAndContent 일 때, -->
-  <select id="searchListByTitleAndContent2" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
+  <select id="searchListByTitleAndContentAndIsAnswered" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
     <![CDATA[
     select * from ( select b.*, rownum r from ( select * from qna_board where ( lower(title) like '%' || lower(trim(#{keyword})) || '%' or lower(content) like '%' || lower(trim(#{keyword})) || '%' ) and isAnswered = 1 order by postNo desc ) b ) where r >= #{start} and r <= #{end}
     ]]>
   </select>
 
   <!-- 검색 결과에 대한 글갯수 조회 -->
-  <select id="searchListCountByTotal2" resultType="int">
+  <select id="searchListCountByTotalAndIsAnswered" resultType="int">
     select count(*) from qna_board 
       where ( lower(title) like '%' || lower(trim(#{keyword})) || '%' 
         or lower(content) like '%' || lower(trim(#{keyword})) || '%' 
@@ -156,15 +156,72 @@
         or lower(originalName) like '%' || lower(trim(#{keyword})) || '%' ) 
         and isAnswered = 1
   </select>
-  <select id="searchListCountByTitle2" resultType="int">
+  <select id="searchListCountByTitleAndIsAnswered" resultType="int">
     select count(*) from qna_board where ( lower(title) like '%' || lower(trim(#{keyword})) || '%' ) and isAnswered = 1
   </select>
-  <select id="searchListCountByContent2" resultType="int">
+  <select id="searchListCountByContentAndIsAnswered" resultType="int">
     select count(*) from qna_board where ( lower(content) like '%' || lower(trim(#{keyword})) || '%' ) and isAnswered = 1
   </select>
-  <select id="searchListCountByTitleAndContent2" resultType="int">
+  <select id="searchListCountByTitleAndContentAndIsAnswered" resultType="int">
     select count(*) from qna_board where ( lower(title) like '%' || lower(trim(#{keyword})) || '%' or lower(content) like '%' || lower(trim(#{keyword})) || '%' ) and isAnswered = 1
   </select>
+
+
+  <!-- 검색 결과에서  -->
+    <!-- category 가 total 일 때, -->
+  <select id="searchListByTotalAndUnAnswered" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
+    <![CDATA[
+    select * from 
+      ( select b.*, rownum r from
+        ( select * from qna_board 
+          where ( lower(title) like '%' || lower(trim(#{keyword})) || '%' 
+          or lower(content) like '%' || lower(trim(#{keyword})) || '%' 
+          or lower(writer) like '%' || lower(trim(#{keyword})) || '%' 
+          or lower(originalName) like '%' || lower(trim(#{keyword})) || '%' ) 
+          and isAnswered = 0
+          order by postNo desc 
+        ) b 
+      ) where r >= #{start} and r <= #{end}
+    ]]>
+  </select>
+    <!-- category 가 title 일 때, -->
+  <select id="searchListByTitleAndUnAnswered" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
+    <![CDATA[
+    select * from ( select b.*, rownum r from ( select * from qna_board where ( lower(title) like '%' || lower(trim(#{keyword})) || '%' ) and isAnswered = 0 order by postNo desc ) b ) where r >= #{start} and r <= #{end}
+    ]]>
+  </select>
+    <!-- category 가 content 일 때, -->
+  <select id="searchListByContentAndUnAnswered" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
+    <![CDATA[
+    select * from ( select b.*, rownum r from ( select * from qna_board where ( lower(content) like '%' || lower(trim(#{keyword})) || '%' ) and isAnswered = 0 order by postNo desc ) b ) where r >= #{start} and r <= #{end}
+    ]]>
+  </select>
+    <!-- category 가 titleAndContent 일 때, -->
+  <select id="searchListByTitleAndContentAndUnAnswered" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
+    <![CDATA[
+    select * from ( select b.*, rownum r from ( select * from qna_board where ( lower(title) like '%' || lower(trim(#{keyword})) || '%' or lower(content) like '%' || lower(trim(#{keyword})) || '%' ) and isAnswered = 0 order by postNo desc ) b ) where r >= #{start} and r <= #{end}
+    ]]>
+  </select>
+
+  <!-- 검색 결과에 대한 글갯수 조회 -->
+  <select id="searchListCountByTotalAndUnAnswered" resultType="int">
+    select count(*) from qna_board 
+      where ( lower(title) like '%' || lower(trim(#{keyword})) || '%' 
+        or lower(content) like '%' || lower(trim(#{keyword})) || '%' 
+        or lower(writer) like '%' || lower(trim(#{keyword})) || '%' 
+        or lower(originalName) like '%' || lower(trim(#{keyword})) || '%' ) 
+        and isAnswered = 0
+  </select>
+  <select id="searchListCountByTitleAndUnAnswered" resultType="int">
+    select count(*) from qna_board where ( lower(title) like '%' || lower(trim(#{keyword})) || '%' ) and isAnswered = 0
+  </select>
+  <select id="searchListCountByContentAndUnAnswered" resultType="int">
+    select count(*) from qna_board where ( lower(content) like '%' || lower(trim(#{keyword})) || '%' ) and isAnswered = 0
+  </select>
+  <select id="searchListCountByTitleAndContentAndUnAnswered" resultType="int">
+    select count(*) from qna_board where ( lower(title) like '%' || lower(trim(#{keyword})) || '%' or lower(content) like '%' || lower(trim(#{keyword})) || '%' ) and isAnswered = 0
+  </select>
+
 
   <!-- 해당 게시글이 가지는 답변의 수가 0 일 경우, isAnswered 컬럼의 값을 0 으로 변경 -->
   <update id="updateIsAnswered">
@@ -270,4 +327,66 @@
   <select id="findByNo" resultType="com.ex.gitprac.data.rec.RecDTO">
     SELECT * FROM rec WHERE recNo = #{recNo}
   </select>
+
+
+  <!-- 검색창 + 체크박스 -->
+  <!-- count 쿼리 -->
+<select id="getFilteredCount" resultType="int">
+  SELECT COUNT(*)
+  FROM qna_board
+  <where>
+    <choose>
+      <when test="category == 'title'">
+        title LIKE '%' || #{keyword} || '%'
+      </when>
+      <when test="category == 'content'">
+        content LIKE '%' || #{keyword} || '%'
+      </when>
+      <when test="category == 'titleAndContent'">
+        (title LIKE '%' || #{keyword} || '%' OR content LIKE '%' || #{keyword} || '%')
+      </when>
+      <otherwise>
+        1 = 1
+      </otherwise>
+    </choose>
+
+    <if test="isAnswered != -1">
+      AND isAnswered = #{isAnswered}
+    </if>
+  </where>
+</select>
+
+  <!-- 리스트 쿼리 -->
+<select id="getFilteredList" resultType="com.ex.gitprac.data.qna.QnaBoardDTO">
+  SELECT *
+  FROM (
+    SELECT ROWNUM rn, A.*
+    FROM (
+      SELECT *
+      FROM qna_board
+      <where>
+        <choose>
+          <when test="category == 'title'">
+            title LIKE '%' || #{keyword} || '%'
+          </when>
+          <when test="category == 'content'">
+            content LIKE '%' || #{keyword} || '%'
+          </when>
+          <when test="category == 'titleAndContent'">
+            (title LIKE '%' || #{keyword} || '%' OR content LIKE '%' || #{keyword} || '%')
+          </when>
+          <otherwise>
+            1 = 1
+          </otherwise>
+        </choose>
+
+        <if test="isAnswered != -1">
+          AND isAnswered = #{isAnswered}
+        </if>
+      </where>
+      ORDER BY reg DESC
+    ) A
+  )
+  WHERE rn BETWEEN #{start} AND #{end}
+</select>
 </mapper>
