@@ -5,7 +5,7 @@
 <mapper namespace="com.ex.gitprac.repository.ask.AskReplyMapper">	
     <!-- 답변 작성 -->
     <insert id="replyInsert">
-        insert into ask_reply values(#{askNo}, ask_reply_seq.nextval, #{writer}, #{content}, sysdate)
+        insert into ask_reply values(ask_reply_seq.nextval, #{askNo}, #{writer}, #{content}, sysdate)
     </insert>
 
     <!-- 답변 조회 -->
