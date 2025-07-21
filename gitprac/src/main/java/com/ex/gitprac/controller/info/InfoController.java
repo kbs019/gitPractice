@@ -174,4 +174,11 @@ public class InfoController {
         int result = infoBoardService.deleteReply(replyNo);
         return result == 1 ? "success" : "fail"; 
     }
+
+    @GetMapping("search")
+    @ResponseBody
+    public List<InfoBoardDTO> search(@RequestParam("option") String option, @RequestParam("keyword") String keyword) {
+        return infoBoardService.searchByOption(option, keyword);
+    }
+    
 }
