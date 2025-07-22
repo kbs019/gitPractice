@@ -174,7 +174,7 @@ public class MyPageController {
     
     @GetMapping("/listAsk")
     @ResponseBody
-    public Map<String, Object> listAsk(@RequestParam int page, HttpSession session) {
+    public Map<String, Object> listAsk(@RequestParam("page") int page, HttpSession session) {
         String writer = ((UserDTO) session.getAttribute("users")).getNick();
         int start = (page - 1) * 10 + 1;
         int end = page * 10;
@@ -195,7 +195,7 @@ public class MyPageController {
 
     @GetMapping("/listInfo")
     @ResponseBody
-    public Map<String, Object> listInfo(@RequestParam int page, HttpSession session) {
+    public Map<String, Object> listInfo(@RequestParam("page") int page, HttpSession session) {
         String writer = ((UserDTO) session.getAttribute("users")).getNick();
         int start = (page - 1) * 10 + 1;
         int end = page * 10;
@@ -216,7 +216,7 @@ public class MyPageController {
 
     @GetMapping("/listQna")
     @ResponseBody
-    public Map<String, Object> listQna(@RequestParam int page, HttpSession session) {
+    public Map<String, Object> listQna(@RequestParam("page") int page, HttpSession session) {
         String writer = ((UserDTO) session.getAttribute("users")).getNick();
         int start = (page - 1) * 10 + 1;
         int end = page * 10;
