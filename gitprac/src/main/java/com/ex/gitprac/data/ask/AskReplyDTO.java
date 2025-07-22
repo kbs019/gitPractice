@@ -16,7 +16,7 @@ public class AskReplyDTO {
 create table ask_reply(
     replyNo         number,
     askNo           number,
-    writer          varchar2(50),
+    writer          varchar2(200),
     content         varchar2(4000)      not null,
     reg             date                default sysdate,
     constraint pk_ask_reply primary key (replyNo),

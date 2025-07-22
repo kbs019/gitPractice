@@ -23,8 +23,8 @@ public class QnaBoardDTO {
 /*
 create table qna_board(
     postNo          number,
-    writer          varchar2(20)    not null,
-    title           varchar2(50)    not null,
+    writer          varchar2(200),
+    title           varchar2(200)    not null,
     content         varchar2(4000)    not null,
     imgName         varchar2(500),
     imgPath         varchar2(500),

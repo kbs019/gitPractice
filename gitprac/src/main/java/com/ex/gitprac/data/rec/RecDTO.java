@@ -18,3 +18,21 @@ public class RecDTO {
     private String imgPath;
 }
 
+/*
+create table rec(
+    recNo           number              primary key,
+    writer          varchar2(200),
+    petNo           number,
+    category        varchar2(10)        not null,
+    title           varchar2(200)       not null,
+    content         varchar2(4000)      not null,
+    reg             date                default sysdate,
+    orgImgName      varchar2(500),
+    imgName         varchar2(500),
+    imgPath         varchar2(500)
+);
+
+create sequence rec_seq nocache start with 1 increment by 1;
+
+commit;
+*/

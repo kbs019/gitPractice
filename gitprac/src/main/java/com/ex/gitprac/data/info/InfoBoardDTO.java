@@ -20,12 +20,12 @@ public class InfoBoardDTO {
 create table info_board (
     postNo    number            primary key,
     category   varchar2(20)      not null,
-    title      varchar2(20)      not null,
-    writer     varchar2(20)      not null,
-    content    varchar2(4000)    not null,
+    title      varchar2(200)      not null,
+    writer     varchar2(200)      not null,
+    content    CLOB              not null,
     reg        date              default sysdate,
     views      number            default 0,
-    status   number            default 0, 
+    status      number            default 0, 
     ref        number            default 0
 );
 

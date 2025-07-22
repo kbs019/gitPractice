@@ -24,17 +24,18 @@ public class UserDTO {
 /*
 
 CREATE TABLE users (
-    id         VARCHAR2(20)         PRIMARY KEY,
-    pw         VARCHAR2(20)         NOT NULL,
-    nick       VARCHAR2(20)         UNIQUE NOT NULL,
-    name       VARCHAR2(20)         NOT NULL,
+    id         VARCHAR2(25)         PRIMARY KEY,
+    pw         VARCHAR2(25)         NOT NULL,
+    nick       VARCHAR2(200)         UNIQUE NOT NULL,
+    name       VARCHAR2(200)         NOT NULL,
     birth      DATE                 NOT NULL,
     reg        DATE                 DEFAULT SYSDATE,
     email      VARCHAR2(50)         NOT NULL,
     phone      VARCHAR2(11)         NOT NULL,
     carrier    VARCHAR2(20)         NOT NULL,
     status     NUMBER               DEFAULT 0,
-    role       NUMBER               DEFAULT 0
+    role       NUMBER               DEFAULT 0,
+    bannedUntil     DATE
 );
 
 */

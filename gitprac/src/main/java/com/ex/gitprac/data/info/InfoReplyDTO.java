@@ -19,10 +19,11 @@ public class InfoReplyDTO {
     CREATE TABLE info_reply (
         replyNo     NUMBER          PRIMARY KEY,
         postNo      NUMBER,
-        writer      VARCHAR2(50),
+        writer      VARCHAR2(200),
         content     VARCHAR2(4000)  NOT NULL,
         reg         DATE            DEFAULT sysdate,
         ref         NUMBER          DEFAULT 0,
+        status      number          default 0,
         CONSTRAINT fk_info_reply_post FOREIGN KEY (postNo) REFERENCES info_board(postNo) ON DELETE CASCADE
     );
 

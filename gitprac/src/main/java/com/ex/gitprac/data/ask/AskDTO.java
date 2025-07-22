@@ -22,8 +22,8 @@ public class AskDTO {
 /* 
 create table ask(
     askNo           number,
-    title           varchar2(50)        not null,
-    writer          varchar2(50),
+    title           varchar2(200)        not null,
+    writer          varchar2(200),
     content         varchar2(4000)      not null,
     reg             date                default sysdate,
     category        number,

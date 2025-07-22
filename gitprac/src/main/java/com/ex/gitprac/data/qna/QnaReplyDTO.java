@@ -17,9 +17,10 @@ public class QnaReplyDTO {
 create table qna_reply(
     postNo          number,
     replyNo         number,
-    writer          varchar2(20)        not null,
+    writer          varchar2(200),
     content         varchar2(4000)      not null,
     reg             date                default sysdate,
+    status          number              default 0,
     constraint pk_qna_reply_01 primary key (replyNo),
     constraint fk_qna_reply_01 foreign key (postNo) references qna_board (postNo)
 );

@@ -19,8 +19,8 @@ public class NoticeDTO {
 /*
 create table notice(
     noticeNo        number,
-    title           varchar2(50)        not null,
-    writer          varchar2(50),
+    title           varchar2(200)        not null,
+    writer          varchar2(200),
     content         varchar2(4000)      not null,
     reg             date                default sysdate,
     views           number              default 0,
