@@ -32,6 +32,7 @@ create table ask(
     imgPath         varchar2(500),
     originalName    varchar2(500),
     isAnswered      number              default 0,
+    status          number,
     constraint pk_ask primary key (askNo)
 );
 

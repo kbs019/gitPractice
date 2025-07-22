@@ -23,7 +23,7 @@ create table rec(
     recNo           number              primary key,
     writer          varchar2(200),
     petNo           number,
-    category        varchar2(10)        not null,
+    category        varchar2(30)        not null,
     title           varchar2(200)       not null,
     content         varchar2(4000)      not null,
     reg             date                default sysdate,
