@@ -1,0 +1,150 @@
+body {
+    font-family: 'Noto Serif KR', serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #222;
+}
+
+/* 전체 레이아웃 */
+.center-container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 30px auto;
+    display: flex;
+    gap: 30px;
+}
+
+/* ✅ 사이드바 */
+.sidebar-wrapper {
+    width: 150px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    height: fit-content;
+}
+
+/* ✅ 본문 영역 */
+#notice-wrapper {
+    flex: 1;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 제목 */
+#notice-wrapper h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: left;
+}
+
+/* 글쓰기 버튼 */
+.writeBtn {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.writeBtn a {
+    padding: 7px 14px;
+    font-size: 14px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #222;
+    background-color: #fff;
+}
+
+.writeBtn a:hover {
+    background-color: #f2f2f2;
+}
+
+/* 게시글 없음 메시지 */
+.empty-msg {
+    text-align: center;
+    color: #aaa;
+    font-size: 18px;
+    margin: 40px 0;
+}
+
+/* 게시판 테이블 */
+.notice-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+
+.notice-table th:nth-child(1),
+.notice-table td:nth-child(1) {
+    width: 60%;
+    text-align: center;
+}
+
+.notice-table th:nth-child(2),
+.notice-table td:nth-child(2),
+.notice-table th:nth-child(3),
+.notice-table td:nth-child(3),
+.notice-table th:nth-child(4),
+.notice-table td:nth-child(4) {
+    width: 13.3%;
+    text-align: center;
+}
+
+
+.notice-table th,
+.notice-table td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+.notice-table th {
+    background-color: #f5f5f5;
+    color: #555;
+    font-weight: 600;
+}
+
+.notice-table td:first-child {
+    text-align: left;
+}
+
+.notice-table td a {
+    color: #222;
+    text-decoration: none;
+}
+
+.notice-table td a:hover {
+    text-decoration: underline;
+    color: #888;
+}
+
+/* 페이징 */
+.paging {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.paging a {
+    margin: 0 6px;
+    text-decoration: none;
+    color: #444;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.paging a:hover {
+    background-color: #e0e0e0;
+}
+
+.paging a.active {
+    font-weight: bold;
+    text-decoration: underline;
+}

@@ -1,72 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>공지사항</title>
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/adminNotice.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
-    <span th:if="${session.users == null}">
-        <script>
-            alert("로그인이 해제되었습니다.");
-            window.location="/user/login";
-        </script>
-    </span>
-    <span th:if="${session.users != null}">
-        <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-        <h1>공지사항</h1>
+<span th:if="${session.users == null}">
+    <script>
+        alert("로그인이 해제되었습니다.");
+        window.location = "/user/login";
+    </script>
+</span>
+
+<span th:if="${session.users != null}">
+    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+
+    <div class="center-container">
+        <!-- ✅ 사이드바 영역 필요시 -->
+        
+
+        <!-- ✅ 본문 영역 -->
         <div id="notice-wrapper">
-            <div align="center">	
-                <table width="800">		
-                    <tr>
-                        <td align="right">
-                            <a th:href="@{/admin/noticeWrite}">글쓰기</a>				
-                        </td>
-                    </tr>
-                </table>
+            <h1>공지사항</h1>
+
+            <div class="writeBtn">
+                <a th:href="@{/admin/noticeWrite}">글쓰기</a>
             </div>
-    
+
             <div th:if="${count == 0}">
-                <table border="1" cellspacing="0" cellpadding="0" align="center" width="800">
-                    <tr align="center">
-                        <td><h3>게시판에 저장된 게시글이 없습니다.</h3></td>
-                    </tr>
-                </table>
+                <div class="empty-msg">게시판에 저장된 게시글이 없습니다.</div>
             </div>
+
             <div th:if="${count != 0}">
-                <table border="1" cellspacing="0" cellpadding="0" align="center" width="800">
-                    <tr height="30">
-                        <th width="400">글제목</th>
-                        <th width="100">작성자</th>
-                        <th width="200">작성일</th>
-                        <th width="100">조회수</th>
-                    </tr>			
-                    <tr height="30" th:each="nto : ${list}">
-                        <td>
-                            <a th:href="@{|/admin/noticeContent?noticeNo=${nto.noticeNo}&pageNum=${pageNum}|}" th:text="${nto.title}"></a>
-                        </td>
-                        <td th:text="${nto.writer}" align="center"></td>
-                        <td th:text="${#temporals.format(nto.reg, 'yy.MM.dd HH:mm')}" align="center"></td>
-                        <td th:text="${nto.views}" align="center"></td>
-                    </tr>
+                <table class="notice-table">
+                    <thead>
+                        <tr>
+                            <th>글제목</th>
+                            <th>작성자</th>
+                            <th>작성일</th>
+                            <th>조회수</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="nto : ${list}">
+                            <td>
+                                <a th:href="@{|/admin/noticeContent?noticeNo=${nto.noticeNo}&pageNum=${pageNum}|}" th:text="${nto.title}"></a>
+                            </td>
+                            <td th:text="${nto.writer}"></td>
+                            <td th:text="${#temporals.format(nto.reg, 'yy.MM.dd HH:mm')}"></td>
+                            <td th:text="${nto.views}"></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
-    
-            <div align="center" th:if="${count > 0}">
+
+            <div class="paging" th:if="${count > 0}">
                 <span th:if="${startPage} > ${pageBlock}">
                     <a th:href="@{|/admin/notice?pageNum=${startPage - pageBlock}|}">[이전]</a>
                 </span>
-                <span th:each=" i : ${#numbers.sequence(startPage, endPage)} ">
-                    <a th:href="@{|/admin/notice?pageNum=${i}|}" th:text="'['+${i}+']'"></a>
+                <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                    <a th:href="@{|/admin/notice?pageNum=${i}|}"
+                       th:text="${i}"
+                       th:classappend="${pageNum == i} ? 'active' : ''"></a>
                 </span>
                 <span th:if="${endPage} < ${pageCount}">
                     <a th:href="@{|/admin/notice?pageNum=${startPage + pageBlock}|}">[다음]</a>
                 </span>
             </div>
         </div>
-    </span>
+    </div>
+</span>
 </body>
 </html>
