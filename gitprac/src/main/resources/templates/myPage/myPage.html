@@ -33,6 +33,7 @@
                 </select>
                 <br><br>
                 <button onclick="updateMyInfo()">수정 완료</button>
+                <button onclick="cancelEdit()">수정 취소</button>
                 <button onclick="deleteUser()">회원 탈퇴</button>
             </div>
         </div>
@@ -52,6 +53,7 @@
                 <p>무게 : <input type="text" id="petWeight" placeholder="g(그램)단위로 입력해주세요"></p>
                 <p>생일 : <input type="date" id="petBirth"></p>
                 <button onclick="submitPet()">저장</button>
+                <button onclick="cancelPetForm()">취소</button>
             </div>
         </div>
     </div>
@@ -72,38 +74,21 @@
     </div>
 
 <script>
-$(document).ready(function() {
-    loadMyInfo();
-    loadPets();
-    showTab('ask');
-});
-
-let originalUserData = {};
-
-function loadMyInfo() {
-    $.post('/myPage/getUser', function(data) {
-        originalUserData = data;
-        $('#myInfoView').html(`
-            <span>닉네임: ${data.nick}  </span>
-            <span>이메일: ${data.email}</span>
-        `);
-        $('#nick').attr('placeholder', data.nick);
-        $('#email').attr('placeholder', data.email);
-        $('#phone').attr('placeholder', data.phone);
-        $('#pw').attr('placeholder', '****');
-        $('#carrier').val(data.carrier);
+    $(document).ready(function() {
+        loadMyInfo();
+        loadPets();
+        showTab('ask');
     });
-}
+
+    let originalUserData = {};
 
     function loadMyInfo() {
         $.post('/myPage/getUser', function(data) {
             originalUserData = data;
-
             $('#myInfoView').html(`
                 <span>닉네임: ${data.nick}  </span>
                 <span>이메일: ${data.email}</span>
             `);
-
             $('#nick').attr('placeholder', data.nick);
             $('#email').attr('placeholder', data.email);
             $('#phone').attr('placeholder', data.phone);
@@ -112,30 +97,50 @@ function loadMyInfo() {
         });
     }
 
+        function loadMyInfo() {
+            $.post('/myPage/getUser', function(data) {
+                originalUserData = data;
+
+                $('#myInfoView').html(`
+                    <span>닉네임: ${data.nick}  </span>
+                    <span>이메일: ${data.email}</span>
+                `);
+
+                $('#nick').attr('placeholder', data.nick);
+                $('#email').attr('placeholder', data.email);
+                $('#phone').attr('placeholder', data.phone);
+                $('#pw').attr('placeholder', '****');
+                $('#carrier').val(data.carrier);
+            });
+        }
+        
     function checkPassword() {
         const pw = prompt("비밀번호를 입력하세요");
-        if (!pw) return; // 취소 또는 빈 값일 경우 종료
-
-        $.post('/myPage/pwCheck', { pw: pw }, function(result) {
+        if (!pw) return;
+        $.post('/myPage/pwCheck', { pw }, function(result) {
             if (result === "success") {
                 alert("비밀번호가 확인되었습니다.");
                 $('#checkPwBtn').hide();
-                showUpdateForm(); // 수정 폼 표시 함수
+                $('#myInfoEdit').show();
             } else {
                 alert("비밀번호가 틀렸습니다.");
             }
         });
     }
 
-    function showUpdateForm() {
-        $('#myInfoEdit').show();
-        $(event.target).hide();
+    function cancelEdit() {
+        $('#myInfoEdit').hide(); // 수정 폼 숨기기
+        $('#checkPwBtn').show(); // 다시 '수정' 버튼 보이기
+        $('#pw').val('');
+        $('#nick').val('');
+        $('#email').val('');
+        $('#phone').val('');
+        matchHeights(); 
     }
 
     function updateMyInfo() {
-        const pwInput = $('#pw').val(); // 사용자가 입력한 비밀번호
-        const finalPw = pwInput || originalUserData.pw; // 비어있으면 기존 비밀번호 사용
-
+        const pwInput = $('#pw').val();
+        const finalPw = pwInput || originalUserData.pw;
         const user = {
             pw: finalPw,
             nick: $('#nick').val() || originalUserData.nick,
@@ -143,45 +148,34 @@ function loadMyInfo() {
             phone: $('#phone').val() || originalUserData.phone,
             carrier: $('#carrier').val() || originalUserData.carrier
         };
-
         $.ajax({
             url: '/myPage/updateUser',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(user),
-            success: function(res) {
+            success: function() {
                 alert('수정 완료');
                 loadMyInfo();
                 $('#myInfoEdit').hide();
-                $('#checkPwBtn').show();
             }
         });
     }
 
     function deleteUser() {
         if (!confirm('정말 탈퇴하시겠습니까?')) return;
-        $.post('/myPage/deleteUser', function(res) {
+        $.post('/myPage/deleteUser', function() {
             alert('탈퇴 처리되었습니다');
-            location.href = '/user/login';
+            location.href = '/';
         });
     }
 
     function loadPets() {
-        
         $.post('/myPage/getUser', function(user) {
-            const id = user.id;
-            $.post('/myPage/listPet', { id: id }, function(list) {
+            $.post('/myPage/listPet', { id: user.id }, function(list) {
                 let html = '';
                 if (Array.isArray(list)) {
                     list.forEach(pet => {
-                        let ageText = '';
-                        const age = parseInt(pet.petAge, 10);
-                        if (age < 24) {
-                            ageText = `${age}개월`;
-                        } else {
-                            const years = Math.floor(age / 12);
-                            ageText = `${years}살`;
-                        }
+                        let ageText = pet.petAge < 24 ? `${pet.petAge}개월` : `${Math.floor(pet.petAge / 12)}살`;
                         html += `
                             <div class="pet-card">
                                 <span>이름: ${pet.petName}  </span>
@@ -193,8 +187,6 @@ function loadMyInfo() {
                         `;
                     });
                     $('#petList').html(html);
-                } else {
-                    console.error("loadPets(): 받은 데이터가 배열이 아님", list);
                 }
             });
         });
@@ -205,9 +197,13 @@ function loadMyInfo() {
         $('#petForm input').val('');
         $('#petNo').val('');
     }
-
+    function cancelPetForm() {
+        $('#petForm input').val('');  // 입력값 초기화
+        $('#petForm').hide();         // 폼 닫기
+        matchHeights();               // 높이 다시 조정
+    }
     function editPet(petNo) {
-        $.post('/myPage/getPet', { petNo: petNo }, function(pet) {
+        $.post('/myPage/getPet', { petNo }, function(pet) {
             $('#petForm').show();
             $('#petNo').val(pet.petNo);
             $('#petName').val(pet.petName);
@@ -232,7 +228,7 @@ function loadMyInfo() {
         };
         const url = pet.petNo ? '/myPage/updatePet' : '/myPage/insertPet';
         $.ajax({
-            url: url,
+            url,
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(pet),
@@ -246,240 +242,105 @@ function loadMyInfo() {
     }
 
     function deletePet(petNo) {
+        if (!confirm('정말 삭제하시겠습니까?')) return;
         $.post('/myPage/deletePet', { petNo }, function() {
             alert('삭제 완료');
             loadPets();
         });
     }
-    function showTab(tabName) {
-        $('.tab-content').hide(); // 모든 탭 숨김
-        $(`#${tabName}Tab`).show(); // 해당 탭만 표시
 
-        // 탭 이름에 따라 직접 함수 실행 (1페이지부터 시작)
-        if (tabName === 'ask') {
-            loadAskPosts(1);
-        } else if (tabName === 'info') {
-            loadInfoPosts(1);
-        } else if (tabName === 'qna') {
-            loadQnaPosts(1);
-        }
+    function showTab(tabName) {
+        $('.tab-content').hide();
+        $(`#${tabName}Tab`).show();
+        if (tabName === 'ask') loadAskPosts(1);
+        else if (tabName === 'info') loadInfoPosts(1);
+        else if (tabName === 'qna') loadQnaPosts(1);
     }
 
-    // 공통 렌더링 함수
     function renderPostList(list, total, page, tabId, loadFuncName) {
         let html = '<ul>';
         if (!list || list.length === 0) {
             html += '<p style="text-align:center;">등록된 게시글이 없습니다.</p>';
-function checkPassword() {
-    const pw = prompt("비밀번호를 입력하세요");
-    if (!pw) return;
-    $.post('/myPage/pwCheck', { pw }, function(result) {
-        if (result === "success") {
-            alert("비밀번호가 확인되었습니다.");
-            $('#checkPwBtn').hide();
-            $('#myInfoEdit').show();
         } else {
-            alert("비밀번호가 틀렸습니다.");
-        }
-    });
-}
-
-function updateMyInfo() {
-    const pwInput = $('#pw').val();
-    const finalPw = pwInput || originalUserData.pw;
-    const user = {
-        pw: finalPw,
-        nick: $('#nick').val() || originalUserData.nick,
-        email: $('#email').val() || originalUserData.email,
-        phone: $('#phone').val() || originalUserData.phone,
-        carrier: $('#carrier').val() || originalUserData.carrier
-    };
-    $.ajax({
-        url: '/myPage/updateUser',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(user),
-        success: function() {
-            alert('수정 완료');
-            loadMyInfo();
-            $('#myInfoEdit').hide();
-        }
-    });
-}
-
-function deleteUser() {
-    if (!confirm('정말 탈퇴하시겠습니까?')) return;
-    $.post('/myPage/deleteUser', function() {
-        alert('탈퇴 처리되었습니다');
-        location.href = '/';
-    });
-}
-
-function loadPets() {
-    $.post('/myPage/getUser', function(user) {
-        $.post('/myPage/listPet', { id: user.id }, function(list) {
-            let html = '';
-            if (Array.isArray(list)) {
-                list.forEach(pet => {
-                    let ageText = pet.petAge < 24 ? `${pet.petAge}개월` : `${Math.floor(pet.petAge / 12)}살`;
-                    html += `
-                        <div class="pet-card">
-                            <span>이름: ${pet.petName}  </span>
-                            <span>견종: ${pet.petBreed}  </span>
-                            <span>나이: ${ageText}</span>
-                            <button onclick="editPet(${pet.petNo})">수정</button>
-                            <button onclick="deletePet(${pet.petNo})">삭제</button>
-                        </div>
-                    `;
-                });
-                $('#petList').html(html);
+            list.forEach(post => {
+                let href = '#';
+                const dateOnly = post.reg.substring(0, 10);
+                if (tabId === 'askTab') href = `/center/askContent?askNo=${post.askNo}&pageNum=1`;
+                else if (tabId === 'infoTab') href = `/info/content?postNo=${post.postNo}&pageNum=1`;
+                else if (tabId === 'qnaTab') href = `/qna/content?postNo=${post.postNo}&pageNum=1`;
+                html += `<li><a href="${href}">${post.title}</a> (${dateOnly})</li>`;
+            });
+            html += '</ul><div class="pagination">';
+            const totalPage = Math.ceil(total / 10);
+            for (let i = 1; i <= totalPage; i++) {
+                html += `<button onclick="${loadFuncName}(${i})" ${i === page ? 'disabled' : ''}>${i}</button>`;
             }
-        });
-    });
-}
-
-function showPetInsertForm() {
-    $('#petForm').show();
-    $('#petForm input').val('');
-    $('#petNo').val('');
-}
-
-function editPet(petNo) {
-    $.post('/myPage/getPet', { petNo }, function(pet) {
-        $('#petForm').show();
-        $('#petNo').val(pet.petNo);
-        $('#petName').val(pet.petName);
-        $('#petBreed').val(pet.petBreed);
-        $('#petAge').val(pet.petAge);
-        $('#petSize').val(pet.petSize);
-        $('#petWeight').val(pet.petWeight);
-        $('#petBirth').val(pet.petBirth);
-    });
-}
-
-function submitPet() {
-    const pet = {
-        petNo: $('#petNo').val(),
-        id: $('#id').val(),
-        petName: $('#petName').val(),
-        petBreed: $('#petBreed').val(),
-        petAge: $('#petAge').val(),
-        petSize: $('#petSize').val(),
-        petWeight: $('#petWeight').val(),
-        petBirth: $('#petBirth').val()
-    };
-    const url = pet.petNo ? '/myPage/updatePet' : '/myPage/insertPet';
-    $.ajax({
-        url,
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(pet),
-        success: function() {
-            alert('처리 완료');
-            loadPets();
-            $('#petForm input').val('');
-            $('#petForm').hide();
+            html += '</div>';
         }
-    });
-}
-
-function deletePet(petNo) {
-    $.post('/myPage/deletePet', { petNo }, function() {
-        alert('삭제 완료');
-        loadPets();
-    });
-}
-
-function showTab(tabName) {
-    $('.tab-content').hide();
-    $(`#${tabName}Tab`).show();
-    if (tabName === 'ask') loadAskPosts(1);
-    else if (tabName === 'info') loadInfoPosts(1);
-    else if (tabName === 'qna') loadQnaPosts(1);
-}
-
-function renderPostList(list, total, page, tabId, loadFuncName) {
-    let html = '<ul>';
-    if (!list || list.length === 0) {
-        html += '<p style="text-align:center;">등록된 게시글이 없습니다.</p>';
-    } else {
-        list.forEach(post => {
-            let href = '#';
-            const dateOnly = post.reg.substring(0, 10);
-            if (tabId === 'askTab') href = `/center/askContent?askNo=${post.askNo}&pageNum=1`;
-            else if (tabId === 'infoTab') href = `/info/content?postNo=${post.postNo}&pageNum=1`;
-            else if (tabId === 'qnaTab') href = `/qna/content?postNo=${post.postNo}&pageNum=1`;
-            html += `<li><a href="${href}">${post.title}</a> (${dateOnly})</li>`;
-        });
-        html += '</ul><div class="pagination">';
-        const totalPage = Math.ceil(total / 10);
-        for (let i = 1; i <= totalPage; i++) {
-            html += `<button onclick="${loadFuncName}(${i})" ${i === page ? 'disabled' : ''}>${i}</button>`;
-        }
-        html += '</div>';
+        $(`#${tabId}`).html(html);
     }
-    $(`#${tabId}`).html(html);
-}
 
-function loadAskPosts(page) {
-    $.get('/myPage/listAsk', { page }, function(res) {
-        renderPostList(res.list, res.total, page, 'askTab', 'loadAskPosts');
-    });
-}
+    function loadAskPosts(page) {
+        $.get('/myPage/listAsk', { page }, function(res) {
+            renderPostList(res.list, res.total, page, 'askTab', 'loadAskPosts');
+        });
+    }
 
-function loadInfoPosts(page) {
-    $.get('/myPage/listInfo', { page }, function(res) {
-        renderPostList(res.list, res.total, page, 'infoTab', 'loadInfoPosts');
-    });
-}
+    function loadInfoPosts(page) {
+        $.get('/myPage/listInfo', { page }, function(res) {
+            renderPostList(res.list, res.total, page, 'infoTab', 'loadInfoPosts');
+        });
+    }
 
-function loadQnaPosts(page) {
-    $.get('/myPage/listQna', { page }, function(res) {
-        renderPostList(res.list, res.total, page, 'qnaTab', 'loadQnaPosts');
-    });
-}
+    function loadQnaPosts(page) {
+        $.get('/myPage/listQna', { page }, function(res) {
+            renderPostList(res.list, res.total, page, 'qnaTab', 'loadQnaPosts');
+        });
+    }
 
-function matchHeights() {
-    const info = $('#myInfoSection');
-    const pet = $('#petSection');
 
-    info.css('min-height', 'auto');
-    pet.css('min-height', 'auto');
 
-    const maxHeight = Math.max(info.outerHeight(true), pet.outerHeight(true));
+    function matchHeights() {
+        const info = $('#myInfoSection');
+        const pet = $('#petSection');
 
-    info.css('min-height', maxHeight + 'px');
-    pet.css('min-height', maxHeight + 'px');
-}
+        info.css('min-height', 'auto');
+        pet.css('min-height', 'auto');
 
-// 최초 진입 및 리사이즈 시 실행
-$(window).on('load resize', matchHeights);
+        const maxHeight = Math.max(info.outerHeight(true), pet.outerHeight(true));
 
-// ajax 데이터 로딩 이후 높이 조정
-$(document).ajaxComplete(matchHeights);
+        info.css('min-height', maxHeight + 'px');
+        pet.css('min-height', maxHeight + 'px');
+    }
 
-// 강아지 폼 표시 시 높이 재조정
-function showPetInsertForm() {
-    $('#petForm').show();
-    $('#petForm input').val('');
-    $('#petNo').val('');
-    matchHeights(); // 높이 동기화
-}
+    // 최초 진입 및 리사이즈 시 실행
+    $(window).on('load resize', matchHeights);
 
-// 강아지 수정 폼 표시 시에도 높이 재조정
-function editPet(petNo) {
-    $.post('/myPage/getPet', { petNo: petNo }, function(pet) {
+    // ajax 데이터 로딩 이후 높이 조정
+    $(document).ajaxComplete(matchHeights);
+
+    // 강아지 폼 표시 시 높이 재조정
+    function showPetInsertForm() {
         $('#petForm').show();
-        $('#petNo').val(pet.petNo);
-        $('#petName').val(pet.petName);
-        $('#petBreed').val(pet.petBreed);
-        $('#petAge').val(pet.petAge);
-        $('#petSize').val(pet.petSize);
-        $('#petWeight').val(pet.petWeight);
-        $('#petBirth').val(pet.petBirth);
+        $('#petForm input').val('');
+        $('#petNo').val('');
         matchHeights(); // 높이 동기화
-    });
-}
+    }
+
+    // 강아지 수정 폼 표시 시에도 높이 재조정
+    function editPet(petNo) {
+        $.post('/myPage/getPet', { petNo: petNo }, function(pet) {
+            $('#petForm').show();
+            $('#petNo').val(pet.petNo);
+            $('#petName').val(pet.petName);
+            $('#petBreed').val(pet.petBreed);
+            $('#petAge').val(pet.petAge);
+            $('#petSize').val(pet.petSize);
+            $('#petWeight').val(pet.petWeight);
+            $('#petBirth').val(pet.petBirth);
+            matchHeights(); // 높이 동기화
+        });
+    }
 </script>
 </body>
 </html>
