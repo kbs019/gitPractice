@@ -57,14 +57,47 @@ body {
     border: 1px solid #ddd;
     border-radius: 6px;
     padding: 20px;
+    box-sizing: border-box;
 }
 
-/* 글쓰기 버튼 */
-.writeBtn {
-    text-align: right;
-    margin-bottom: 10px;
+/* ✅ 검색 + 글쓰기 영역을 한 줄로 우측 정렬 */
+.top-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
 }
 
+/* ✅ 검색바 스타일 */
+.search-bar {
+    display: flex;
+    gap: 5px;
+}
+
+.search-bar select,
+.search-bar input[type="text"] {
+    padding: 6px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.search-bar button {
+    padding: 6px 12px;
+    font-size: 14px;
+    background-color: #fff;
+    border: 1px solid #444;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-bar button:hover {
+    background-color: #f2f2f2;
+}
+
+/* ✅ 글쓰기 버튼 */
 .writeBtn a {
     padding: 7px 14px;
     font-size: 14px;
@@ -73,13 +106,14 @@ body {
     text-decoration: none;
     color: #222;
     background-color: #fff;
+    white-space: nowrap;
 }
 
 .writeBtn a:hover {
     background-color: #f2f2f2;
 }
 
-/* 게시글 테이블 */
+/* ✅ 게시글 테이블 */
 .info-table {
     width: 100%;
     border-collapse: collapse;
@@ -108,7 +142,7 @@ body {
     color: #888;
 }
 
-/* 텅~!!! 메시지 */
+/* ✅ 텅~!!! 메시지 */
 .empty-msg {
     text-align: center;
     color: #aaa;
@@ -116,7 +150,7 @@ body {
     margin: 40px 0;
 }
 
-/* 페이징 */
+/* ✅ 페이징 */
 .paging {
     margin-top: 20px;
     text-align: center;

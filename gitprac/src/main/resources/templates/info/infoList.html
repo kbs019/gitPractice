@@ -21,15 +21,6 @@
         <div id="info-wrapper">
             <!-- ✅ 카테고리 사이드바 -->
             <aside class="category-sidebar">
-                <!-- ✅ 검색 영역 -->
-                <div class="search-bar">
-                    <select id="searchOption">
-                        <option value="writer">작성자</option>
-                        <option value="title">제목</option>
-                    </select>
-                    <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요">
-                    <button id="searchBtn">검색</button>
-                </div>
                 <ul>
                     <li><a th:href="@{/info/list}" th:classappend="${category} == '전체글' ? 'active'">전체글</a></li>
                     <li><a th:href="@{/info/list(category='대형견')}" th:classappend="${category} == '대형견' ? 'active'">대형견</a></li>
@@ -41,8 +32,19 @@
     
             <!-- ✅ 게시판 본문 -->
             <section class="info-list-area">
-                <div class="writeBtn">
-                    <a th:href="@{/info/write}">글쓰기</a>
+                <!-- ✅ 검색 영역 -->
+                <div class="top-controls">
+                    <div class="search-bar">
+                        <select id="searchOption">
+                            <option value="writer">작성자</option>
+                            <option value="title">제목</option>
+                        </select>
+                        <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요">
+                        <button id="searchBtn">검색</button>
+                    </div>
+                    <div class="writeBtn">
+                        <a th:href="@{/info/write}">글쓰기</a>
+                    </div>
                 </div>
     
                 <!-- ✅ 게시글 없음 -->
