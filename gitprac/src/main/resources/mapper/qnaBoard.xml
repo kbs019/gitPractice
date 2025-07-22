@@ -93,12 +93,16 @@
         or lower(writer) like '%' || lower(trim(#{keyword})) || '%' 
         or lower(originalName) like '%' || lower(trim(#{keyword})) || '%'
   </select>
+
+  <!-- 검색 결과 title일때 개수 세기 -->
   <select id="searchListCountByTitle" resultType="int">
     select count(*) from qna_board where lower(title) like '%' || lower(trim(#{keyword})) || '%'
   </select>
+  <!-- 검색 결과 content일때 개수 세기 -->
   <select id="searchListCountByContent" resultType="int">
     select count(*) from qna_board where lower(content) like '%' || lower(trim(#{keyword})) || '%' 
   </select>
+  <!-- 검색 결과 title, content일때 개수 세기 -->
   <select id="searchListCountByTitleAndContent" resultType="int">
     select count(*) from qna_board where lower(title) like '%' || lower(trim(#{keyword})) || '%' or lower(content) like '%' || lower(trim(#{keyword})) || '%'
   </select>
