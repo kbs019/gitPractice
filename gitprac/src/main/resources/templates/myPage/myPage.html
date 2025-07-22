@@ -12,310 +12,301 @@
 <body>    
     <div th:replace="~{fragments/header.html :: headerFragment}"></div>
     <center><h1>마이페이지</h1></center>
-
-    <!-- 내 정보 영역 -->
-    <div id="myInfoSection">
-        <h2>내 정보</h2>
-        <div id="myInfoView">
-            <!-- 사용자 정보가 여기에 표시됩니다 -->
+    <div id="info-pet-wrapper">
+        <!-- 내 정보 영역 -->
+        <div id="myInfoSection">
+            <h2>내 정보</h2>
+            <div id="myInfoView"></div>
+            <button id="checkPwBtn" onclick="checkPassword()">수정</button>
+            <div id="myInfoEdit" style="display:none;">
+                <p>비밀번호: <input type="password" id="pw" placeholder=""></p>
+                <p>닉네임: <input type="text" id="nick" placeholder=""></p>
+                <p>이메일: <input type="text" id="email" placeholder=""></p>
+                <p>휴대폰번호: <input type="text" id="phone" placeholder=""></p>
+                <label for="carrier">통신사:</label>
+                <select name="carrier" id="carrier" required>
+                    <option value="SKT">SKT</option>
+                    <option value="KT">KT</option>
+                    <option value="LG U+">LG U+</option>
+                    <option value="알뜰폰">알뜰폰</option>
+                </select>
+                <br><br>
+                <button onclick="updateMyInfo()">수정 완료</button>
+                <button onclick="deleteUser()">회원 탈퇴</button>
+            </div>
         </div>
 
-        <button id="checkPwBtn" onclick="checkPassword()">수정</button>
-        <div id="myInfoEdit" style="display:none;">
-            <p>비밀번호: <input type="password" id="pw" placeholder=""></p>
-            <p>닉네임: <input type="text" id="nick" placeholder=""></p>
-            <p>이메일: <input type="text" id="email" placeholder=""></p>
-            <p>휴대폰번호: <input type="text" id="phone" placeholder=""></p>
-            
-            <label for="carrier">통신사:</label>
-            <select name="carrier" id="carrier" required>
-                <option value="SKT">SKT</option>
-                <option value="KT">KT</option>
-                <option value="LG U+">LG U+</option>
-                <option value="알뜰폰">알뜰폰</option>
-            </select>
-
-            <br><br>
-            <button onclick="updateMyInfo()">수정 완료</button>
-            <button onclick="deleteUser()">회원 탈퇴</button>
-        </div>
-    </div>
-
-    <hr>
-
-    <!-- 강아지 정보 영역 -->
-    <div id="petSection">
-        <h2>강아지 정보</h2>
-        <div id="petList">
-            <!-- 강아지 목록이 여기에 표시됩니다 -->
-        </div>
-        <button onclick="showPetInsertForm()">강아지 추가</button>
-        <div id="petForm" style="display:none;">
-            <input type="hidden" id="petNo">
-            <input type="hidden" id="id" th:value="${session.users.id}">
-            <p>이름 : <input type="text" id="petName"></p>
-            <p>견종 : <input type="text" id="petBreed"></p>
-            <p>나이 : <input type="number" id="petAge" placeholder="개월수를 입력해주세요"></p>
-            <p>크기 : <input type="text" id="petSize" placeholder="cm(센티미터)단위로 입력해주세요"></p>
-            <p>무게 : <input type="text" id="petWeight" placeholder="g(그램)단위로 입력해주세요"></p>
-            <p>생일 : <input type="date" id="petBirth"></p>
-            <button onclick="submitPet()">저장</button>
+        <!-- 강아지 정보 영역 -->
+        <div id="petSection">
+            <h2>강아지 정보</h2>
+            <div id="petList"></div>
+            <button onclick="showPetInsertForm()">강아지 추가</button>
+            <div id="petForm" style="display:none;">
+                <input type="hidden" id="petNo">
+                <input type="hidden" id="id" th:value="${session.users.id}">
+                <p>이름 : <input type="text" id="petName"></p>
+                <p>견종 : <input type="text" id="petBreed"></p>
+                <p>나이 : <input type="number" id="petAge" placeholder="개월수를 입력해주세요"></p>
+                <p>크기 : <input type="text" id="petSize" placeholder="cm(센티미터)단위로 입력해주세요"></p>
+                <p>무게 : <input type="text" id="petWeight" placeholder="g(그램)단위로 입력해주세요"></p>
+                <p>생일 : <input type="date" id="petBirth"></p>
+                <button onclick="submitPet()">저장</button>
+            </div>
         </div>
     </div>
 
     <hr>
 
+    <!-- 내가 쓴 글 영역 -->
     <div id="postSection">
         <h2>내가 쓴 글</h2>
-
-        <!-- 탭 버튼 -->
         <div class="tab-buttons">
             <button onclick="showTab('ask')">질의응답</button>
             <button onclick="showTab('info')">정보게시판</button>
             <button onclick="showTab('qna')">상담게시판</button>
         </div>
-
-        <!-- 탭 콘텐츠 -->
         <div class="tab-content" id="askTab" style="display:none;"></div>
         <div class="tab-content" id="infoTab" style="display:none;"></div>
         <div class="tab-content" id="qnaTab" style="display:none;"></div>
     </div>
 
 <script>
-    $(document).ready(function() {
-        loadMyInfo();
-        loadPets();
-        showTab('ask');
+$(document).ready(function() {
+    loadMyInfo();
+    loadPets();
+    showTab('ask');
+});
+
+let originalUserData = {};
+
+function loadMyInfo() {
+    $.post('/myPage/getUser', function(data) {
+        originalUserData = data;
+        $('#myInfoView').html(`
+            <span>닉네임: ${data.nick}  </span>
+            <span>이메일: ${data.email}</span>
+        `);
+        $('#nick').attr('placeholder', data.nick);
+        $('#email').attr('placeholder', data.email);
+        $('#phone').attr('placeholder', data.phone);
+        $('#pw').attr('placeholder', '****');
+        $('#carrier').val(data.carrier);
     });
+}
 
-    let originalUserData = {}; // 전역 저장소
-
-    function loadMyInfo() {
-        $.post('/myPage/getUser', function(data) {
-            originalUserData = data;
-
-            $('#myInfoView').html(`
-                <span>닉네임: ${data.nick}  </span>
-                <span>이메일: ${data.email}</span>
-            `);
-
-            $('#nick').attr('placeholder', data.nick);
-            $('#email').attr('placeholder', data.email);
-            $('#phone').attr('placeholder', data.phone);
-            $('#pw').attr('placeholder', '****');
-            $('#carrier').val(data.carrier);
-        });
-    }
-
-    function checkPassword() {
-        const pw = prompt("비밀번호를 입력하세요");
-        if (!pw) return; // 취소 또는 빈 값일 경우 종료
-
-        $.post('/myPage/pwCheck', { pw: pw }, function(result) {
-            if (result === "success") {
-                alert("비밀번호가 확인되었습니다.");
-                $('#checkPwBtn').hide();
-                showUpdateForm(); // 수정 폼 표시 함수
-            } else {
-                alert("비밀번호가 틀렸습니다.");
-            }
-        });
-    }
-
-    function showUpdateForm() {
-        $('#myInfoEdit').show();
-        $(event.target).hide();
-    }
-
-    function updateMyInfo() {
-        const pwInput = $('#pw').val(); // 사용자가 입력한 비밀번호
-        const finalPw = pwInput || originalUserData.pw; // 비어있으면 기존 비밀번호 사용
-
-        const user = {
-            pw: finalPw,
-            nick: $('#nick').val() || originalUserData.nick,
-            email: $('#email').val() || originalUserData.email,
-            phone: $('#phone').val() || originalUserData.phone,
-            carrier: $('#carrier').val() || originalUserData.carrier
-        };
-
-        $.ajax({
-            url: '/myPage/updateUser',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(user),
-            success: function(res) {
-                alert('수정 완료');
-                loadMyInfo();
-                $('#myInfoEdit').hide();
-            }
-        });
-    }
-
-    function deleteUser() {
-        if (!confirm('정말 탈퇴하시겠습니까?')) return;
-        $.post('/myPage/deleteUser', function(res) {
-            alert('탈퇴 처리되었습니다');
-            location.href = '/';
-        });
-    }
-
-    function loadPets() {
-        
-        $.post('/myPage/getUser', function(user) {
-            const id = user.id;
-            $.post('/myPage/listPet', { id: id }, function(list) {
-                let html = '';
-                if (Array.isArray(list)) {
-                    list.forEach(pet => {
-                        let ageText = '';
-                        const age = parseInt(pet.petAge, 10);
-                        if (age < 24) {
-                            ageText = `${age}개월`;
-                        } else {
-                            const years = Math.floor(age / 12);
-                            ageText = `${years}살`;
-                        }
-                        html += `
-                            <div class="pet-card">
-                                <span>이름: ${pet.petName}  </span>
-                                <span>견종: ${pet.petBreed}  </span>
-                                <span>나이: ${ageText}</span>
-                                <button onclick="editPet(${pet.petNo})">수정</button>
-                                <button onclick="deletePet(${pet.petNo})">삭제</button>
-                            </div>
-                        `;
-                    });
-                    $('#petList').html(html);
-                } else {
-                    console.error("loadPets(): 받은 데이터가 배열이 아님", list);
-                }
-            });
-        });
-    }
-
-    function showPetInsertForm() {
-        $('#petForm').show();
-        $('#petForm input').val('');
-        $('#petNo').val('');
-    }
-
-    function editPet(petNo) {
-        $.post('/myPage/getPet', { petNo: petNo }, function(pet) {
-            $('#petForm').show();
-            $('#petNo').val(pet.petNo);
-            $('#petName').val(pet.petName);
-            $('#petBreed').val(pet.petBreed);
-            $('#petAge').val(pet.petAge);
-            $('#petSize').val(pet.petSize);
-            $('#petWeight').val(pet.petWeight);
-            $('#petBirth').val(pet.petBirth);
-        });
-    }
-
-    function submitPet() {
-        const pet = {
-            petNo: $('#petNo').val(),
-            id: $('#id').val(),
-            petName: $('#petName').val(),
-            petBreed: $('#petBreed').val(),
-            petAge: $('#petAge').val(),
-            petSize: $('#petSize').val(),
-            petWeight: $('#petWeight').val(),
-            petBirth: $('#petBirth').val()
-        };
-        const url = pet.petNo ? '/myPage/updatePet' : '/myPage/insertPet';
-        $.ajax({
-            url: url,
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(pet),
-            success: function() {
-                alert('처리 완료');
-                loadPets();
-                $('#petForm input').val('');
-                $('#petForm').hide();
-            }
-        });
-    }
-
-    function deletePet(petNo) {
-        $.post('/myPage/deletePet', { petNo }, function() {
-            alert('삭제 완료');
-            loadPets();
-        });
-    }
-    function showTab(tabName) {
-        $('.tab-content').hide(); // 모든 탭 숨김
-        $(`#${tabName}Tab`).show(); // 해당 탭만 표시
-
-        // 탭 이름에 따라 직접 함수 실행 (1페이지부터 시작)
-        if (tabName === 'ask') {
-            loadAskPosts(1);
-        } else if (tabName === 'info') {
-            loadInfoPosts(1);
-        } else if (tabName === 'qna') {
-            loadQnaPosts(1);
-        }
-    }
-
-    // 공통 렌더링 함수
-    function renderPostList(list, total, page, tabId, loadFuncName) {
-        let html = '<ul>';
-        if (!list || list.length === 0) {
-            html += '<p style="text-align:center;">등록된 게시글이 없습니다.</p>';
+function checkPassword() {
+    const pw = prompt("비밀번호를 입력하세요");
+    if (!pw) return;
+    $.post('/myPage/pwCheck', { pw }, function(result) {
+        if (result === "success") {
+            alert("비밀번호가 확인되었습니다.");
+            $('#checkPwBtn').hide();
+            $('#myInfoEdit').show();
         } else {
-            list.forEach(post => {
-                let href = '#'; // 기본값 (에러 방지용)
-                const dateOnly = post.reg.substring(0, 10);  // 'YYYY-MM-DD'
-                if (tabId === 'askTab') {
-                    href = `/center/askContent?askNo=${post.askNo}&pageNum=1`;
-                } else if (tabId === 'infoTab') {
-                    href = `/info/content?postNo=${post.postNo}&pageNum=1`;
-                } else if (tabId === 'qnaTab') {
-                    href = `/qna/content?postNo=${post.postNo}&pageNum=1`;
-                }
-
-                html += `<li><a href="${href}">${post.title}</a> (${dateOnly})</li>`;
-            });
-
-            html += '</ul>';
-
-            // 페이징 처리
-            const totalPage = Math.ceil(total / 10);
-            html += '<div class="pagination">';
-            for (let i = 1; i <= totalPage; i++) {
-                html += `<button onclick="${loadFuncName}(${i})" ${i === page ? 'disabled' : ''}>${i}</button>`;
-            }
-            html += '</div>';
+            alert("비밀번호가 틀렸습니다.");
         }
-        $(`#${tabId}`).html(html);
-    }
+    });
+}
 
-    // 탭별 Ajax 호출
-    function loadAskPosts(page) {
-        console.log(`[loadAskPosts 호출] page =`, page);
-        $.get('/myPage/listAsk', { page }, function(res) {
-            console.log(`[listAsk 응답]`, res);
-            renderPostList(res.list, res.total, page, 'askTab', 'loadAskPosts');
-        });
-    }
+function updateMyInfo() {
+    const pwInput = $('#pw').val();
+    const finalPw = pwInput || originalUserData.pw;
+    const user = {
+        pw: finalPw,
+        nick: $('#nick').val() || originalUserData.nick,
+        email: $('#email').val() || originalUserData.email,
+        phone: $('#phone').val() || originalUserData.phone,
+        carrier: $('#carrier').val() || originalUserData.carrier
+    };
+    $.ajax({
+        url: '/myPage/updateUser',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(user),
+        success: function() {
+            alert('수정 완료');
+            loadMyInfo();
+            $('#myInfoEdit').hide();
+            $('#checkPwBtn').show();
+        }
+    });
+}
 
-    function loadInfoPosts(page) {
-        console.log(`[loadInfoPosts 호출] page =`, page);
-        $.get('/myPage/listInfo', { page }, function(res) {
-            console.log(`[listInfo 응답]`, res);
-            renderPostList(res.list, res.total, page, 'infoTab', 'loadInfoPosts');
-        });
-    }
+function deleteUser() {
+    if (!confirm('정말 탈퇴하시겠습니까?')) return;
+    $.post('/myPage/deleteUser', function() {
+        alert('탈퇴 처리되었습니다');
+        location.href = '/';
+    });
+}
 
-    function loadQnaPosts(page) {
-        console.log(`[loadQnaPosts 호출] page =`, page);
-        $.get('/myPage/listQna', { page }, function(res) {
-            console.log(`[listQna 응답]`, res);
-            renderPostList(res.list, res.total, page, 'qnaTab', 'loadQnaPosts');
+function loadPets() {
+    $.post('/myPage/getUser', function(user) {
+        $.post('/myPage/listPet', { id: user.id }, function(list) {
+            let html = '';
+            if (Array.isArray(list)) {
+                list.forEach(pet => {
+                    let ageText = pet.petAge < 24 ? `${pet.petAge}개월` : `${Math.floor(pet.petAge / 12)}살`;
+                    html += `
+                        <div class="pet-card">
+                            <span>이름: ${pet.petName}  </span>
+                            <span>견종: ${pet.petBreed}  </span>
+                            <span>나이: ${ageText}</span>
+                            <button onclick="editPet(${pet.petNo})">수정</button>
+                            <button onclick="deletePet(${pet.petNo})">삭제</button>
+                        </div>
+                    `;
+                });
+                $('#petList').html(html);
+            }
         });
+    });
+}
+
+function showPetInsertForm() {
+    $('#petForm').show();
+    $('#petForm input').val('');
+    $('#petNo').val('');
+}
+
+function editPet(petNo) {
+    $.post('/myPage/getPet', { petNo }, function(pet) {
+        $('#petForm').show();
+        $('#petNo').val(pet.petNo);
+        $('#petName').val(pet.petName);
+        $('#petBreed').val(pet.petBreed);
+        $('#petAge').val(pet.petAge);
+        $('#petSize').val(pet.petSize);
+        $('#petWeight').val(pet.petWeight);
+        $('#petBirth').val(pet.petBirth);
+    });
+}
+
+function submitPet() {
+    const pet = {
+        petNo: $('#petNo').val(),
+        id: $('#id').val(),
+        petName: $('#petName').val(),
+        petBreed: $('#petBreed').val(),
+        petAge: $('#petAge').val(),
+        petSize: $('#petSize').val(),
+        petWeight: $('#petWeight').val(),
+        petBirth: $('#petBirth').val()
+    };
+    const url = pet.petNo ? '/myPage/updatePet' : '/myPage/insertPet';
+    $.ajax({
+        url,
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(pet),
+        success: function() {
+            alert('처리 완료');
+            loadPets();
+            $('#petForm input').val('');
+            $('#petForm').hide();
+        }
+    });
+}
+
+function deletePet(petNo) {
+    $.post('/myPage/deletePet', { petNo }, function() {
+        alert('삭제 완료');
+        loadPets();
+    });
+}
+
+function showTab(tabName) {
+    $('.tab-content').hide();
+    $(`#${tabName}Tab`).show();
+    if (tabName === 'ask') loadAskPosts(1);
+    else if (tabName === 'info') loadInfoPosts(1);
+    else if (tabName === 'qna') loadQnaPosts(1);
+}
+
+function renderPostList(list, total, page, tabId, loadFuncName) {
+    let html = '<ul>';
+    if (!list || list.length === 0) {
+        html += '<p style="text-align:center;">등록된 게시글이 없습니다.</p>';
+    } else {
+        list.forEach(post => {
+            let href = '#';
+            const dateOnly = post.reg.substring(0, 10);
+            if (tabId === 'askTab') href = `/center/askContent?askNo=${post.askNo}&pageNum=1`;
+            else if (tabId === 'infoTab') href = `/info/content?postNo=${post.postNo}&pageNum=1`;
+            else if (tabId === 'qnaTab') href = `/qna/content?postNo=${post.postNo}&pageNum=1`;
+            html += `<li><a href="${href}">${post.title}</a> (${dateOnly})</li>`;
+        });
+        html += '</ul><div class="pagination">';
+        const totalPage = Math.ceil(total / 10);
+        for (let i = 1; i <= totalPage; i++) {
+            html += `<button onclick="${loadFuncName}(${i})" ${i === page ? 'disabled' : ''}>${i}</button>`;
+        }
+        html += '</div>';
     }
+    $(`#${tabId}`).html(html);
+}
+
+function loadAskPosts(page) {
+    $.get('/myPage/listAsk', { page }, function(res) {
+        renderPostList(res.list, res.total, page, 'askTab', 'loadAskPosts');
+    });
+}
+
+function loadInfoPosts(page) {
+    $.get('/myPage/listInfo', { page }, function(res) {
+        renderPostList(res.list, res.total, page, 'infoTab', 'loadInfoPosts');
+    });
+}
+
+function loadQnaPosts(page) {
+    $.get('/myPage/listQna', { page }, function(res) {
+        renderPostList(res.list, res.total, page, 'qnaTab', 'loadQnaPosts');
+    });
+}
+
+
+function matchHeights() {
+    const info = $('#myInfoSection');
+    const pet = $('#petSection');
+
+    info.css('min-height', 'auto');
+    pet.css('min-height', 'auto');
+
+    const maxHeight = Math.max(info.outerHeight(true), pet.outerHeight(true));
+
+    info.css('min-height', maxHeight + 'px');
+    pet.css('min-height', maxHeight + 'px');
+}
+
+// 최초 진입 및 리사이즈 시 실행
+$(window).on('load resize', matchHeights);
+
+// ajax 데이터 로딩 이후 높이 조정
+$(document).ajaxComplete(matchHeights);
+
+// 강아지 폼 표시 시 높이 재조정
+function showPetInsertForm() {
+    $('#petForm').show();
+    $('#petForm input').val('');
+    $('#petNo').val('');
+    matchHeights(); // 높이 동기화
+}
+
+// 강아지 수정 폼 표시 시에도 높이 재조정
+function editPet(petNo) {
+    $.post('/myPage/getPet', { petNo: petNo }, function(pet) {
+        $('#petForm').show();
+        $('#petNo').val(pet.petNo);
+        $('#petName').val(pet.petName);
+        $('#petBreed').val(pet.petBreed);
+        $('#petAge').val(pet.petAge);
+        $('#petSize').val(pet.petSize);
+        $('#petWeight').val(pet.petWeight);
+        $('#petBirth').val(pet.petBirth);
+        matchHeights(); // 높이 동기화
+    });
+}
+
 
 </script>
 </body>
