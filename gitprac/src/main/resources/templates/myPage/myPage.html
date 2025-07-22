@@ -162,7 +162,7 @@ function loadMyInfo() {
         if (!confirm('정말 탈퇴하시겠습니까?')) return;
         $.post('/myPage/deleteUser', function(res) {
             alert('탈퇴 처리되었습니다');
-            location.href = '/';
+            location.href = '/user/login';
         });
     }
 
