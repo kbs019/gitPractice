@@ -13,7 +13,7 @@
       <div>
         <p>카테고리: <span th:text="${rto.category}">카테고리</span></p>
         <!-- 🔧 수정: 날짜 포맷 방식 변경 -->
-        <p>작성일: <span th:text="${#temporals.format(rto.reg, 'yyyy-MM-dd')}">작성일</span></p>
+        <p>작성일: <span th:text="${#temporals.format(rto.reg, 'yyyy-MM-dd HH:mm')}">작성일</span></p>
       </div>
 
       <hr>

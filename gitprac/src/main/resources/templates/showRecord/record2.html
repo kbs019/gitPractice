@@ -5,15 +5,12 @@
   <title>하루犬과 - 일지 목록</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/rec.css">
-  <link rel="stylesheet" href="/css/header.css">
 </head>
 <body>
-
-<div th:replace="~{fragments/header.html :: headerFragment}"></div>
-
 <main class="rec-container">
 
-  <form method="get" action="/rec" style="margin-bottom: 16px;">
+  <form method="get" action="/qna/showRecord" style="margin-bottom: 16px;">
+    <input type="hidden" name="nick" th:value="${nick}">
     <select name="petNo" onchange="this.form.submit()" style="padding: 5px; font-size: 14px;">
         <option value="" disabled
                 th:selected="${selectedPetNo == null}">-- 반려견 선택 --</option>
@@ -26,33 +23,28 @@
     <span style="margin-left: 8px;">의 일지</span>
   </form>
 
-
   <!-- 🔎 날짜 & 카테고리 필터 -->
   <section class="rec-filter">
-    <form method="get" action="/rec" class="filter-bar">
-      <input type="hidden" name="petNo" th:value="${selectedPetNo}" />
+    <form method="get" action="/qna/showRecord" class="filter-bar">
+      <input type="hidden" id="petNo" name="petNo" th:value="${selectedPetNo}">
   <div class="filter-left">
     <input type="date" id="startDate" name="startDate" th:value="${startDate}">
     ~
     <input type="date" id="endDate" name="endDate" th:value="${endDate}">
     
     <input type="hidden" name="categoryGroup" id="hiddenCategoryGroup" th:value="${categoryGroup}">
-
+    <input type="hidden" name="nick" id="nick" th:value="${nick}">
+    
     <button type="submit" class="small">조회</button>
     <button type="submit" name="reset" value="true" class="small">전체 초기화</button>
   </div>
-  
-  <div class="filter-right">
-    <div class="filter-right">
-      <a href="/rec/upload" class="btn-write">일지 작성</a>
-    </div>
-  </div>
-</form>
+    </form>
 
-    <form method="get" action="/rec" class="category-form">
+    <form method="get" action="/qna/showRecord" class="category-form">
       <input type="hidden" name="startDate" id="hiddenStartDate" th:value="${param.startDate}">
       <input type="hidden" name="endDate" id="hiddenEndDate" th:value="${param.endDate}">
-      <input type="hidden" name="petNo" th:value="${selectedPetNo}" />
+      <input type="hidden"  name="petNo" id="hiddenPetNo" th:value="${param.petNo}">
+      <input type="hidden" name="nick" id="hiddenNick" th:value="${param.nick}">
       <div class="category-tabs">
         <button type="submit" name="categoryGroup" value="밥/간식"
                 onclick="copyDates()"
@@ -88,13 +80,9 @@
               <span class="rec-date" th:text="${#temporals.format(rec.reg, 'yyyy-MM-dd HH:mm')}">날짜</span>
               <span class="rec-category" th:text="${rec.category}">카테고리</span>
             </div>
-            <div class="rec-actions">
-              <a th:href="@{'/rec/edit/' + ${rec.recNo}}">수정</a>
-              <a th:href="@{'/rec/delete/' + ${rec.recNo}}" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
-            </div>
           </div>
           <div class="rec-title">
-            <a th:href="@{'/rec/content/' + ${rec.recNo}}" th:text="${rec.title}">제목</a>
+            <a th:href="@{'/qna/content/' + ${rec.recNo} +'/'+ ${nick}}" th:text="${rec.title}">제목</a>
           </div>
           <hr>
         </div>
@@ -116,18 +104,23 @@
   function copyDates() {
     document.getElementById("hiddenStartDate").value = document.getElementById("startDate").value;
     document.getElementById("hiddenEndDate").value = document.getElementById("endDate").value;
+    document.getElementById("hiddenNick").value = document.getElementById("nick").value;
+    document.getElementById("hiddenPetNo").value = document.getElementById("selectedPetNo").value;
   }
 </script>
 
-<script>
+<script th:inline="javascript">
   let offset = 15; 
   const limit = 15;
+  let nick = /*[[${nick}]]*/ 'anonymous';
+  let petNo = /*[[${petNo}]]*/ '0';
 
   document.getElementById("loadMoreBtn").addEventListener("click", function () {
-    fetch(`/rec/more?offset=${offset}&limit=${limit}`)
+    fetch(`/qna/showRecord/more?offset=${offset}&limit=${limit}&nick=${nick}`)
       .then(res => res.json())
       .then(data => {
-        if (data.length === 0) {
+        const recList = Array.isArray(data.result) ? data.result : data; 
+        if (!Array.isArray(recList) || recList.length === 0) {
           document.getElementById("loadMoreBtn").style.display = 'none';
           return;
         }
@@ -140,20 +133,16 @@
           const formattedDate = formatDateTime(rec.reg); // ← 여기서 포맷팅
 
           div.innerHTML = `
-          <div class="rec-top">
-            <div class="rec-meta">
-              <span class="rec-date">${formattedDate}</span>
-              <span class="rec-category">${rec.category}</span>
+            <div class="rec-top">
+              <div class="rec-meta">
+                <span class="rec-date">${formattedDate}</span>
+                <span class="rec-category">${rec.category}</span>
+              </div>
             </div>
-            <div class="rec-actions">
-              <a href="/rec/edit/${rec.recNo}">수정</a>
-              <a href="/rec/delete/${rec.recNo}" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+            <div class="rec-title">
+              <a href="/qna/content/${rec.recNo}/${rec.writer}">${rec.title}</a>
             </div>
-          </div>
-          <div class="rec-title">
-            <a th:href="@{'/rec/content/' + ${rec.recNo}}">${rec.title}</a>
-          </div>
-          <hr>
+            <hr>
           `;
           container.appendChild(div);
         });

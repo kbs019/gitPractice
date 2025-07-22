@@ -80,6 +80,7 @@
     <script th:inline="javascript">
         function showRecord() {
             let writer = /*[[${qto.writer}]]*/ 'anonymous'; // 작성자 닉네임 등 넘길 값
+
             window.open(
                 '/qna/showRecord?nick=' + encodeURIComponent(writer),
                 'popupRecord',
