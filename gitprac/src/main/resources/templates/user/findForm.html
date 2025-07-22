@@ -25,22 +25,61 @@
 
     <!-- 아이디 찾기 -->
     <div id="idForm">
-        <form th:action="@{/user/findId}" method="post">
+        <form id="findIdForm">
             <label>가입한 이메일</label>
-            <input type="email" name="email" required />
-            <button type="submit">아이디 찾기</button>
+            <input type="email" name="email" id="findEmail" required/>
+            <button type="button" onclick="findId()">아이디 찾기</button>
         </form>
     </div>
 
     <!-- 비밀번호 찾기 -->
     <div id="pwForm">
-        <form th:action="@{/user/findPw}" method="post">
-            <label>아이디</label>
+        <form id="findPwForm">
+            <label>가입한 아이디</label>
             <input type="text" name="id" required />
             <label>가입한 이메일</label>
             <input type="email" name="email" required />
-            <button type="submit">비밀번호 찾기</button>
-        </form>
+            <button type="button" onclick="findPw()">비밀번호 찾기</button> 
     </div>
+    <script>
+        function findId() {
+            const email = document.getElementById("findEmail").value;
+
+            fetch("/user/findId", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.id) {
+                    alert("아이디는: " + data.id);
+                    window.location = "/user/login";
+                } else {
+                    alert("일치하는 아이디가 없거나 회원이 아닙니다.");
+                }
+            });
+        }
+
+        function findPw() {
+            const id = document.querySelector("#pwForm input[name='id']").value;
+            const email = document.querySelector("#pwForm input[name='email']").value;
+
+            fetch("/user/findPw", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: id, email: email })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.pw) {
+                    alert("비밀번호는: " + data.pw + "\n로그인 후 꼭 변경하세요.");
+                    window.location = "/user/login";
+                } else {
+                    alert("아이디와 이메일이 일치하지 않거나 회원이 아닙니다.");
+                }
+            });
+        }
+    </script>
 </body>
 </html>
