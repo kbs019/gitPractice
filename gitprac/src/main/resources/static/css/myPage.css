@@ -157,3 +157,49 @@ button:hover {
     cursor: default;
     color: #888;
 }
+
+/* 전체 레이아웃 */
+#info-pet-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px;
+    width: 90%;
+    max-width: 1000px;
+    margin: 30px auto;
+}
+
+/* 내 정보 - 좌측 */
+#myInfoSection {
+    flex: 0 0 65%;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* 강아지 정보 - 우측 */
+#petSection {
+    flex: 0 0 35%;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* 공통 버튼 간격 */
+#myInfoSection button,
+#petSection button {
+    margin-top: 10px;
+}
+
+/* 강아지 카드 */
+.pet-card {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+
+
