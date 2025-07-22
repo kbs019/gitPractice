@@ -1,60 +1,68 @@
-<div class="users-wrapper">
-    <table>
-        <tr>
-            <td>아이디</td>
-            <td>이름</td>
-            <td>닉네임</td>
-            <td>가입일자</td>
-            <td>권한</td>
-            <td>활동 상태</td>
-            <td>제재 기간</td>
-        </tr>
-        <tr th:each="uto : ${list}">
-            <td th:text="${uto.id}"></td>
-            <td th:text="${uto.name}"></td>
-            <td th:text="${uto.nick}"></td>
-            <td th:text="${#temporals.format(uto.reg, 'yy.MM.dd')}"></td>
-            <td>
-                <select class="changeUserRole" th:attr="data-userid=${uto.id}">
-                    <option value="0" th:selected="${uto.role == 0}">사용자</option>
-                    <option value="1" th:selected="${uto.role == 1}">수의사</option>
-                    <option value="2" th:selected="${uto.role == 2}">관리자</option>
-                </select>
-            </td>
-            <td width="150">
-                <select class="changeUserStatus" th:attr="data-userid=${uto.id}">
-                    <option value="0" th:selected="${uto.status == 0}">활동중</option>
-                    <option value="1" th:selected="${uto.status == 1}">활동 정지</option>
-                    <option value="2" th:selected="${uto.status == 2}">탈퇴</option>
-                </select>
-
-                <select class="ban-period" style="display:none;">
-                    <option value="1">1일</option>
-                    <option value="7">7일</option>
-                    <option value="14">14일</option>
-                    <option value="30">한달</option>
-                    <option value="-1">영구</option>
-                </select>
-            </td>
-            <td align="center" class="banned-until">
-                <span th:if="${uto.bannedUntil != null}">
-                    ~ <span th:text="${uto.bannedUntil}"></span>
-                </span>
-                <span th:if="${uto.bannedUntil == null}">
-                    --
-                </span>
-            </td>
-        </tr>
-    </table>
-    <div class="paging" align="center" th:if="${count > 0}">
-        <span th:if="${startPage} > ${pageCount}">
-            <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
-        </span>
-        <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-        <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
-        </span>
-        <span th:if="${endPage} < ${pageCount}">
-            <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
-        </span>
+<span th:if="${session.users == null}">
+    <script>
+        alert("로그인이 해제되었습니다.");
+        window.location="/user/login";
+    </script>
+</span>
+<span th:if="${session.users != null}">
+    <div class="users-wrapper">
+        <table>
+            <tr>
+                <td>아이디</td>
+                <td>이름</td>
+                <td>닉네임</td>
+                <td>가입일자</td>
+                <td>권한</td>
+                <td>활동 상태</td>
+                <td>제재 기간</td>
+            </tr>
+            <tr th:each="uto : ${list}">
+                <td th:text="${uto.id}"></td>
+                <td th:text="${uto.name}"></td>
+                <td th:text="${uto.nick}"></td>
+                <td th:text="${#temporals.format(uto.reg, 'yy.MM.dd')}"></td>
+                <td>
+                    <select class="changeUserRole" th:attr="data-userid=${uto.id}">
+                        <option value="0" th:selected="${uto.role == 0}">사용자</option>
+                        <option value="1" th:selected="${uto.role == 1}">수의사</option>
+                        <option value="2" th:selected="${uto.role == 2}">관리자</option>
+                    </select>
+                </td>
+                <td width="150">
+                    <select class="changeUserStatus" th:attr="data-userid=${uto.id}">
+                        <option value="0" th:selected="${uto.status == 0}">활동중</option>
+                        <option value="1" th:selected="${uto.status == 1}">활동 정지</option>
+                        <option value="2" th:selected="${uto.status == 2}">탈퇴</option>
+                    </select>
+    
+                    <select class="ban-period" style="display:none;">
+                        <option value="1">1일</option>
+                        <option value="7">7일</option>
+                        <option value="14">14일</option>
+                        <option value="30">한달</option>
+                        <option value="-1">영구</option>
+                    </select>
+                </td>
+                <td align="center" class="banned-until">
+                    <span th:if="${uto.bannedUntil != null}">
+                        ~ <span th:text="${uto.bannedUntil}"></span>
+                    </span>
+                    <span th:if="${uto.bannedUntil == null}">
+                        --
+                    </span>
+                </td>
+            </tr>
+        </table>
+        <div class="paging" align="center" th:if="${count > 0}">
+            <span th:if="${startPage} > ${pageCount}">
+                <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
+            </span>
+            <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+            <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
+            </span>
+            <span th:if="${endPage} < ${pageCount}">
+                <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
+            </span>
+        </div>
     </div>
-</div>
+</span>

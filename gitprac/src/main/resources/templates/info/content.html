@@ -10,62 +10,70 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> <!-- jQuery 추가 -->
 </head>
 <body>
-    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-
-    <!-- 게시글 내용 -->
-    <div class="content-top">
-        <div class="content-top-title">
-            <center>글 내용</center>
-            <hr width="600" align="center" color="orange">
-        </div>
-        <div class="content-top-btns">
-            <div width="600" align="right">
-                <span th:if="${ session.users.nick == idto.writer }">
-                    <input type="button" value="수정" th:onclick="|window.location='@{/info/update(postNo=${idto.postNo}, pageNum=${pageNum}, category=${category})}'|"/>
-                </span>
-                <span th:if="${session.users.nick == idto.writer || session.users.role == 2}">
-                    <input type="button" value="삭제" th:onclick="|window.location='@{/info/delete(postNo=${idto.postNo}, pageNum=${pageNum}, category=${category})}'|"/>
-                </span>
-                <input type="button" value="글목록" th:onclick="|window.location='@{/info/list(pageNum=${pageNum}, category=${idto.category})}'|"/>
+    <span th:if="${session.users == null}">
+        <script>
+            alert("로그인이 해제되었습니다.");
+            window.location="/user/login";
+        </script>
+    </span>
+    <span th:if="${session.users != null}">
+        <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+    
+        <!-- 게시글 내용 -->
+        <div class="content-top">
+            <div class="content-top-title">
+                <center>글 내용</center>
+                <hr width="600" align="center" color="orange">
+            </div>
+            <div class="content-top-btns">
+                <div width="600" align="right">
+                    <span th:if="${ session.users.nick == idto.writer }">
+                        <input type="button" value="수정" th:onclick="|window.location='@{/info/update(postNo=${idto.postNo}, pageNum=${pageNum}, category=${category})}'|"/>
+                    </span>
+                    <span th:if="${session.users.nick == idto.writer || session.users.role == 2}">
+                        <input type="button" value="삭제" th:onclick="|window.location='@{/info/delete(postNo=${idto.postNo}, pageNum=${pageNum}, category=${category})}'|"/>
+                    </span>
+                    <input type="button" value="글목록" th:onclick="|window.location='@{/info/list(pageNum=${pageNum}, category=${idto.category})}'|"/>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="content-body">
-        <div class="content-category-wrapper">
-            <h3>카테고리 : <span th:text="${idto.category}"></span></h3>
-        </div>
-        <div class="content-title-wrapper">
-            <h3>글 제목 : <span th:text="${idto.title}"></span></h3>
-        </div>
-        <div class="content-info-wrapper">
-            <div class="content-writer-wrapper">
-                작성자 : <span th:text="${idto.writer}"></span>
-                <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${idto.writer}">
-                📋
-                </span>
+    
+        <div class="content-body">
+            <div class="content-category-wrapper">
+                <h3>카테고리 : <span th:text="${idto.category}"></span></h3>
             </div>
-            <div class="content-views-wrapper">
-                조회수 | <span th:text="${idto.views}"></span>
+            <div class="content-title-wrapper">
+                <h3>글 제목 : <span th:text="${idto.title}"></span></h3>
             </div>
-            <div class="content-reg-wrapper">
-                작성일자 | <span th:text="${#temporals.format(idto.reg, 'yy/MM/dd HH:mm')}"></span>
+            <div class="content-info-wrapper">
+                <div class="content-writer-wrapper">
+                    작성자 : <span th:text="${idto.writer}"></span>
+                    <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${idto.writer}">
+                    📋
+                    </span>
+                </div>
+                <div class="content-views-wrapper">
+                    조회수 | <span th:text="${idto.views}"></span>
+                </div>
+                <div class="content-reg-wrapper">
+                    작성일자 | <span th:text="${#temporals.format(idto.reg, 'yy/MM/dd HH:mm')}"></span>
+                </div>
+            </div>
+            <div class="content-content-wrapper">
+                <div th:utext="${idto.content}"></div>
             </div>
         </div>
-        <div class="content-content-wrapper">
-            <div th:utext="${idto.content}"></div>
+    
+        <!-- 댓글 영역 -->
+        <div class="reply-wrapper" style="width: 600px; margin: 30px auto;">
+            <h3>댓글</h3>
+            <div>
+                <textarea id="replyContent" style="width: 100%; height: 60px;" placeholder="댓글을 입력하세요."></textarea>
+                <button type="button" onclick="addReply(0)">댓글 등록</button>
+            </div>
+            <div id="replyList" style="margin-top: 20px;"></div>
         </div>
-    </div>
-
-    <!-- 댓글 영역 -->
-    <div class="reply-wrapper" style="width: 600px; margin: 30px auto;">
-        <h3>댓글</h3>
-        <div>
-            <textarea id="replyContent" style="width: 100%; height: 60px;" placeholder="댓글을 입력하세요."></textarea>
-            <button type="button" onclick="addReply(0)">댓글 등록</button>
-        </div>
-        <div id="replyList" style="margin-top: 20px;"></div>
-    </div>
+    </span>
 
     <script th:inline="javascript">
     const postNo = /*[[${idto.postNo}]]*/ 0;

@@ -9,46 +9,54 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-    <div class="content-top">
-        <div class="content-top-title">
-            <center>공지사항 내용</center>
-            <hr width="800" align="center" color="orange">
-        </div>
-        <div class="content-top-btns">
-            <div width="800" align="right">
-                <span th:if="${ session.users.role == 2 }">
-                    <input type="button" value="수정" th:onclick="|window.location='@{/admin/noticeUpdate(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">  &nbsp;&nbsp;
-                    <input type="button" value="삭제" th:onclick="|window.location='@{/admin/noticeDelete(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
-                </span>
+    <span th:if="${session.users == null}">
+        <script>
+            alert("로그인이 해제되었습니다.");
+            window.location="/user/login";
+        </script>
+    </span>
+    <span th:if="${session.users != null}">
+        <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+        <div class="content-top">
+            <div class="content-top-title">
+                <center>공지사항 내용</center>
+                <hr width="800" align="center" color="orange">
+            </div>
+            <div class="content-top-btns">
+                <div width="800" align="right">
+                    <span th:if="${ session.users.role == 2 }">
+                        <input type="button" value="수정" th:onclick="|window.location='@{/admin/noticeUpdate(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">  &nbsp;&nbsp;
+                        <input type="button" value="삭제" th:onclick="|window.location='@{/admin/noticeDelete(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
+                    </span>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="content-body">
-        <div class="content-title-wrapper">
-            <h3><span th:text="${nto.title}"></span></h3>
-        </div>
-        <div class="content-info-wrapper">
-            <div class="content-writer-wrapper">
-                작성자 | <span th:text="${nto.writer}"></span>
+        <div class="content-body">
+            <div class="content-title-wrapper">
+                <h3><span th:text="${nto.title}"></span></h3>
             </div>
-            <div class="content-views-wrapper">
-                조회수 | <span th:text="${nto.views}"></span>
+            <div class="content-info-wrapper">
+                <div class="content-writer-wrapper">
+                    작성자 | <span th:text="${nto.writer}"></span>
+                </div>
+                <div class="content-views-wrapper">
+                    조회수 | <span th:text="${nto.views}"></span>
+                </div>
+                <div class="content-reg-wrapper">
+                    작성일자 | <span th:text="${#temporals.format(nto.reg, 'yy/MM/dd HH:mm')}"></span>
+                </div>
+            </div>    
+            <div class="content-image-wrapper" th:if="${nto.originalName != null}">
+                <img th:src="@{|${nto.imgPath + nto.imgName}|}">    
             </div>
-            <div class="content-reg-wrapper">
-                작성일자 | <span th:text="${#temporals.format(nto.reg, 'yy/MM/dd HH:mm')}"></span>
+            <div class="content-content-wrapper">
+                <div th:text="${nto.content}"></div>
             </div>
-        </div>    
-        <div class="content-image-wrapper" th:if="${nto.originalName != null}">
-            <img th:src="@{|${nto.imgPath + nto.imgName}|}">    
         </div>
-        <div class="content-content-wrapper">
-            <div th:text="${nto.content}"></div>
+    
+        <div class="content-bottom-btns">
+            <input type="button" value="글목록" th:onclick="|window.location='@{/admin/notice(pageNum=${pageNum})}'|">
         </div>
-    </div>
-
-    <div class="content-bottom-btns">
-        <input type="button" value="글목록" th:onclick="|window.location='@{/admin/notice(pageNum=${pageNum})}'|">
-    </div>
+    </span>
 </body>
 </html>

@@ -10,57 +10,65 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-
-    <!-- ✅ 전체 컨테이너 -->
-    <div class="center-container">
-        <!-- ✅ 사이드바 -->
-        <div class="sidebar-wrapper">
-            <div th:replace="~{fragments/centersidebar.html :: centersidebar}"></div>
+    <span th:if="${session.users == null}">
+        <script>
+            alert("로그인이 해제되었습니다.");
+            window.location="/user/login";
+        </script>
+    </span>
+    <span th:if="${session.users != null}">
+        <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+    
+        <!-- ✅ 전체 컨테이너 -->
+        <div class="center-container">
+            <!-- ✅ 사이드바 -->
+            <div class="sidebar-wrapper">
+                <div th:replace="~{fragments/centersidebar.html :: centersidebar}"></div>
+            </div>
+    
+            <!-- ✅ 본문 내용 -->
+            <div class="content-wrapper">
+                <div class="content-top">
+                    <div class="content-top-title">
+                        <h2>공지사항 내용</h2>
+                    </div>
+                    <div class="content-top-btns">
+                        <span th:if="${ session.users.role == 2 }">
+                            <input type="button" value="수정" th:onclick="|window.location='@{/center/noticeUpdate(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
+                            <input type="button" value="삭제" th:onclick="|window.location='@{/center/noticeDelete(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
+                        </span>
+                    </div>
+                </div>
+    
+                <div class="content-body">
+                    <div class="content-title-wrapper">
+                        <h3 th:text="${nto.title}"></h3>
+                    </div>
+                    <div class="content-info-wrapper">
+                        <div class="content-writer-wrapper">
+                            작성자 | <span th:text="${nto.writer}"></span>
+                        </div>
+                        <div class="content-views-wrapper">
+                            조회수 | <span th:text="${nto.views}"></span>
+                        </div>
+                        <div class="content-reg-wrapper">
+                            작성일자 | <span th:text="${#temporals.format(nto.reg, 'yy/MM/dd HH:mm')}"></span>
+                        </div>
+                    </div>    
+    
+                    <div class="content-image-wrapper" th:if="${nto.originalName != null}">
+                        <img th:src="@{|${nto.imgPath + nto.imgName}|}">    
+                    </div>
+    
+                    <div class="content-content-wrapper">
+                        <div th:text="${nto.content}"></div>
+                    </div>
+                </div>
+                <div class="content-bottom-btns">
+                    <input type="button" value="글목록" th:onclick="|window.location='@{/center/notice(pageNum=${pageNum})}'|">
+                </div>
+            </div>
         </div>
-
-        <!-- ✅ 본문 내용 -->
-        <div class="content-wrapper">
-            <div class="content-top">
-                <div class="content-top-title">
-                    <h2>공지사항 내용</h2>
-                </div>
-                <div class="content-top-btns">
-                    <span th:if="${ session.users.role == 2 }">
-                        <input type="button" value="수정" th:onclick="|window.location='@{/center/noticeUpdate(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
-                        <input type="button" value="삭제" th:onclick="|window.location='@{/center/noticeDelete(noticeNo=${nto.noticeNo}, pageNum=${pageNum})}'|">
-                    </span>
-                </div>
-            </div>
-
-            <div class="content-body">
-                <div class="content-title-wrapper">
-                    <h3 th:text="${nto.title}"></h3>
-                </div>
-                <div class="content-info-wrapper">
-                    <div class="content-writer-wrapper">
-                        작성자 | <span th:text="${nto.writer}"></span>
-                    </div>
-                    <div class="content-views-wrapper">
-                        조회수 | <span th:text="${nto.views}"></span>
-                    </div>
-                    <div class="content-reg-wrapper">
-                        작성일자 | <span th:text="${#temporals.format(nto.reg, 'yy/MM/dd HH:mm')}"></span>
-                    </div>
-                </div>    
-
-                <div class="content-image-wrapper" th:if="${nto.originalName != null}">
-                    <img th:src="@{|${nto.imgPath + nto.imgName}|}">    
-                </div>
-
-                <div class="content-content-wrapper">
-                    <div th:text="${nto.content}"></div>
-                </div>
-            </div>
-            <div class="content-bottom-btns">
-                <input type="button" value="글목록" th:onclick="|window.location='@{/center/notice(pageNum=${pageNum})}'|">
-            </div>
-        </div>
-    </div>
+    </span>
 </body>
 </html>

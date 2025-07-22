@@ -1,65 +1,73 @@
-<div th:if="${count == 0}">
-    <table border="1" cellspacing="0" cellpadding="0" align="center" width="1000">
-        <tr align="center">
-            <td><h3>게시판에 저장된 게시글이 없습니다.</h3></td>
-        </tr>
-    </table>
-</div>
-<div th:if="${count != 0}">
-    <table border="1" cellspacing="0" cellpadding="0" align="center" width="1000">
-        <tr height="30">
-            <th width="100">구분</th>
-            <th width="350">글제목</th>
-            <th width="150">작성자</th>
-            <th width="150">작성일</th>
-            <th width="150">답변여부</th>
-            <th width="100">조회수</th>
-        </tr>			
-        <tr height="30" th:each="ato : ${list}">
-            <td align="center">
-                <span th:if="${ato.category == 0}">
-                    <span>문의</span>
-                </span>
-                <span th:if="${ato.category == 1}">
-                    <span>신고</span>
-                </span>
-            </td>
-            <td>
-                <span th:if="${ato.status == 0}">
-                    <a th:href="@{|/admin/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
-                </span>
-                <span th:if="${ato.status != 0}">
-                    <span>관리자에 의해 제재된 사용자의 글입니다.</span>
-                </span>
-            </td>
-            <td align="center">
-                <span th:text="${ato.writer}"></span>
-                <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${ato.writer}">
-                📋
-                </span>
-            </td>
-            <td th:text="${#temporals.format(ato.reg, 'yy.MM.dd HH:mm')}" align="center"></td>
-            <td align="center">
-                <span th:if="${ato.isAnswered == 0}">
-                    <span>미답변</span>
-                </span>
-                <span th:if="${ato.isAnswered == 1}">
-                    <span>답변 완료</span>
-                </span>
-            </td>
-            <td th:text="${ato.views}" align="center"></td>
-        </tr>
-    </table>
-</div>
-
-<div align="center" th:if="${count > 0}">
-    <span th:if="${startPage} > ${pageCount}">
-        <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
-    </span>
-    <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-        <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
-    </span>
-    <span th:if="${endPage} < ${pageCount}">
-        <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
-    </span>
-</div>
+<span th:if="${session.users == null}">
+    <script>
+        alert("로그인이 해제되었습니다.");
+        window.location="/user/login";
+    </script>
+</span>
+<span th:if="${session.users != null}">
+    <div th:if="${count == 0}">
+        <table border="1" cellspacing="0" cellpadding="0" align="center" width="1000">
+            <tr align="center">
+                <td><h3>게시판에 저장된 게시글이 없습니다.</h3></td>
+            </tr>
+        </table>
+    </div>
+    <div th:if="${count != 0}">
+        <table border="1" cellspacing="0" cellpadding="0" align="center" width="1000">
+            <tr height="30">
+                <th width="100">구분</th>
+                <th width="350">글제목</th>
+                <th width="150">작성자</th>
+                <th width="150">작성일</th>
+                <th width="150">답변여부</th>
+                <th width="100">조회수</th>
+            </tr>			
+            <tr height="30" th:each="ato : ${list}">
+                <td align="center">
+                    <span th:if="${ato.category == 0}">
+                        <span>문의</span>
+                    </span>
+                    <span th:if="${ato.category == 1}">
+                        <span>신고</span>
+                    </span>
+                </td>
+                <td>
+                    <span th:if="${ato.status == 0}">
+                        <a th:href="@{|/admin/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
+                    </span>
+                    <span th:if="${ato.status != 0}">
+                        <span>관리자에 의해 제재된 사용자의 글입니다.</span>
+                    </span>
+                </td>
+                <td align="center">
+                    <span th:text="${ato.writer}"></span>
+                    <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${ato.writer}">
+                    📋
+                    </span>
+                </td>
+                <td th:text="${#temporals.format(ato.reg, 'yy.MM.dd HH:mm')}" align="center"></td>
+                <td align="center">
+                    <span th:if="${ato.isAnswered == 0}">
+                        <span>미답변</span>
+                    </span>
+                    <span th:if="${ato.isAnswered == 1}">
+                        <span>답변 완료</span>
+                    </span>
+                </td>
+                <td th:text="${ato.views}" align="center"></td>
+            </tr>
+        </table>
+    </div>
+    
+    <div align="center" th:if="${count > 0}">
+        <span th:if="${startPage} > ${pageCount}">
+            <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
+        </span>
+        <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+            <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
+        </span>
+        <span th:if="${endPage} < ${pageCount}">
+            <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
+        </span>
+    </div>
+</span>

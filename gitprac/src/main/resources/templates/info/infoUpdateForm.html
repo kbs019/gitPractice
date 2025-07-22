@@ -19,55 +19,63 @@ window.location='/info/list?category=전체글';
     <title>Document</title>
 </head>
 <body>
-    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-    <div class="body">
-        <div class="" align="center">
-            <h2>글수정</h2>
-            <hr width="400" align="center"> 
+    <span th:if="${session.users == null}">
+        <script>
+            alert("로그인이 해제되었습니다.");
+            window.location="/user/login";
+        </script>
+    </span>
+    <span th:if="${session.users != null}">
+        <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+        <div class="body">
+            <div class="" align="center">
+                <h2>글수정</h2>
+                <hr width="400" align="center"> 
+            </div>
+            <div class="body-content">
+                <form th:action="@{/info/update}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="pageNum" th:value="${pageNum}"/>
+                    <input type="hidden" name="postNo" th:value="${idto.postNo}" />
+                    <div class="writeForm-wrapper" align="center">
+                        <div>
+                            <label for="category">카테고리</label>
+                            <select id="category" name="category" th:value="${idto.category}">
+                                <option value="전체글" selected>전체글</option>
+                                <option value="소형견">소형견</option>
+                                <option value="중형견">중형견</option>
+                                <option value="대형견">대형견</option>
+                            </select>
+                        </div>
+                        <div class="title-wrapper">
+                            <label for="title">글 제목</label>
+                            <input type="text" id="title" name="title" th:value="${idto.title}" required />
+                        </div>
+                        <div class="writer-wrapper">
+                            <input type="hidden" name="writer" th:value="${session.users.nick}"/>
+                            <span>작성자 <span th:text="${session.users.nick}"></span></span>
+                        </div>
+                        <div class="content-wrapper"> 
+                            <label for="summernote">글 내용</label>
+                            <!-- 방법 1 textarea 에는 th:value 가 안된다 이유로는 input 태그에서만 가능 하기 때문.  
+                            <textarea id="summernote" name="content" th:text="${idto.content}" required></textarea>  -->
+                            <!-- 방법 2 -->
+                            <textarea id="summernote" name="content" th:text="${idto.content}" required>  
+                                [[${idto.content}]]
+                            </textarea>
+                        </div>
+                        <div class="writePage-button">
+                            <span class="submit-button">
+                                <button type="submit">수정하기</button>
+                            </span>
+                            <span class="cancel-button">
+                                <button onclick="history.go(-1)">취소</button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="body-content">
-            <form th:action="@{/info/update}" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="pageNum" th:value="${pageNum}"/>
-                <input type="hidden" name="postNo" th:value="${idto.postNo}" />
-                <div class="writeForm-wrapper" align="center">
-                    <div>
-                        <label for="category">카테고리</label>
-                        <select id="category" name="category" th:value="${idto.category}">
-                            <option value="전체글" selected>전체글</option>
-                            <option value="소형견">소형견</option>
-                            <option value="중형견">중형견</option>
-                            <option value="대형견">대형견</option>
-                        </select>
-                    </div>
-                    <div class="title-wrapper">
-                        <label for="title">글 제목</label>
-                        <input type="text" id="title" name="title" th:value="${idto.title}" required />
-                    </div>
-                    <div class="writer-wrapper">
-                        <input type="hidden" name="writer" th:value="${session.users.nick}"/>
-                        <span>작성자 <span th:text="${session.users.nick}"></span></span>
-                    </div>
-                    <div class="content-wrapper"> 
-                        <label for="summernote">글 내용</label>
-                        <!-- 방법 1 textarea 에는 th:value 가 안된다 이유로는 input 태그에서만 가능 하기 때문.  
-                        <textarea id="summernote" name="content" th:text="${idto.content}" required></textarea>  -->
-                        <!-- 방법 2 -->
-                        <textarea id="summernote" name="content" th:text="${idto.content}" required>  
-                            [[${idto.content}]]
-                        </textarea>
-                    </div>
-                    <div class="writePage-button">
-                        <span class="submit-button">
-                            <button type="submit">수정하기</button>
-                        </span>
-                        <span class="cancel-button">
-                            <button onclick="history.go(-1)">취소</button>
-                        </span>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+    </span>
 
     <script>
 	$(document).ready(function () {

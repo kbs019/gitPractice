@@ -123,7 +123,7 @@ public class DiaryController {
         // 여러분 여기에용!!!       \\gitprac
         // 여러분 여기에용!!!
 
-        String uploadPath = new File("").getAbsolutePath()+"\\gitprac\\src\\main\\resources\\static\\diaryUpload\\";
+        String uploadPath = new File("").getAbsolutePath()+"\\src\\main\\resources\\static\\diaryUpload\\";
 
         // 여러분 여기에용!!!
         // 여러분 여기에용!!!       \\gitprac

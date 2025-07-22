@@ -19,48 +19,56 @@ window.location='/info/list?category=전체글';
     <title>Document</title>
 </head>
 <body>
-    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-    <div class="">
-        <div class="" align="center">
-            <h2>글작성</h2>
-            <hr width="400" align="center"> 
-        </div>
+    <span th:if="${session.users == null}">
+        <script>
+            alert("로그인이 해제되었습니다.");
+            window.location="/user/login";
+        </script>
+    </span>
+    <span th:if="${session.users != null}">
+        <div th:replace="~{fragments/header.html :: headerFragment}"></div>
         <div class="">
-            <form th:action="@{/info/write}" method="post" enctype="multipart/form-data">
-                <div class="writeForm-wrapper" align="center">
-                    <div>
-                        <label for="category">카테고리</label>
-                        <select id="category" name="category">
-                            <option value="전체글" selected>전체글</option>
-                            <option value="소형견">소형견</option>
-                            <option value="중형견">중형견</option>
-                            <option value="대형견">대형견</option>
-                        </select>
+            <div class="" align="center">
+                <h2>글작성</h2>
+                <hr width="400" align="center"> 
+            </div>
+            <div class="">
+                <form th:action="@{/info/write}" method="post" enctype="multipart/form-data">
+                    <div class="writeForm-wrapper" align="center">
+                        <div>
+                            <label for="category">카테고리</label>
+                            <select id="category" name="category">
+                                <option value="전체글" selected>전체글</option>
+                                <option value="소형견">소형견</option>
+                                <option value="중형견">중형견</option>
+                                <option value="대형견">대형견</option>
+                            </select>
+                        </div>
+                        <div class="">
+                            <label for="title">글 제목</label>
+                            <input type="text" id="title" name="title" required />
+                        </div>
+                        <div class="">
+                            <input type="hidden" name="writer" th:value="${session.users.nick}"/>
+                            <span>작성자 <span th:text="${session.users.nick}"></span></span>
+                        </div>
+                        <div class=""> 
+                            <label for="summernote">글 내용</label>
+                            <textarea id="summernote" name="content" required></textarea>
+                        </div>
+                        <div class="writePage-button">
+                            <span class="submit-button">
+                                <button type="submit">업로드</button>
+                            </span>
+                            <span class="cancel-button">
+                                <button onclick="history.go(-1)">취소</button>
+                            </span>
+                        </div>
                     </div>
-                    <div class="">
-                        <label for="title">글 제목</label>
-                        <input type="text" id="title" name="title" required />
-                    </div>
-                    <div class="">
-                        <input type="hidden" name="writer" th:value="${session.users.nick}"/>
-                        <span>작성자 <span th:text="${session.users.nick}"></span></span>
-                    </div>
-                    <div class=""> 
-                        <label for="summernote">글 내용</label>
-                        <textarea id="summernote" name="content" required></textarea>
-                    </div>
-                    <div class="writePage-button">
-                        <span class="submit-button">
-                            <button type="submit">업로드</button>
-                        </span>
-                        <span class="cancel-button">
-                            <button onclick="history.go(-1)">취소</button>
-                        </span>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
+    </span>
 
     <script>
 	$(document).ready(function () {

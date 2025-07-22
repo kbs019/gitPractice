@@ -9,105 +9,113 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-
-    <div id="info-wrapper">
-        <!-- ✅ 카테고리 사이드바 -->
-        <aside class="category-sidebar">
-            <!-- ✅ 검색 영역 -->
-            <div class="search-bar">
-                <select id="searchOption">
-                    <option value="writer">작성자</option>
-                    <option value="title">제목</option>
-                </select>
-                <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요">
-                <button id="searchBtn">검색</button>
-            </div>
-            <ul>
-                <li><a th:href="@{/info/list}" th:classappend="${category} == '전체글' ? 'active'">전체글</a></li>
-                <li><a th:href="@{/info/list(category='대형견')}" th:classappend="${category} == '대형견' ? 'active'">대형견</a></li>
-                <li><a th:href="@{/info/list(category='중형견')}" th:classappend="${category} == '중형견' ? 'active'">중형견</a></li>
-                <li><a th:href="@{/info/list(category='소형견')}" th:classappend="${category} == '소형견' ? 'active'">소형견</a></li>
-            </ul>
-            
-        </aside>
-
-        <!-- ✅ 게시판 본문 -->
-        <section class="info-list-area">
-            <div class="writeBtn">
-                <a th:href="@{/info/write}">글쓰기</a>
-            </div>
-
-            <!-- ✅ 게시글 없음 -->
-            <div th:if="${count == 0}" class="empty-msg">
-                작성된 게시글이 없습니다.
-            </div>
-
-            <!-- ✅ 게시글 목록 -->
-            <div th:if="${count != 0}">
-                <table class="info-table">
-                    <thead>
-                        <tr>
-                            <th>글번호</th>
-                            <th>작성자</th>
-                            <th>카테고리</th>
-                            <th>제목</th>
-                            <th>조회수</th>
-                            <th>작성날짜</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="dto : ${list}">
-                            <td th:text="${dto.postNo}"></td>
-                            <td>
-                                <span th:text="${dto.writer}"></span>
-                                <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${dto.writer}">
-                                    📋
-                                </span>
-                            </td>
-                            <td th:text="${dto.category}"></td>
-                            <td>
-                                <span th:if="${dto.status == 0}">
-                                    <a th:href="@{|/info/content?postNo=${dto.postNo}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
-                                </span>
-                                <span th:if="${dto.status != 0}">
-                                    <span>관리자에 의해 제재된 글입니다.</span>
-                                </span>
-                            </td>
-                            <td th:text="${dto.views}"></td>
-                            <td th:text="${#temporals.format(dto.reg, 'yy.MM.dd HH:mm')}"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- ✅ 페이징 -->
-            <div class="paging" th:if="${count > 0}">
-                <span th:if="${startPage > pageBlock}">
-                    <a th:href="@{|/info/list?pageNum=${startPage - pageBlock}&category=${category}|}">[이전]</a>
-                </span>
-                <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-                    <a th:href="@{|/info/list?pageNum=${i}&category=${category}|}"
-                        th:text="'[' + ${i} + ']'"
-                        th:class="${i == pageNum} ? 'active' : null"></a>
-                </span>
-                <span th:if="${endPage < pageCount}">
-                    <a th:href="@{|/info/list?pageNum=${startPage + pageBlock}&category=${category}|}">[다음]</a>
-                </span>
-            </div>
-        </section>
-    </div>
+    <span th:if="${session.users == null}">
+        <script>
+            alert("로그인이 해제되었습니다.");
+            window.location="/user/login";
+        </script>
+    </span>
+    <span th:if="${session.users != null}">
+        <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+    
+        <div id="info-wrapper">
+            <!-- ✅ 카테고리 사이드바 -->
+            <aside class="category-sidebar">
+                <!-- ✅ 검색 영역 -->
+                <div class="search-bar">
+                    <select id="searchOption">
+                        <option value="writer">작성자</option>
+                        <option value="title">제목</option>
+                    </select>
+                    <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요">
+                    <button id="searchBtn">검색</button>
+                </div>
+                <ul>
+                    <li><a th:href="@{/info/list}" th:classappend="${category} == '전체글' ? 'active'">전체글</a></li>
+                    <li><a th:href="@{/info/list(category='대형견')}" th:classappend="${category} == '대형견' ? 'active'">대형견</a></li>
+                    <li><a th:href="@{/info/list(category='중형견')}" th:classappend="${category} == '중형견' ? 'active'">중형견</a></li>
+                    <li><a th:href="@{/info/list(category='소형견')}" th:classappend="${category} == '소형견' ? 'active'">소형견</a></li>
+                </ul>
+                
+            </aside>
+    
+            <!-- ✅ 게시판 본문 -->
+            <section class="info-list-area">
+                <div class="writeBtn">
+                    <a th:href="@{/info/write}">글쓰기</a>
+                </div>
+    
+                <!-- ✅ 게시글 없음 -->
+                <div th:if="${count == 0}" class="empty-msg">
+                    작성된 게시글이 없습니다.
+                </div>
+    
+                <!-- ✅ 게시글 목록 -->
+                <div th:if="${count != 0}">
+                    <table class="info-table">
+                        <thead>
+                            <tr>
+                                <th>글번호</th>
+                                <th>작성자</th>
+                                <th>카테고리</th>
+                                <th>제목</th>
+                                <th>조회수</th>
+                                <th>작성날짜</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="dto : ${list}">
+                                <td th:text="${dto.postNo}"></td>
+                                <td>
+                                    <span th:text="${dto.writer}"></span>
+                                    <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${dto.writer}">
+                                        📋
+                                    </span>
+                                </td>
+                                <td th:text="${dto.category}"></td>
+                                <td>
+                                    <span th:if="${dto.status == 0}">
+                                        <a th:href="@{|/info/content?postNo=${dto.postNo}&pageNum=${pageNum}|}" th:text="${dto.title}"></a>
+                                    </span>
+                                    <span th:if="${dto.status != 0}">
+                                        <span>관리자에 의해 제재된 글입니다.</span>
+                                    </span>
+                                </td>
+                                <td th:text="${dto.views}"></td>
+                                <td th:text="${#temporals.format(dto.reg, 'yy.MM.dd HH:mm')}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+    
+                <!-- ✅ 페이징 -->
+                <div class="paging" th:if="${count > 0}">
+                    <span th:if="${startPage > pageBlock}">
+                        <a th:href="@{|/info/list?pageNum=${startPage - pageBlock}&category=${category}|}">[이전]</a>
+                    </span>
+                    <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                        <a th:href="@{|/info/list?pageNum=${i}&category=${category}|}"
+                            th:text="'[' + ${i} + ']'"
+                            th:class="${i == pageNum} ? 'active' : null"></a>
+                    </span>
+                    <span th:if="${endPage < pageCount}">
+                        <a th:href="@{|/info/list?pageNum=${startPage + pageBlock}&category=${category}|}">[다음]</a>
+                    </span>
+                </div>
+            </section>
+        </div>
+    </span>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- ajax 시작 -->
     <script th:inline="javascript">
-    $(document).ready(function() {
-
-        // ✅ 1. 검색 기능 AJAX
-        $('#searchBtn').click(function() {
-            const option = $('#searchOption').val();
-            const keyword = $('#searchKeyword').val();
-            const currentUserRole = /*[[${session.users.role}]]*/ 0;
+        $(document).ready(function() {
+            
+            // ✅ 1. 검색 기능 AJAX
+            $('#searchBtn').click(function() {
+                const option = $('#searchOption').val();
+                const keyword = $('#searchKeyword').val();
+                const currentUserRole = /*[[${session.users != null ? session.users.role : -1}]]*/ -1;
 
             if (!keyword.trim()) {
                 alert("검색어를 입력하세요.");

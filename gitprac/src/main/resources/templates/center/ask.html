@@ -10,81 +10,89 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-
-    <div class="center-container">
-        <div class="sidebar-wrapper">
-            <div th:replace="~{fragments/centersidebar.html :: centersidebar}"></div>
-        </div>
-
-        <div id="ask-wrapper">
-            <h1>질의응답</h1>
-
-            <div class="ask-filter-bar">
-                <label class="isAnswered-check">
-                    <input type="checkbox" id="isAnsweredStatusCheck">
-                    <span>답변완료된 질문만 보기</span>
-                </label>
-                <div class="writeBtn" th:if="${session.users.role == 0 || session.users.role == 1}">
-                    <a th:href="@{/center/askWrite}">글쓰기</a>
-                </div>
+    <span th:if="${session.users == null}">
+        <script>
+            alert("로그인이 해제되었습니다.");
+            window.location="/user/login";
+        </script>
+    </span>
+    <span th:if="${session.users != null}">
+        <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+    
+        <div class="center-container">
+            <div class="sidebar-wrapper">
+                <div th:replace="~{fragments/centersidebar.html :: centersidebar}"></div>
             </div>
-
-            <div id="askList-wrapper">
-                <div th:if="${count == 0}">
-                    <div class="empty-msg">게시판에 저장된 게시글이 없습니다.</div>
+    
+            <div id="ask-wrapper">
+                <h1>질의응답</h1>
+    
+                <div class="ask-filter-bar">
+                    <label class="isAnswered-check">
+                        <input type="checkbox" id="isAnsweredStatusCheck">
+                        <span>답변완료된 질문만 보기</span>
+                    </label>
+                    <div class="writeBtn" th:if="${session.users.role == 0 || session.users.role == 1}">
+                        <a th:href="@{/center/askWrite}">글쓰기</a>
+                    </div>
                 </div>
-
-                <div th:if="${count != 0}">
-                    <table class="info-table">
-                        <thead>
-                            <tr>
-                                <th width="100">구분</th>
-                                <th width="350">글제목</th>
-                                <th width="150">작성자</th>
-                                <th width="150">작성일</th>
-                                <th width="150">답변여부</th>
-                                <th width="100">조회수</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="ato : ${list}">
-                                <td th:text="${ato.category == 0 ? '문의' : '신고'}"></td>
-                                <td>
-                                    <span th:if="${session.users.role == 2 || session.users.nick == ato.writer}">
-                                        <span th:if="${ato.status == 0}">
-                                            <a th:href="@{|/center/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
+    
+                <div id="askList-wrapper">
+                    <div th:if="${count == 0}">
+                        <div class="empty-msg">게시판에 저장된 게시글이 없습니다.</div>
+                    </div>
+    
+                    <div th:if="${count != 0}">
+                        <table class="info-table">
+                            <thead>
+                                <tr>
+                                    <th width="100">구분</th>
+                                    <th width="350">글제목</th>
+                                    <th width="150">작성자</th>
+                                    <th width="150">작성일</th>
+                                    <th width="150">답변여부</th>
+                                    <th width="100">조회수</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="ato : ${list}">
+                                    <td th:text="${ato.category == 0 ? '문의' : '신고'}"></td>
+                                    <td>
+                                        <span th:if="${session.users.role == 2 || session.users.nick == ato.writer}">
+                                            <span th:if="${ato.status == 0}">
+                                                <a th:href="@{|/center/askContent?askNo=${ato.askNo}&pageNum=${pageNum}|}" th:text="${ato.title}"></a>
+                                            </span>
+                                            <span th:if="${ato.status != 0}">관리자에 의해 제재된 사용자의 글입니다.</span>
                                         </span>
-                                        <span th:if="${ato.status != 0}">관리자에 의해 제재된 사용자의 글입니다.</span>
-                                    </span>
-                                    <span th:unless="${session.users.role == 2 || session.users.nick == ato.writer}">
-                                        <span th:if="${ato.status == 0}" th:text="${ato.title}"></span>
-                                        <span th:if="${ato.status != 0}">관리자에 의해 제재된 사용자의 글입니다.</span>
-                                    </span>
-                                </td>
-                                <td th:text="${ato.writer}"></td>
-                                <td th:text="${#temporals.format(ato.reg, 'yy.MM.dd HH:mm')}"></td>
-                                <td th:text="${ato.isAnswered == 1 ? '답변 완료' : '미답변'}"></td>
-                                <td th:text="${ato.views}"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="paging" th:if="${count > 0}">
-                    <span th:if="${startPage} > ${pageBlock}">
-                        <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
-                    </span>
-                    <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-                        <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
-                    </span>
-                    <span th:if="${endPage} < ${pageCount}">
-                        <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
-                    </span>
+                                        <span th:unless="${session.users.role == 2 || session.users.nick == ato.writer}">
+                                            <span th:if="${ato.status == 0}" th:text="${ato.title}"></span>
+                                            <span th:if="${ato.status != 0}">관리자에 의해 제재된 사용자의 글입니다.</span>
+                                        </span>
+                                    </td>
+                                    <td th:text="${ato.writer}"></td>
+                                    <td th:text="${#temporals.format(ato.reg, 'yy.MM.dd HH:mm')}"></td>
+                                    <td th:text="${ato.isAnswered == 1 ? '답변 완료' : '미답변'}"></td>
+                                    <td th:text="${ato.views}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+    
+                    <div class="paging" th:if="${count > 0}">
+                        <span th:if="${startPage} > ${pageBlock}">
+                            <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
+                        </span>
+                        <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                            <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
+                        </span>
+                        <span th:if="${endPage} < ${pageCount}">
+                            <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </span>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>

@@ -10,77 +10,85 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-    <div align="center">
-        <span class="isAnswered-check">
-            <input type="checkbox" id="isAnsweredStatusCheck">
-            <span>답변완료된 질문만 보기</span>
-        </span>
-        <span class="search-wrapper">
-            <select id="category">
-                <option value="total">전체</option>
-                <option value="title">제목</option>
-                <option value="content">내용</option>
-                <option value="titleAndContent">제목+내용</option>
-            </select>
-            <input type="text" id="keyword" placeholder="2글자 이상 작성해주세요.">
-            <button type="button" id="selectPostByKeyword">검색</button>
-        </span>
-        <span class="writeBtn">
-            <a th:href="@{/qna/write}">글쓰기</a>
-        </span>
-    </div>
-    <div id="list-wrapper">
-        <div th:if="${count == 0}">
-            <div class="post-content">
-                <h2>게시글이 존재하지 않습니다.</h2>
-            </div>
+    <span th:if="${session.users == null}">
+        <script>
+            alert("로그인이 해제되었습니다.");
+            window.location="/user/login";
+        </script>
+    </span>
+    <span th:if="${session.users != null}">
+        <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+        <div align="center">
+            <span class="isAnswered-check">
+                <input type="checkbox" id="isAnsweredStatusCheck">
+                <span>답변완료된 질문만 보기</span>
+            </span>
+            <span class="search-wrapper">
+                <select id="category">
+                    <option value="total">전체</option>
+                    <option value="title">제목</option>
+                    <option value="content">내용</option>
+                    <option value="titleAndContent">제목+내용</option>
+                </select>
+                <input type="text" id="keyword" placeholder="2글자 이상 작성해주세요.">
+                <button type="button" id="selectPostByKeyword">검색</button>
+            </span>
+            <span class="writeBtn">
+                <a th:href="@{/qna/write}">글쓰기</a>
+            </span>
         </div>
-        <div th:if="${count != 0}">
-            <div align="center" width="800">
-                <div class="post-info" th:each="qto : ${list}">
-                    <div class="post-title-wrapper">
-                        <span th:if="${qto.status == 0}">
-                            <a th:href="@{|/qna/content?postNo=${qto.postNo}&pageNum=${pageNum}|}" th:text="${qto.title}"></a>
+        <div id="list-wrapper">
+            <div th:if="${count == 0}">
+                <div class="post-content">
+                    <h2>게시글이 존재하지 않습니다.</h2>
+                </div>
+            </div>
+            <div th:if="${count != 0}">
+                <div align="center" width="800">
+                    <div class="post-info" th:each="qto : ${list}">
+                        <div class="post-title-wrapper">
+                            <span th:if="${qto.status == 0}">
+                                <a th:href="@{|/qna/content?postNo=${qto.postNo}&pageNum=${pageNum}|}" th:text="${qto.title}"></a>
+                            </span>
+                            <span th:if="${qto.status != 0}">
+                                <span>관리자에 의해 제재된 글입니다.</span>
+                            </span>
+                        </div>
+                        <span class="writer-name-wrapper">
+                            <span class="post-writer-wrapper" th:text="${qto.writer}"></span>
+                            <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${qto.writer}">
+                                📋
+                            </span>
                         </span>
-                        <span th:if="${qto.status != 0}">
-                            <span>관리자에 의해 제재된 글입니다.</span>
+                        <span class="post-views-wrapper">
+                            <span>조회수 : </span>
+                            <span th:text="${qto.views}"></span>
                         </span>
-                    </div>
-                    <span class="writer-name-wrapper">
-                        <span class="post-writer-wrapper" th:text="${qto.writer}"></span>
-                        <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${qto.writer}">
-                            📋
-                        </span>
-                    </span>
-                    <span class="post-views-wrapper">
-                        <span>조회수 : </span>
-                        <span th:text="${qto.views}"></span>
-                    </span>
-                    <span th:text="${#temporals.format(qto.reg, 'yy.MM.dd HH:mm')}"></span>
-                    <div class="post-isAnswered-status">
-                        <span th:if="${qto.isAnswered == 0}">
-                            <span>미답변</span>
-                        </span>
-                        <span th:if="${qto.isAnswered == 1}">
-                            <span>답변 완료</span>
-                        </span>
+                        <span th:text="${#temporals.format(qto.reg, 'yy.MM.dd HH:mm')}"></span>
+                        <div class="post-isAnswered-status">
+                            <span th:if="${qto.isAnswered == 0}">
+                                <span>미답변</span>
+                            </span>
+                            <span th:if="${qto.isAnswered == 1}">
+                                <span>답변 완료</span>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="paging" align="center" th:if="${count > 0}">
+                <span th:if="${startPage} > ${pageCount}">
+                    <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
+                </span>
+                <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                    <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
+                </span>
+                <span th:if="${endPage} < ${pageCount}">
+                    <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
+                </span>
+            </div>
         </div>
-        <div class="paging" align="center" th:if="${count > 0}">
-            <span th:if="${startPage} > ${pageCount}">
-                <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
-            </span>
-            <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-                <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
-            </span>
-            <span th:if="${endPage} < ${pageCount}">
-                <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
-            </span>
-        </div>
-    </div>
+    </span>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- ajax 시작 -->

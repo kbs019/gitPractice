@@ -10,68 +10,76 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet" />
 </head>
 <body>
-    <!-- ✅ 헤더 -->
-    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-
-    <!-- ✅ 전체 레이아웃 -->
-    <div class="center-container">
-        <!-- ✅ 사이드바 -->
-        <div class="sidebar-wrapper">
-            <div th:replace="~{fragments/centersidebar.html :: centersidebar}"></div>
+    <span th:if="${session.users == null}">
+        <script>
+            alert("로그인이 해제되었습니다.");
+            window.location="/user/login";
+        </script>
+    </span>
+    <span th:if="${session.users != null}">
+        <!-- ✅ 헤더 -->
+        <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+    
+        <!-- ✅ 전체 레이아웃 -->
+        <div class="center-container">
+            <!-- ✅ 사이드바 -->
+            <div class="sidebar-wrapper">
+                <div th:replace="~{fragments/centersidebar.html :: centersidebar}"></div>
+            </div>
+    
+            <!-- ✅ 본문 -->
+            <div id="notice-wrapper">
+                <h1>공지사항</h1>
+    
+                <!-- ✅ 글쓰기 버튼 (관리자만) -->
+                <div class="writeBtn" th:if="${session.users.role == 2}">
+                    <a th:href="@{/admin/noticeWrite}">글쓰기</a>
+                </div>
+    
+                <!-- ✅ 게시글 없음 -->
+                <div class="empty-msg" th:if="${count == 0}">
+                    게시판에 저장된 게시글이 없습니다.
+                </div>
+    
+                <!-- ✅ 게시글 목록 -->
+                <table class="notice-table" th:if="${count != 0}">
+                    <thead>
+                        <tr>
+                            <th>글제목</th>
+                            <th>작성자</th>
+                            <th>작성일</th>
+                            <th>조회수</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="nto : ${list}">
+                            <td>
+                                <a th:href="@{|/center/noticeContent?noticeNo=${nto.noticeNo}&pageNum=${pageNum}|}"
+                                    th:text="${nto.title}"></a>
+                            </td>
+                            <td th:text="${nto.writer}"></td>
+                            <td th:text="${#temporals.format(nto.reg, 'yy.MM.dd HH:mm')}"></td>
+                            <td th:text="${nto.views}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+    
+                <!-- ✅ 페이징 -->
+                <div class="paging" th:if="${count > 0}">
+                    <span th:if="${startPage} > ${pageBlock}">
+                        <a th:href="@{|/center/notice?pageNum=${startPage - pageBlock}|}">[이전]</a>
+                    </span>
+                    <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                        <a th:href="@{|/center/notice?pageNum=${i}|}"
+                            th:text="'[' + ${i} + ']'"
+                            th:class="${i == pageNum} ? 'active' : null"></a>
+                    </span>
+                    <span th:if="${endPage} < ${pageCount}">
+                        <a th:href="@{|/center/notice?pageNum=${startPage + pageBlock}|}">[다음]</a>
+                    </span>
+                </div>
+            </div>
         </div>
-
-        <!-- ✅ 본문 -->
-        <div id="notice-wrapper">
-            <h1>공지사항</h1>
-
-            <!-- ✅ 글쓰기 버튼 (관리자만) -->
-            <div class="writeBtn" th:if="${session.users.role == 2}">
-                <a th:href="@{/admin/noticeWrite}">글쓰기</a>
-            </div>
-
-            <!-- ✅ 게시글 없음 -->
-            <div class="empty-msg" th:if="${count == 0}">
-                게시판에 저장된 게시글이 없습니다.
-            </div>
-
-            <!-- ✅ 게시글 목록 -->
-            <table class="notice-table" th:if="${count != 0}">
-                <thead>
-                    <tr>
-                        <th>글제목</th>
-                        <th>작성자</th>
-                        <th>작성일</th>
-                        <th>조회수</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="nto : ${list}">
-                        <td>
-                            <a th:href="@{|/center/noticeContent?noticeNo=${nto.noticeNo}&pageNum=${pageNum}|}"
-                               th:text="${nto.title}"></a>
-                        </td>
-                        <td th:text="${nto.writer}"></td>
-                        <td th:text="${#temporals.format(nto.reg, 'yy.MM.dd HH:mm')}"></td>
-                        <td th:text="${nto.views}"></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <!-- ✅ 페이징 -->
-            <div class="paging" th:if="${count > 0}">
-                <span th:if="${startPage} > ${pageBlock}">
-                    <a th:href="@{|/center/notice?pageNum=${startPage - pageBlock}|}">[이전]</a>
-                </span>
-                <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-                    <a th:href="@{|/center/notice?pageNum=${i}|}"
-                       th:text="'[' + ${i} + ']'"
-                       th:class="${i == pageNum} ? 'active' : null"></a>
-                </span>
-                <span th:if="${endPage} < ${pageCount}">
-                    <a th:href="@{|/center/notice?pageNum=${startPage + pageBlock}|}">[다음]</a>
-                </span>
-            </div>
-        </div>
-    </div>
+    </span>
 </body>
 </html>

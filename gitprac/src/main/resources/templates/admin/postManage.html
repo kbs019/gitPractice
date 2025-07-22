@@ -9,96 +9,104 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-    <div id="post-Management">
-        <div id="qna-board-connect" align="center">
-            <span>
-                <h1>상담 게시판</h1>
-                <span><a th:href="@{/qna/list}">더보기</a></span>
-            </span>
-            <div id="qna-list-wrapper">
-                <table width="800">
-                    <tr>
-                        <th width="350">제목</th>
-                        <th width="150">작성자</th>
-                        <th width="150">작성일자</th>
-                        <th width="150">제재 여부</th>
-                    </tr>
-                    <tr th:each="qto : ${qnaList}" align="center">
-                        <td>
-                        <span th:if="${qto.status == 0}">
-                            <a th:href="@{|/qna/content?postNo=${qto.postNo}&pageNum=${pageNum}|}" th:text="${qto.title}"></a>
-                        </span>
-                        <span th:if="${qto.status != 0}">
-                            <span>관리자에 의해 제재된 글입니다.</span>
-                        </span>
-                        </td>
-                        <td>
-                            <span class="writer-name-wrapper">
-                                <span class="post-writer-wrapper" th:text="${qto.writer}"></span>
-                                <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${qto.writer}">
-                                    📋
-                                </span>
-                            </span>
-                        </td>
-                        <td th:text="${#temporals.format(qto.reg, 'yy.MM.dd HH:mm')}"></td>
-                        <td>
+    <span th:if="${session.users == null}">
+        <script>
+            alert("로그인이 해제되었습니다.");
+            window.location="/user/login";
+        </script>
+    </span>
+    <span th:if="${session.users != null}">
+        <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+        <div id="post-Management">
+            <div id="qna-board-connect" align="center">
+                <span>
+                    <h1>상담 게시판</h1>
+                    <span><a th:href="@{/qna/list}">더보기</a></span>
+                </span>
+                <div id="qna-list-wrapper">
+                    <table width="800">
+                        <tr>
+                            <th width="350">제목</th>
+                            <th width="150">작성자</th>
+                            <th width="150">작성일자</th>
+                            <th width="150">제재 여부</th>
+                        </tr>
+                        <tr th:each="qto : ${qnaList}" align="center">
+                            <td>
                             <span th:if="${qto.status == 0}">
-                                <span></span>
+                                <a th:href="@{|/qna/content?postNo=${qto.postNo}&pageNum=${pageNum}|}" th:text="${qto.title}"></a>
                             </span>
-                            <span th:if="${qto.status == 1}">
-                                <span>숨김 처리됨</span>
-                            </span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div id="info-board-connect" align="center">
-            <h1>정보공유 게시판</h1>
-            <span>
-                <h4><a th:href="@{/info/list}">더보기</a></h4>
-                <!-- <h4><a th:href="@{/info/list(category='전체글')}">더보기</a></h4> -->
-            </span>
-            <div id="info-list-wrapper">
-                <table width="800">
-                    <tr>
-                        <th width="350">제목</th>
-                        <th width="150">작성자</th>
-                        <th width="150">작성일자</th>
-                        <th width="150">제재 여부</th>
-                    </tr>
-                    <tr th:each="ito : ${infoList}" align="center">
-                        <td>
-                            <span th:if="${ito.status == 0}">
-                                <a th:href="@{|/info/content?postNo=${ito.postNo}&pageNum=${pageNum}|}" th:text="${ito.title}"></a>
-                            </span>
-                            <span th:if="${ito.status != 0}">
+                            <span th:if="${qto.status != 0}">
                                 <span>관리자에 의해 제재된 글입니다.</span>
                             </span>
-                        </td>
-                        <td>
-                            <span class="writer-name-wrapper">
-                                <span class="post-writer-wrapper" th:text="${ito.writer}"></span>
-                                <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${ito.writer}">
-                                    📋
+                            </td>
+                            <td>
+                                <span class="writer-name-wrapper">
+                                    <span class="post-writer-wrapper" th:text="${qto.writer}"></span>
+                                    <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${qto.writer}">
+                                        📋
+                                    </span>
                                 </span>
-                            </span>
-                        </td>
-                        <td th:text="${#temporals.format(ito.reg, 'yy.MM.dd HH:mm')}"></td>
-                        <td>
-                            <span th:if="${ito.status == 0}">
-                                <span></span>
-                            </span>
-                            <span th:if="${ito.status == 1}">
-                                <span>숨김 처리됨</span>
-                            </span>
-                        </td>
-                    </tr>
-                </table>
+                            </td>
+                            <td th:text="${#temporals.format(qto.reg, 'yy.MM.dd HH:mm')}"></td>
+                            <td>
+                                <span th:if="${qto.status == 0}">
+                                    <span></span>
+                                </span>
+                                <span th:if="${qto.status == 1}">
+                                    <span>숨김 처리됨</span>
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div id="info-board-connect" align="center">
+                <h1>정보공유 게시판</h1>
+                <span>
+                    <h4><a th:href="@{/info/list}">더보기</a></h4>
+                    <!-- <h4><a th:href="@{/info/list(category='전체글')}">더보기</a></h4> -->
+                </span>
+                <div id="info-list-wrapper">
+                    <table width="800">
+                        <tr>
+                            <th width="350">제목</th>
+                            <th width="150">작성자</th>
+                            <th width="150">작성일자</th>
+                            <th width="150">제재 여부</th>
+                        </tr>
+                        <tr th:each="ito : ${infoList}" align="center">
+                            <td>
+                                <span th:if="${ito.status == 0}">
+                                    <a th:href="@{|/info/content?postNo=${ito.postNo}&pageNum=${pageNum}|}" th:text="${ito.title}"></a>
+                                </span>
+                                <span th:if="${ito.status != 0}">
+                                    <span>관리자에 의해 제재된 글입니다.</span>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="writer-name-wrapper">
+                                    <span class="post-writer-wrapper" th:text="${ito.writer}"></span>
+                                    <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${ito.writer}">
+                                        📋
+                                    </span>
+                                </span>
+                            </td>
+                            <td th:text="${#temporals.format(ito.reg, 'yy.MM.dd HH:mm')}"></td>
+                            <td>
+                                <span th:if="${ito.status == 0}">
+                                    <span></span>
+                                </span>
+                                <span th:if="${ito.status == 1}">
+                                    <span>숨김 처리됨</span>
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    </span>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- ajax 시작 -->

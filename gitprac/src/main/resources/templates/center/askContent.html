@@ -10,77 +10,85 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-
-    <div class="center-container">
-        <div class="sidebar-wrapper">
-            <div th:replace="~{fragments/centersidebar.html :: centersidebar}"></div>
-        </div>
-
-        <div id="ask-content-wrapper">
-            <h1>질의응답 내용</h1>
-
-            <div class="content-top-btns">
-                <div class="btn-group" align="right">
-                    <span th:if="${ session.users.nick == ato.writer }">
-                        <input type="button" value="수정" th:onclick="|window.location='@{/center/askUpdate(askNo=${ato.askNo}, pageNum=${pageNum})}'|"> &nbsp;&nbsp;
-                        <input type="button" value="삭제" th:onclick="|window.location='@{/center/askDelete(askNo=${ato.askNo}, pageNum=${pageNum})}'|">
-                    </span>
-                    <span th:if="${ session.users.role == 2 }">
-                        <input type="button" value="삭제" th:onclick="|window.location='@{/center/askDelete(askNo=${ato.askNo}, pageNum=${pageNum})}'|">
-                    </span>
-                </div>
+    <span th:if="${session.users == null}">
+        <script>
+            alert("로그인이 해제되었습니다.");
+            window.location="/user/login";
+        </script>
+    </span>
+    <span th:if="${session.users != null}">
+        <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+    
+        <div class="center-container">
+            <div class="sidebar-wrapper">
+                <div th:replace="~{fragments/centersidebar.html :: centersidebar}"></div>
             </div>
-
-            <div class="content-body">
-                <div class="content-title">
-                    <h3 th:text="${ato.title}">질문 제목</h3>
-                </div>
-
-                <div class="content-info">
-                    <div>
-                        작성자 | <span th:text="${ato.writer}"></span>
-                        &nbsp;&nbsp; 조회수 | <span th:text="${ato.views}"></span>
-                    </div>
-                    <div>
-                        카테고리 | 
-                        <span th:if="${ato.category == 0}">문의</span>
-                        <span th:if="${ato.category == 1}">신고</span>
-                        &nbsp;&nbsp; 작성일자 | 
-                        <span th:text="${#temporals.format(ato.reg, 'yy/MM/dd HH:mm')}"></span>
+    
+            <div id="ask-content-wrapper">
+                <h1>질의응답 내용</h1>
+    
+                <div class="content-top-btns">
+                    <div class="btn-group" align="right">
+                        <span th:if="${ session.users.nick == ato.writer }">
+                            <input type="button" value="수정" th:onclick="|window.location='@{/center/askUpdate(askNo=${ato.askNo}, pageNum=${pageNum})}'|"> &nbsp;&nbsp;
+                            <input type="button" value="삭제" th:onclick="|window.location='@{/center/askDelete(askNo=${ato.askNo}, pageNum=${pageNum})}'|">
+                        </span>
+                        <span th:if="${ session.users.role == 2 }">
+                            <input type="button" value="삭제" th:onclick="|window.location='@{/center/askDelete(askNo=${ato.askNo}, pageNum=${pageNum})}'|">
+                        </span>
                     </div>
                 </div>
-
-                <div class="content-image" th:if="${ato.originalName != null}">
-                    <img th:src="@{|${ato.imgPath + ato.imgName}|}" alt="첨부 이미지">
+    
+                <div class="content-body">
+                    <div class="content-title">
+                        <h3 th:text="${ato.title}">질문 제목</h3>
+                    </div>
+    
+                    <div class="content-info">
+                        <div>
+                            작성자 | <span th:text="${ato.writer}"></span>
+                            &nbsp;&nbsp; 조회수 | <span th:text="${ato.views}"></span>
+                        </div>
+                        <div>
+                            카테고리 | 
+                            <span th:if="${ato.category == 0}">문의</span>
+                            <span th:if="${ato.category == 1}">신고</span>
+                            &nbsp;&nbsp; 작성일자 | 
+                            <span th:text="${#temporals.format(ato.reg, 'yy/MM/dd HH:mm')}"></span>
+                        </div>
+                    </div>
+    
+                    <div class="content-image" th:if="${ato.originalName != null}">
+                        <img th:src="@{|${ato.imgPath + ato.imgName}|}" alt="첨부 이미지">
+                    </div>
+    
+                    <div class="content-text">
+                        <p th:text="${ato.content}"></p>
+                    </div>
                 </div>
-
-                <div class="content-text">
-                    <p th:text="${ato.content}"></p>
+    
+                <div class="content-bottom-btns">
+                    <input type="button" value="글목록" th:onclick="|window.location='@{/center/ask(pageNum=${pageNum})}'|">
                 </div>
-            </div>
-
-            <div class="content-bottom-btns">
-                <input type="button" value="글목록" th:onclick="|window.location='@{/center/ask(pageNum=${pageNum})}'|">
-            </div>
-
-            <div class="reply-section">
-                <h4>관리자 답변</h4>
-
-                <div class="reply-form" th:if="${session.users.role == 2}">
-                    <form id="replyInsertForm">
-                        <input type="hidden" id="askNo" th:value="${ato.askNo}">
-                        <input type="hidden" id="writer" th:value="${session.users.nick}">
-                        <textarea id="replyContent" placeholder="답변 내용을 입력하세요" required></textarea>
-                        <button type="button" id="replyInsertBtn">답변 작성</button>
-                    </form>
+    
+                <div class="reply-section">
+                    <h4>관리자 답변</h4>
+    
+                    <div class="reply-form" th:if="${session.users.role == 2}">
+                        <form id="replyInsertForm">
+                            <input type="hidden" id="askNo" th:value="${ato.askNo}">
+                            <input type="hidden" id="writer" th:value="${session.users.nick}">
+                            <textarea id="replyContent" placeholder="답변 내용을 입력하세요" required></textarea>
+                            <button type="button" id="replyInsertBtn">답변 작성</button>
+                        </form>
+                    </div>
+    
+                    <input type="hidden" id="askNo" th:value="${ato.askNo}">
+                    <div id="replyList"></div>
                 </div>
-
-                <input type="hidden" id="askNo" th:value="${ato.askNo}">
-                <div id="replyList"></div>
             </div>
         </div>
-    </div>
+    </span>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>

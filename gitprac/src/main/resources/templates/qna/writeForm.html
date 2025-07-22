@@ -9,50 +9,58 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-    <div class="body">
-        <div class="body-top" align="center">
-            <h2>글 작성</h2>
-            <hr width="400" align="center">
+    <span th:if="${session.users == null}">
+        <script>
+            alert("로그인이 해제되었습니다.");
+            window.location="/user/login";
+        </script>
+    </span>
+    <span th:if="${session.users != null}">
+        <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+        <div class="body">
+            <div class="body-top" align="center">
+                <h2>글 작성</h2>
+                <hr width="400" align="center">
+            </div>
+            <div class="body-content">
+                <form th:action="@{/qna/write}" method="post" enctype="multipart/form-data">
+                    <div class="writeForm-wrapper" align="center">
+                        <div class="title-wrapper">
+                            <label for="title">글 제목</label> : 
+                            <input type="text" id="title" name="title" required>
+                        </div>
+                        <div class="writer-wrapper">
+                            <input type="hidden" name="writer" th:value="${session.users.nick}">
+                            <span>작성자 : <span th:text="${session.users.nick}"></span></span>
+                        </div>
+                        <div class="image-wrapper">
+                            <label for="image">첨부파일</label> &nbsp;
+                            <input type="file" id="image" name="image">
+                        </div>
+                        <div class="record-wrapper">
+                            <span>일지 공유 여부 선택</span>    &nbsp;&nbsp;
+                            Yes <input type="radio" name="showRecord" value="1">    &nbsp;&nbsp;
+                            No <input type="radio" name="showRecord" value="0" checked> 
+                        </div>
+                        <div class="content-wrapper">
+                            <label for="content">글 내용</label>    <br>
+                            <textarea id="content" name="content" required></textarea>
+                        </div>
+                        <div class="btns-wrapper">
+                            <span class="reset-button">
+                                <button type="reset">다시 작성</button>
+                            </span> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="submit-button">
+                                <button type="submit">업로드</button>
+                            </span> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="cancel-button">
+                                <button onclick="history.go(-1);">취소</button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="body-content">
-            <form th:action="@{/qna/write}" method="post" enctype="multipart/form-data">
-                <div class="writeForm-wrapper" align="center">
-                    <div class="title-wrapper">
-                        <label for="title">글 제목</label> : 
-                        <input type="text" id="title" name="title" required>
-                    </div>
-                    <div class="writer-wrapper">
-                        <input type="hidden" name="writer" th:value="${session.users.nick}">
-                        <span>작성자 : <span th:text="${session.users.nick}"></span></span>
-                    </div>
-                    <div class="image-wrapper">
-                        <label for="image">첨부파일</label> &nbsp;
-                        <input type="file" id="image" name="image">
-                    </div>
-                    <div class="record-wrapper">
-                        <span>일지 공유 여부 선택</span>    &nbsp;&nbsp;
-                        Yes <input type="radio" name="showRecord" value="1">    &nbsp;&nbsp;
-                        No <input type="radio" name="showRecord" value="0" checked> 
-                    </div>
-                    <div class="content-wrapper">
-                        <label for="content">글 내용</label>    <br>
-                        <textarea id="content" name="content" required></textarea>
-                    </div>
-                    <div class="btns-wrapper">
-                        <span class="reset-button">
-                            <button type="reset">다시 작성</button>
-                        </span> &nbsp;&nbsp;&nbsp;&nbsp;
-                        <span class="submit-button">
-                            <button type="submit">업로드</button>
-                        </span> &nbsp;&nbsp;&nbsp;&nbsp;
-                        <span class="cancel-button">
-                            <button onclick="history.go(-1);">취소</button>
-                        </span>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+    </span>
 </body>
 </html>

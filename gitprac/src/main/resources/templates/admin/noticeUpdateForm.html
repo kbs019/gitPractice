@@ -9,54 +9,62 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-    <div class="body">
-        <div class="body-top" align="center">
-            <h2>공지사항 수정</h2>
-            <hr width="400" align="center">
-        </div>
-        <div class="body-content">
-            <form th:action="@{/admin/noticeUpdate}" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="pageNum" th:value="${pageNum}">
-                <input type="hidden" name="noticeNo" th:value="${nto.noticeNo}">
-                <div class="update" align="center">
-                    <div class="title-wrapper">
-                        <label for="title">제목</label> : 
-                        <input type="text" id="title" name="title" th:value="${nto.title}" required>
-                    </div>
-                    <div class="writer-wrapper">
-                        <input type="hidden" name="writer" th:value="${nto.writer}">
-                        <span>작성자 : <span th:text="${nto.writer}"></span></span>
-                    </div>
-                    <div class="image-wrapper">
-                        <label for="image">첨부파일</label> &nbsp;
-                        <input type="file" id="image" name="image">
-                        <div th:if="${nto.originalName != null}">
-                            <div>기존 이미지</div>
-                            <img th:src="@{|${nto.imgPath + nto.imgName}|}">
-                            <input type="hidden" name="originalName" th:value="${nto.originalName}">
-                            <input type="hidden" name="imgName" th:value="${nto.imgName}">
-                            <input type="hidden" name="imgPath" th:value="${nto.imgPath}">
+    <span th:if="${session.users == null}">
+        <script>
+            alert("로그인이 해제되었습니다.");
+            window.location="/user/login";
+        </script>
+    </span>
+    <span th:if="${session.users != null}">
+        <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+        <div class="body">
+            <div class="body-top" align="center">
+                <h2>공지사항 수정</h2>
+                <hr width="400" align="center">
+            </div>
+            <div class="body-content">
+                <form th:action="@{/admin/noticeUpdate}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="pageNum" th:value="${pageNum}">
+                    <input type="hidden" name="noticeNo" th:value="${nto.noticeNo}">
+                    <div class="update" align="center">
+                        <div class="title-wrapper">
+                            <label for="title">제목</label> : 
+                            <input type="text" id="title" name="title" th:value="${nto.title}" required>
+                        </div>
+                        <div class="writer-wrapper">
+                            <input type="hidden" name="writer" th:value="${nto.writer}">
+                            <span>작성자 : <span th:text="${nto.writer}"></span></span>
+                        </div>
+                        <div class="image-wrapper">
+                            <label for="image">첨부파일</label> &nbsp;
+                            <input type="file" id="image" name="image">
+                            <div th:if="${nto.originalName != null}">
+                                <div>기존 이미지</div>
+                                <img th:src="@{|${nto.imgPath + nto.imgName}|}">
+                                <input type="hidden" name="originalName" th:value="${nto.originalName}">
+                                <input type="hidden" name="imgName" th:value="${nto.imgName}">
+                                <input type="hidden" name="imgPath" th:value="${nto.imgPath}">
+                            </div>
+                        </div>
+                        <div class="content-wrapper">
+                            <label for="content">내용</label>    <br>
+                            <textarea id="content" name="content" th:text="${nto.content}" required></textarea>
+                        </div>
+                        <div class="btns-wrapper">
+                            <span class="reset-button">
+                                <button type="reset">다시 작성</button>
+                            </span> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="submit-button">
+                                <button type="submit">수정하기</button>
+                            </span> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="cancel-button">
+                                <button type="button" onclick="history.go(-1);">취소</button>
+                            </span>
                         </div>
                     </div>
-                    <div class="content-wrapper">
-                        <label for="content">내용</label>    <br>
-                        <textarea id="content" name="content" th:text="${nto.content}" required></textarea>
-                    </div>
-                    <div class="btns-wrapper">
-                        <span class="reset-button">
-                            <button type="reset">다시 작성</button>
-                        </span> &nbsp;&nbsp;&nbsp;&nbsp;
-                        <span class="submit-button">
-                            <button type="submit">수정하기</button>
-                        </span> &nbsp;&nbsp;&nbsp;&nbsp;
-                        <span class="cancel-button">
-                            <button type="button" onclick="history.go(-1);">취소</button>
-                        </span>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
+    </span>
 </body>
 </html>

@@ -1,58 +1,66 @@
-<div id="searchList">
-    <h2 th:text="${count}"></h2>
-    <div th:if="${count == 0}">
-        <div class="post-content">
-            <h2>게시글이 존재하지 않습니다.</h2>
-        </div>
-    </div>
-    <div th:if="${count != 0}">
-        <div th:each="qto : ${list}" class="post-info">
-            <div class="post-title-wrapper">
-                <span th:if="${qto.status == 0}">
-                    <a th:href="@{|/qna/content?postNo=${qto.postNo}&pageNum=${pageNum}|}" th:text="${qto.title}"></a>
-                </span>
-                <span th:if="${qto.status != 0}">
-                    <span>관리자에 의해 제재된 글입니다.</span>
-                </span>
-            </div>
-
-            <span class="writer-name-wrapper">
-                <span class="post-writer-wrapper" th:text="${qto.writer}"></span>
-                <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${qto.writer}">
-                    📋
-                </span>
-            </span>
-
-            <span class="post-views-wrapper">
-                <span>조회수 : </span>
-                <span th:text="${qto.views}"></span>
-            </span>
-
-            <span th:text="${#temporals.format(qto.reg, 'yy.MM.dd HH:mm')}"></span>
-
-            <div class="post-isAnswered-status">
-                <span th:if="${qto.isAnswered == 0}">
-                    <span>미답변</span>
-                </span>
-                <span th:if="${qto.isAnswered == 1}">
-                    <span>답변 완료</span>
-                </span>
+<span th:if="${session.users == null}">
+    <script>
+        alert("로그인이 해제되었습니다.");
+        window.location="/user/login";
+    </script>
+</span>
+<span th:if="${session.users != null}">
+    <div id="searchList">
+        <h2 th:text="${count}"></h2>
+        <div th:if="${count == 0}">
+            <div class="post-content">
+                <h2>게시글이 존재하지 않습니다.</h2>
             </div>
         </div>
+        <div th:if="${count != 0}">
+            <div th:each="qto : ${list}" class="post-info">
+                <div class="post-title-wrapper">
+                    <span th:if="${qto.status == 0}">
+                        <a th:href="@{|/qna/content?postNo=${qto.postNo}&pageNum=${pageNum}|}" th:text="${qto.title}"></a>
+                    </span>
+                    <span th:if="${qto.status != 0}">
+                        <span>관리자에 의해 제재된 글입니다.</span>
+                    </span>
+                </div>
+    
+                <span class="writer-name-wrapper">
+                    <span class="post-writer-wrapper" th:text="${qto.writer}"></span>
+                    <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${qto.writer}">
+                        📋
+                    </span>
+                </span>
+    
+                <span class="post-views-wrapper">
+                    <span>조회수 : </span>
+                    <span th:text="${qto.views}"></span>
+                </span>
+    
+                <span th:text="${#temporals.format(qto.reg, 'yy.MM.dd HH:mm')}"></span>
+    
+                <div class="post-isAnswered-status">
+                    <span th:if="${qto.isAnswered == 0}">
+                        <span>미답변</span>
+                    </span>
+                    <span th:if="${qto.isAnswered == 1}">
+                        <span>답변 완료</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    
+        <div class="paging" align="center" th:if="${count > 0}">
+            <span th:if="${startPage} > ${pageCount}">
+                <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
+            </span>
+            <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
+            </span>
+            <span th:if="${endPage} < ${pageCount}">
+                <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
+            </span>
+        </div>
     </div>
-
-    <div class="paging" align="center" th:if="${count > 0}">
-        <span th:if="${startPage} > ${pageCount}">
-            <a href="#" class="ajax-page-link" th:data-page="${startPage - pageBlock}">[이전]</a>
-        </span>
-        <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-            <a href="#" class="ajax-page-link" th:data-page="${i}" th:classappend="${i == pageNum} ? 'active'" th:text="${i}"></a>
-        </span>
-        <span th:if="${endPage} < ${pageCount}">
-            <a href="#" class="ajax-page-link" th:data-page="${startPage + pageBlock}">[다음]</a>
-        </span>
-    </div>
-</div>
+</span>
 
 <script>
     $(document).ready(function(){
