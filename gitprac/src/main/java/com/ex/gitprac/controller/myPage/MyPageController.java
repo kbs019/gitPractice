@@ -113,6 +113,7 @@ public class MyPageController {
 
         int ok = myPageService.deleteUser(id);
         if(ok == 1){
+            session.invalidate();
             result = "success";
         }
         return result;
