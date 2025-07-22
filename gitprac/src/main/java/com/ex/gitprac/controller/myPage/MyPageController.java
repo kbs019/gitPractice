@@ -104,6 +104,7 @@ public class MyPageController {
 
 
     @PostMapping("deleteUser")
+    @ResponseBody
     public String deleteUser(HttpSession session){
 
         String result = "error";
@@ -155,6 +156,7 @@ public class MyPageController {
     }
 
     @PostMapping("deletePet")
+    @ResponseBody
     public String deletePet(PetDTO pdto){
         
         String result = "error";
@@ -165,6 +167,7 @@ public class MyPageController {
         if(ok1 == 1){
             result = "success";
         }
+    
         return result;
     }
     
