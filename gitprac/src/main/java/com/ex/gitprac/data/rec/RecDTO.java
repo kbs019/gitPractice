@@ -1,6 +1,6 @@
 package com.ex.gitprac.data.rec;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
@@ -12,7 +12,7 @@ public class RecDTO {
     private String category;
     private String title;
     private String content;
-    private LocalDate reg;
+    private LocalDateTime reg;
     private String orgImgName;
     private String imgName;
     private String imgPath;

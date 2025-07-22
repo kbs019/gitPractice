@@ -100,13 +100,14 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- ajax 시작 -->
-    <script>
+    <script th:inline="javascript">
     $(document).ready(function() {
 
         // ✅ 1. 검색 기능 AJAX
         $('#searchBtn').click(function() {
             const option = $('#searchOption').val();
             const keyword = $('#searchKeyword').val();
+            const currentUserRole = /*[[${session.users.role}]]*/ 0;
 
             if (!keyword.trim()) {
                 alert("검색어를 입력하세요.");
@@ -137,12 +138,17 @@
                                 ? `<a href='/info/content?postNo=${postNo}&pageNum=1'>${dto.title}</a>`
                                 : '관리자에 의해 제재된 글입니다.';
 
+                            // role 2 일 때만 복사 아이콘 출력
+                            const copyIcon = (currentUserRole === 2)
+                                ? `<span class="copy-icon" data-writer="${writer}">📋</span>`
+                                : '';
+
                             $('.info-table tbody').append(`
                                 <tr>
                                     <td>${postNo}</td>
                                     <td>
                                         <span>${writer}</span>
-                                        <span class="copy-icon" data-writer="${writer}">📋</span>
+                                        ${copyIcon}
                                     </td>
                                     <td>${category}</td>
                                     <td>${titleHtml}</td>

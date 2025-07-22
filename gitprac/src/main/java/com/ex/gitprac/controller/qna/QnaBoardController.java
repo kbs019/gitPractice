@@ -23,6 +23,7 @@ import com.ex.gitprac.data.qna.QnaBoardDTO;
 import com.ex.gitprac.data.qna.QnaReplyDTO;
 import com.ex.gitprac.data.rec.RecDTO;
 import com.ex.gitprac.data.user.UserDTO;
+import com.ex.gitprac.service.pet.PetService;
 import com.ex.gitprac.service.qna.QnaBoardService;
 import com.ex.gitprac.service.rec.RecService;
 
@@ -37,6 +38,7 @@ public class QnaBoardController {
 
     private final QnaBoardService qnaBoardService;
     private final RecService recService;
+    private final PetService petService;
 
     // 상담 게시판의 메인 페이지인 list
     @GetMapping("list")
@@ -223,34 +225,41 @@ public class QnaBoardController {
         String writer = qnaBoardService.selectIdByWriter(nick);
         int offset = 0;
         int limit = 15;
-        List<RecDTO> recList;
+        List<RecDTO> recList = null; // 기본값: 아무 것도 안 보이게
 
-        if ("true".equals(reset)) {
-            recList = qnaBoardService.getRecListWithPaging(writer, offset, limit);
-            startDate = "";
-            endDate = "";
-            categoryGroup = "";
-        } else {
-            // 기본 날짜 범위 설정
-            if (startDate == null || startDate.isBlank()) {
-                startDate = "1900-01-01";
-            }
-            if (endDate == null || endDate.isBlank()) {
-                endDate = "2100-12-31";
-            }
+        // 🐶 펫 목록 조회 (드롭다운 표시용)
+        List<PetDTO> petList = petService.getPetsByUserId(writer);
+        model.addAttribute("petList", petList);
 
-            recList = qnaBoardService.getRecListFilteredWithPaging(writer, petNo, startDate, endDate, categoryGroup, offset, limit);
+        // 🟡 petNo가 null이면 아무것도 보여주지 않음
+        if (petNo != null) {
+            if ("true".equals(reset)) {
+                recList = recService.getRecListWithPaging(writer, offset, limit);
+                startDate = "";
+                endDate = "";
+                categoryGroup = "";
+            } else {
+                if (startDate == null || startDate.isBlank()) {
+                    startDate = "1900-01-01";
+                }
+                if (endDate == null || endDate.isBlank()) {
+                    endDate = "2100-12-31";
+                }
+
+                recList = recService.getRecListFilteredWithPaging(
+                    writer, petNo, startDate, endDate, categoryGroup, offset, limit);
+            }
         }
 
-        // model에 데이터 전달
+        // 모델에 전달
         model.addAttribute("recList", recList);
-        model.addAttribute("startDate", startDate.equals("1900-01-01") ? "" : startDate);
-        model.addAttribute("endDate", endDate.equals("2100-12-31") ? "" : endDate);
+        model.addAttribute("startDate", startDate != null && startDate.equals("1900-01-01") ? "" : startDate);
+        model.addAttribute("endDate", endDate != null && endDate.equals("2100-12-31") ? "" : endDate);
         model.addAttribute("categoryGroup", categoryGroup);
-        model.addAttribute("writer", writer);
+        model.addAttribute("selectedPetNo", petNo); // 선택값 유지
         model.addAttribute("nick", nick);
 
-        return "showRecord/record";
+        return "showRecord/record2";
     }
 
     // 팝업창에서 글내용으로 이동
