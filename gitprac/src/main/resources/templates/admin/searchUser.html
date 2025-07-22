@@ -1,20 +1,13 @@
-<span th:if="${session.users == null}">
-    <script>
-        alert("로그인이 해제되었습니다.");
-        window.location="/user/login";
-    </script>
-</span>
-<span th:if="${session.users != null}">
     <div class="users-wrapper">
         <table>
             <tr>
-                <td>아이디</td>
-                <td>이름</td>
-                <td>닉네임</td>
-                <td>가입일자</td>
-                <td>권한</td>
-                <td>활동 상태</td>
-                <td>제재 기간</td>
+                <th>아이디</th>
+                <th>이름</th>
+                <th>닉네임</th>
+                <th>가입일자</th>
+                <th>권한</th>
+                <th>활동 상태</th>
+                <th>제재 기간</th>
             </tr>
             <tr th:each="uto : ${list}">
                 <td th:text="${uto.id}"></td>
@@ -65,4 +58,3 @@
             </span>
         </div>
     </div>
-</span>

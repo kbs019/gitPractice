@@ -234,74 +234,74 @@ public class QnaBoardService {
     }
 
 
-    // 검색 결과에 따른 글목록 조회  --  수의사
-    public List<QnaBoardDTO> searchBoardList3( String category, String keyword, int isAnswered, int start, int end ){
-        List<QnaBoardDTO> list = new ArrayList<QnaBoardDTO>();
+    // // 검색 결과에 따른 글목록 조회  --  수의사
+    // public List<QnaBoardDTO> searchBoardList3( String category, String keyword, int isAnswered, int start, int end ){
+    //     List<QnaBoardDTO> list = new ArrayList<QnaBoardDTO>();
 
-        if( isAnswered == 1 ){
-            if( category.equals("total") ){
-                list = qnaBoardMapper.searchListByTotal(keyword, start, end);
-            } else if( category.equals("title") ){
-                list = qnaBoardMapper.searchListByTitle(keyword, start, end);
-            } else if( category.equals("content") ){
-                list = qnaBoardMapper.searchListByContent(keyword, start, end);
-            } else if( category.equals("titleAndContent") ){
-                list = qnaBoardMapper.searchListByTitleAndContent(keyword, start, end);
-            }
-        } else if( isAnswered == 0 ){
-            if( category.equals("total") ){
-                list = qnaBoardMapper.searchListByTotalAndUnAnswered(keyword, isAnswered, start, end);
-            } else if( category.equals("title") ){
-                list = qnaBoardMapper.searchListByTitleAndUnAnswered(keyword, isAnswered, start, end);
-            } else if( category.equals("content") ){
-                list = qnaBoardMapper.searchListByContentAndUnAnswered(keyword, isAnswered, start, end);
-            } else if( category.equals("titleAndContent") ){
-                list = qnaBoardMapper.searchListByTitleAndContentAndUnAnswered(keyword, isAnswered, start, end);
-            }
-        }
+    //     if( isAnswered == 1 ){
+    //         if( category.equals("total") ){
+    //             list = qnaBoardMapper.searchListByTotal(keyword, start, end);
+    //         } else if( category.equals("title") ){
+    //             list = qnaBoardMapper.searchListByTitle(keyword, start, end);
+    //         } else if( category.equals("content") ){
+    //             list = qnaBoardMapper.searchListByContent(keyword, start, end);
+    //         } else if( category.equals("titleAndContent") ){
+    //             list = qnaBoardMapper.searchListByTitleAndContent(keyword, start, end);
+    //         }
+    //     } else if( isAnswered == 0 ){
+    //         if( category.equals("total") ){
+    //             list = qnaBoardMapper.searchListByTotalAndUnAnswered(keyword, isAnswered, start, end);
+    //         } else if( category.equals("title") ){
+    //             list = qnaBoardMapper.searchListByTitleAndUnAnswered(keyword, isAnswered, start, end);
+    //         } else if( category.equals("content") ){
+    //             list = qnaBoardMapper.searchListByContentAndUnAnswered(keyword, isAnswered, start, end);
+    //         } else if( category.equals("titleAndContent") ){
+    //             list = qnaBoardMapper.searchListByTitleAndContentAndUnAnswered(keyword, isAnswered, start, end);
+    //         }
+    //     }
 
-        return list;
-    }
+    //     return list;
+    // }
 
-    // 검색 결과에 따른 글갯수 조회  --  수의사
-    public int searchListCount3( String category, String keyword, int isAnswered ){
-        int count = 0;
+    // // 검색 결과에 따른 글갯수 조회  --  수의사
+    // public int searchListCount3( String category, String keyword, int isAnswered ){
+    //     int count = 0;
 
-        if( isAnswered == 1 ){
-            if( category.equals("total") ){
-                count = qnaBoardMapper.searchListCountByTotal(keyword);
-            } else if( category.equals("title") ){
-                count = qnaBoardMapper.searchListCountByTitle(keyword);
-            } else if( category.equals("content") ){
-                count = qnaBoardMapper.searchListCountByContent(keyword);
-            } else if( category.equals("titleAndContent") ){
-                count = qnaBoardMapper.searchListCountByTitleAndContent(keyword);
-            }
-        } else if( isAnswered == 0 ){
-            if( category.equals("total") ){
-                count = qnaBoardMapper.searchListCountByTotalAndUnAnswered(keyword, isAnswered);
-            } else if( category.equals("title") ){
-                count = qnaBoardMapper.searchListCountByTitleAndUnAnswered(keyword, isAnswered);
-            } else if( category.equals("content") ){
-                count = qnaBoardMapper.searchListCountByContentAndUnAnswered(keyword, isAnswered);
-            } else if( category.equals("titleAndContent") ){
-                count = qnaBoardMapper.searchListCountByTitleAndContentAndUnAnswered(keyword, isAnswered);
-            }
-        }
+    //     if( isAnswered == 1 ){
+    //         if( category.equals("total") ){
+    //             count = qnaBoardMapper.searchListCountByTotal(keyword);
+    //         } else if( category.equals("title") ){
+    //             count = qnaBoardMapper.searchListCountByTitle(keyword);
+    //         } else if( category.equals("content") ){
+    //             count = qnaBoardMapper.searchListCountByContent(keyword);
+    //         } else if( category.equals("titleAndContent") ){
+    //             count = qnaBoardMapper.searchListCountByTitleAndContent(keyword);
+    //         }
+    //     } else if( isAnswered == 0 ){
+    //         if( category.equals("total") ){
+    //             count = qnaBoardMapper.searchListCountByTotalAndUnAnswered(keyword, isAnswered);
+    //         } else if( category.equals("title") ){
+    //             count = qnaBoardMapper.searchListCountByTitleAndUnAnswered(keyword, isAnswered);
+    //         } else if( category.equals("content") ){
+    //             count = qnaBoardMapper.searchListCountByContentAndUnAnswered(keyword, isAnswered);
+    //         } else if( category.equals("titleAndContent") ){
+    //             count = qnaBoardMapper.searchListCountByTitleAndContentAndUnAnswered(keyword, isAnswered);
+    //         }
+    //     }
 
-        return count;
-    }
+    //     return count;
+    // }
 
 
-    // 
-    public int getFilteredCount( String category, String keyword, int isAnswered ){
-        return qnaBoardMapper.getFilteredCount(category, keyword, isAnswered);
-    }
+    // // 
+    // public int getFilteredCount( String category, String keyword, int isAnswered ){
+    //     return qnaBoardMapper.getFilteredCount(category, keyword, isAnswered);
+    // }
 
-    // 
-    public List<QnaBoardDTO> getFilteredList( String category, String keyword, int isAnswered, int start, int end ){
-        return qnaBoardMapper.getFilteredList(category, keyword, isAnswered, start, end);
-    }
+    // // 
+    // public List<QnaBoardDTO> getFilteredList( String category, String keyword, int isAnswered, int start, int end ){
+    //     return qnaBoardMapper.getFilteredList(category, keyword, isAnswered, start, end);
+    // }
 
 
     // =============================================================================
