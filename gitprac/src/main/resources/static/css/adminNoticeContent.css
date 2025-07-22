@@ -14,15 +14,6 @@ body {
     gap: 30px;
 }
 
-.sidebar-wrapper {
-    width: 150px;
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    height: fit-content;
-}
-
 /* 오른쪽 본문 */
 .content-wrapper {
     flex: 1;

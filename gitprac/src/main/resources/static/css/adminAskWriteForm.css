@@ -1,0 +1,112 @@
+body {
+    font-family: 'Noto Serif KR', serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #222;
+}
+
+/* 전체 컨테이너 */
+.body {
+    width: 90%;
+    max-width: 800px;
+    margin: 40px auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+/* 제목 */
+.body-top h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* 콘텐츠 영역 */
+.body-content {
+    margin-top: 20px;
+}
+
+/* 폼 구성 */
+.writeForm-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 제목 입력 */
+.title-wrapper label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+.title-wrapper input[type="text"] {
+    width: 300px;
+    padding: 6px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 작성자 */
+.writer-wrapper {
+    font-size: 14px;
+    color: #555;
+}
+
+/* 카테고리 */
+.category-wrapper select {
+    padding: 6px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 이미지 업로드 */
+.image-wrapper label {
+    font-weight: bold;
+}
+.image-wrapper input[type="file"] {
+    margin-top: 5px;
+}
+
+/* 내용 입력 */
+.content-wrapper label {
+    font-weight: bold;
+}
+.content-wrapper textarea {
+    width: 100%;
+    height: 250px;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    resize: vertical;
+    box-sizing: border-box;
+    font-family: 'Noto Serif KR', serif;
+    line-height: 1.6;
+}
+
+/* 버튼 영역 */
+.btns-wrapper {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.btns-wrapper button {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: 1px solid #444;
+    background-color: #fff;
+    color: #222;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-family: 'Noto Serif KR', serif;
+}
+
+.btns-wrapper button:hover {
+    background-color: #f2f2f2;
+}

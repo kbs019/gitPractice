@@ -1,187 +1,168 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>질의응답 내용</title>
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/adminAskContent.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
 </head>
 <body>
-    <span th:if="${session.users == null}">
-        <script>
-            alert("로그인이 해제되었습니다.");
-            window.location="/user/login";
-        </script>
-    </span>
-    <span th:if="${session.users != null}">
-        <div th:replace="~{fragments/header.html :: headerFragment}"></div>
-        <div class="content-top">
-            <div class="content-top-title">
-                <center>질의응답 내용</center>
-                <hr width="800" align="center" color="orange">
-            </div>
-            <div class="content-top-btns">
-                <div width="800" align="right">
-                    <span th:if="${ session.users.nick == ato.writer }">
-                        <input type="button" value="수정" th:onclick="|window.location='@{/admin/askUpdate(askNo=${ato.askNo}, pageNum=${pageNum})}'|">  &nbsp;&nbsp;
-                    </span>
-                    <span th:if="${ session.users.role == 2 || session.users.nick == ato.writer }">
-                        <input type="button" value="삭제" th:onclick="|window.location='@{/admin/askDelete(askNo=${ato.askNo}, pageNum=${pageNum})}'|">
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="content-body">
-            <div class="content-title-wrapper">
-                <h3><span th:text="${ato.title}"></span></h3>
-            </div>
-            <div class="content-info-wrapper">
-                <div class = "writer-views-wrapper">
-                    <div class="content-writer-wrapper">
-                        작성자 | <span th:text="${ato.writer}"></span>
-                        <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${ato.writer}">
-                        📋
-                        </span>
-                    </div>
-                    <div class="content-views-wrapper">
-                        조회수 | <span th:text="${ato.views}"></span>
-                    </div>
-                </div>
-                <div class="category-reg-wrapper">
-                    <div class="content-category-wrappper">
-                        카테고리 | 
-                        <span th:if="${ato.category == 0}">
-                            <span>문의</span>
-                        </span>
-                        <span th:if="${ato.category == 1}">
-                            <span>신고</span>
-                        </span>
-                    </div>
-                    <div class="content-reg-wrapper">
-                        작성일자 | <span th:text="${#temporals.format(ato.reg, 'yy/MM/dd HH:mm')}"></span>
-                    </div>
-                </div>
-            </div>    
-            <div class="content-image-wrapper" th:if="${ato.originalName != null}">
-                <img th:src="@{|${ato.imgPath + ato.imgName}|}">    
-            </div>
-            <div class="content-content-wrapper">
-                <div th:text="${ato.content}"></div>
-            </div>
-        </div>
-    
-        <div class="content-bottom-btns">
-            <input type="button" value="글목록" th:onclick="|window.location='@{/admin/ask(pageNum=${pageNum})}'|">
-        </div>
-    
-        <div class="reply-block">
-            <div class="reply-insert-form" th:if="${session.users.role == 2}">      <!-- 수의사만 댓글 입력폼이 보이도록 설정 -->
-                <form id="replyInsertForm">
-                    <input type="hidden" id="askNo" th:value="${ato.askNo}">
-                    <input type="hidden" id="writer" th:value="${session.users.nick}">
-                    <textarea id="replyContent" required></textarea>
-                    <button type="button" id="replyInsertBtn">답변 작성</button>
-                </form>
-            </div>
-            <input type="hidden" id="askNo" th:value="${ato.askNo}">
-            <div id="replyList"></div>  <!-- 여기에 리스트 출력시킬 예정 -->
-        </div>
-    </span>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <!-- 답변 작성 클릭 시, ajax 실행 -->
+<span th:if="${session.users == null}">
     <script>
-        $(document).ready(function(){
-            $('#replyInsertBtn').click(function(){
-                $.ajax({
-                    url : '/admin/askReplyInsert',
-                    type : 'post',
-                    data : {
-                        askNo : $('#askNo').val(),
-                        writer : $('#writer').val(),
-                        content : $('#replyContent').val()
-                    },
-                    success : function( result ){
-                        alert(result);
-                        $('#replyContent').val('');
-                        loadReplies();
-                    },
-                    error : function( xhr, status, error ){
-                        console.log(error + '  발생');
-                        alert('오류 발생');
-                    }
-                });
-            });
-        });
-
-        // 답변 리스트를 보여주는 작업
-        $(document).ready(function(){
-            loadReplies();
-        });
-
-        // 답련 리스트 로딩 시키는 함수
-        function loadReplies(){
-            $.ajax({
-                url : '/admin/askReplyList',
-                type : 'post',
-                data : {
-                    askNo : $('#askNo').val()
-                },
-                success : function( replyTable ){
-                    $('#replyList').html(replyTable);
-                },
-                error : function( xhr, status, error ){
-                    console.log(error + "-- 발생");
-                    alert("오류 발생");
-                }
-            });
-        }
-        
-
-        // 답변 삭제 버튼 클릭 시 진행되는 ajax
-        $(document).ready(function(){           // html 문서가 모두 로딩된 후 실행되는 함수
-            $(document).on('click', '.replyDelete', function(){
-            // .replyDelete 클래스를 가진 버튼이 클릭되었을 때 실행.
-            // on() : 동적으로 생성된 요소에도 적용되도록 도와준다.  
-            // --> 답변작성이라는 ajax 로 생성되어 ajax 로 리스트가 출력된 .replyDelete 라는 클래스명의 버튼에 click 이벤트를 넣어 함수 실행
-
-                let replyNo = $(this).closest('.reply-item').find('.replyNo').val();
-                // 클릭된 '.replyDelete' 버튼('this')을 기준으로
-                // 가장 가까운 상위 요소 중 '.reply-item' 라는 클래스 선택자 이름을 가진 요소를 찾고
-                // 그 내부에서 '.replyNo' 클래스를 가진 input 의 값을 가져온다.
-
-                $.ajax({            // ajax 요청 시작
-                    url : '/admin/replyDelete',
-                    type : 'post',
-                    data : {
-                        replyNo : replyNo
-                    },
-                    success : function(a){
-                        alert(a);
-                        loadReplies();
-                    },
-                    error : function( xhr, status, error ){
-                        console.log('오류 : ' + error);
-                        alert('오류 발생!');
-                    }
-                });
-            });
-        });
-
-        // 작성자명을 클릭하여 복사하는 API 사용
-        $(document).ready(function(){
-            $(document).on('click', '.copy-icon', function(e){
-                let writer = $(this).data('writer');
-    
-                navigator.clipboard.writeText(writer).then(function(){
-                    alert(`"${writer}" 복사됨`);
-                }).catch(function(err){
-                    console.log("복사 실패 : ", err);
-                });
-            });
-        });
+        alert("로그인이 해제되었습니다.");
+        window.location = "/user/login";
     </script>
+</span>
+
+<span th:if="${session.users != null}">
+    <!-- ✅ 헤더 -->
+    <div th:replace="~{fragments/header.html :: headerFragment}"></div>
+
+    <div class="center-container">
+        <!-- ✅ 본문 -->
+        <div id="ask-content-wrapper">
+            <h1>질의응답 내용</h1>
+
+            <!-- 상단 버튼 -->
+            <div class="content-top-btns btn-group">
+                <span th:if="${session.users.nick == ato.writer}">
+                    <input type="button" value="수정"
+                           th:onclick="|window.location='@{/admin/askUpdate(askNo=${ato.askNo}, pageNum=${pageNum})}'|">
+                </span>
+                <span th:if="${session.users.role == 2 || session.users.nick == ato.writer}">
+                    <input type="button" value="삭제"
+                           th:onclick="|window.location='@{/admin/askDelete(askNo=${ato.askNo}, pageNum=${pageNum})}'|">
+                </span>
+            </div>
+
+            <!-- 본문 내용 -->
+            <div class="content-body">
+                <div class="content-title">
+                    <h3 th:text="${ato.title}"></h3>
+                </div>
+
+                <div class="content-info">
+                    작성자 | <span th:text="${ato.writer}"></span>
+                    <span th:if="${session.users.role == 2}" class="copy-icon" th:attr="data-writer=${ato.writer}">📋</span><br>
+                    조회수 | <span th:text="${ato.views}"></span><br>
+                    카테고리 |
+                    <span th:if="${ato.category == 0}">문의</span>
+                    <span th:if="${ato.category == 1}">신고</span><br>
+                    작성일자 | <span th:text="${#temporals.format(ato.reg, 'yy/MM/dd HH:mm')}"></span>
+                </div>
+
+                <div class="content-image" th:if="${ato.originalName != null}">
+                    <img th:src="@{|${ato.imgPath + ato.imgName}|}" alt="첨부 이미지">
+                </div>
+
+                <div class="content-text">
+                    <div th:text="${ato.content}"></div>
+                </div>
+            </div>
+
+            <!-- 목록 버튼 -->
+            <div class="content-bottom-btns">
+                <input type="button" value="글목록"
+                       th:onclick="|window.location='@{/admin/ask(pageNum=${pageNum})}'|">
+            </div>
+
+            <!-- 답변 영역 -->
+            <div class="reply-section">
+                <h4>답변</h4>
+
+                <!-- 입력폼: 수의사만 -->
+                <div class="reply-form" th:if="${session.users.role == 2}">
+                    <form id="replyInsertForm">
+                        <input type="hidden" id="askNo" th:value="${ato.askNo}">
+                        <input type="hidden" id="writer" th:value="${session.users.nick}">
+                        <textarea id="replyContent" required></textarea>
+                        <button type="button" id="replyInsertBtn">답변 작성</button>
+                    </form>
+                </div>
+
+                <!-- 리스트 출력 -->
+                <input type="hidden" id="askNo" th:value="${ato.askNo}">
+                <div id="replyList"></div>
+            </div>
+        </div>
+    </div>
+</span>
+
+<!-- ✅ JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    // 답변 등록
+    $(document).on('click', '#replyInsertBtn', function () {
+        $.ajax({
+            url: '/admin/askReplyInsert',
+            type: 'post',
+            data: {
+                askNo: $('#askNo').val(),
+                writer: $('#writer').val(),
+                content: $('#replyContent').val()
+            },
+            success: function (result) {
+                alert(result);
+                $('#replyContent').val('');
+                loadReplies();
+            },
+            error: function (xhr, status, error) {
+                console.log("등록 오류:", error);
+                alert("답변 등록 중 오류 발생");
+            }
+        });
+    });
+
+    // 답변 목록 로딩
+    function loadReplies() {
+        $.ajax({
+            url: '/admin/askReplyList',
+            type: 'post',
+            data: {
+                askNo: $('#askNo').val()
+            },
+            success: function (html) {
+                $('#replyList').html(html);
+            },
+            error: function (xhr, status, error) {
+                console.log("불러오기 오류:", error);
+                alert("답변 목록 불러오기 실패");
+            }
+        });
+    }
+
+    // 답변 삭제
+    $(document).on('click', '.replyDelete', function () {
+        const replyNo = $(this).closest('.reply-item').find('.replyNo').val();
+        $.ajax({
+            url: '/admin/replyDelete',
+            type: 'post',
+            data: {replyNo: replyNo},
+            success: function (msg) {
+                alert(msg);
+                loadReplies();
+            },
+            error: function (xhr, status, error) {
+                console.log("삭제 오류:", error);
+                alert("답변 삭제 실패");
+            }
+        });
+    });
+
+    // 작성자 복사
+    $(document).on('click', '.copy-icon', function () {
+        const writer = $(this).data('writer');
+        navigator.clipboard.writeText(writer)
+            .then(() => alert(`"${writer}" 복사됨`))
+            .catch(err => console.error("복사 실패:", err));
+    });
+
+    // 초기 로드
+    $(document).ready(function () {
+        loadReplies();
+    });
+</script>
 </body>
 </html>
