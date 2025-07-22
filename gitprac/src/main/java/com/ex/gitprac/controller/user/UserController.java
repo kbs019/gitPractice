@@ -1,9 +1,13 @@
 package com.ex.gitprac.controller.user;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -115,26 +119,33 @@ public class UserController {
         return "user/findForm";
     }
     
-    @PostMapping("findId")
-    public String findId(@RequestParam("email") String email, Model model) {
-        UserDTO fidto = userService.findId(email);
-        String id = fidto.getId();
-        model.addAttribute("id", id);
-        return "user/findIdPro";
-    }
-    
-    @PostMapping("findPw")
-    public String findPw(@RequestParam("id") String id, @RequestParam("email") String email, Model model) {
-        UserDTO fidto = userService.findPw(id, email);
+    @PostMapping("/findId")
+    @ResponseBody
+    public Map<String, Object> findId(@RequestBody Map<String, String> map) {
+        String email = map.get("email");
+        UserDTO dto = userService.findId(email);
 
-        if (fidto != null) {
-            // 아이디와 이메일이 일치하는 사용자 존재 → pw만 전달
-            model.addAttribute("pw", fidto.getPw());
-        } else {
-            // 일치하는 사용자 없음 → pw를 null로 전달
-            model.addAttribute("pw", null);
+        Map<String, Object> result = new HashMap<>();
+        if (dto != null) {
+            result.put("id", dto.getId());
         }
 
-        return "user/findPwPro";
+        return result;
     }
+
+    @PostMapping("/findPw")
+    @ResponseBody
+    public Map<String, Object> findPw(@RequestBody Map<String, String> map) {
+        String id = map.get("id");
+        String email = map.get("email");
+        UserDTO dto = userService.findPw(id, email);
+
+        Map<String, Object> result = new HashMap<>();
+        if (dto != null) {
+            result.put("pw", dto.getPw());
+        }
+
+        return result;
+    }
+
 }
