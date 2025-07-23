@@ -114,7 +114,6 @@ public class AdminService {
         // 질의응답게시판에서 작성자명이 같은 경우(where writer = nick), status = 1 로 update   --- void
         askMapper.updateStatusByNick(nick);
 
-
         return result;
     }
 
