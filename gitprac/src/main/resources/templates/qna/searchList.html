@@ -6,7 +6,9 @@
 </span>
 <span th:if="${session.users != null}">
     <div id="searchList">
-        <h2 th:text="${count}"></h2>
+        <span>
+            검색 결과 | <span th:text="${count}"></span> |
+        </span>
         <div th:if="${count == 0}">
             <div class="post-content">
                 <h2>게시글이 존재하지 않습니다.</h2>
