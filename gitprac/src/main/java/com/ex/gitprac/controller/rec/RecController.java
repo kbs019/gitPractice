@@ -73,7 +73,7 @@ public String recListPage(
     List<PetDTO> petList = petService.getPetsByUserId(writer);
     model.addAttribute("petList", petList);
 
-    // 🟡 petNo가 null이면 아무것도 보여주지 않음
+    // petNo가 null이면 아무것도 보여주지 않음
     if (petNo != null) {
         if ("true".equals(reset)) {
             recList = recService.getRecListWithPaging(writer, offset, limit);
